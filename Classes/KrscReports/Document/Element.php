@@ -57,7 +57,7 @@ class KrscReports_Document_Element
             // iteration over elements in group
             foreach( $aGroupElements as $oElement )
             {
-                $oElement->setGroupName( $sGroupName );
+                $oElement->setInnerGroupName( $sGroupName );
                 $oElement->beforeConstructDocument();
                 $oElement->constructDocument();
                 $oElement->afterConstructDocument();

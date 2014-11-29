@@ -5,7 +5,7 @@
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Excel
-{
+{   
     /**
      * @var PHPExcel 
      */
@@ -51,7 +51,26 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
     public function setGroupName( $sGroupName )
     {
         $this->_sGroupName = $sGroupName;
-        self::$_oPHPExcel->setActiveSheetIndexByName( $sGroupName );
+        
+        try
+        {
+            self::$_oPHPExcel->setActiveSheetIndexByName( $sGroupName );
+        }
+        catch ( PHPExcel_Exception $oException )
+        {   // create new worksheet
+            if( count( self::$_oPHPExcel->getAllSheets()) == 1 && self::$_oPHPExcel->getActiveSheet()->getTitle() == 'Worksheet' )
+            {   // renaming default worksheet
+                self::$_oPHPExcel->setActiveSheetIndex()->setTitle( $sGroupName );
+            }
+            else
+            {   // second or later worksheet
+                $oNewSheet = self::$_oPHPExcel->createSheet();
+                $oNewSheet->setTitle( $sGroupName );                
+            }
+            
+            self::$_oPHPExcel->setActiveSheetIndexByName( $sGroupName );
+        }
+        
     }
 }
 ?>

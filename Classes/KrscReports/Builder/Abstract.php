@@ -14,6 +14,11 @@ abstract class KrscReports_Builder_Abstract
     
     protected $_iActualHeight = 0;
     
+    /**
+     * @var Array 
+     */
+    protected $_aData;
+    
     public function setStartWidth( $iStartWidth )
     {
         $this->_iActualWidth = $iStartWidth;
@@ -22,6 +27,18 @@ abstract class KrscReports_Builder_Abstract
     public function setStartHeight( $iStartHeight )
     {
         $this->_iActualHeight = $iStartHeight;
+    }
+    
+    /**
+     * 
+     * @param Array $aData
+     * @return KrscReports_Document_Element_Default
+     */
+    public function setData( $aData )
+    {
+        $this->_aData = $aData;
+        return $this;
+        
     }
     
     public function getActualWidth()

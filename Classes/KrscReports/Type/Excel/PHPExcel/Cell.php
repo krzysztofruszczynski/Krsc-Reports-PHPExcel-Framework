@@ -58,6 +58,7 @@ class KrscReports_Type_Excel_PHPExcel_Cell
         // setting styles
         
         // constructing phpexcel element
+        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue );
     }
     
 }
