@@ -6,17 +6,38 @@
  */
 abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Excel
 {
+    /**
+     * @var PHPExcel 
+     */
     protected static $_oPHPExcel;
+    
+    /**
+     * @var KrscReports_Type_Excel_PHPExcel_Cell 
+     */
+    protected $_oCell;
+    
+    /**
+     * 
+     * @param KrscReports_Type_Excel_PHPExcel_Cell $oCell
+     */
+    public function setCellObject( $oCell )
+    {
+        $this->_oCell = $oCell;
+    }
     
     /**
      * @todo : zrobić statyczną zmienną opisującą aktualną grupę? 
      */
-    
     public static function setPHPExcelObject( PHPExcel $oPHPExcel )
     {
         self::$_oPHPExcel = $oPHPExcel;
     }
     
+    /**
+     * 
+     * @return PHPExcel
+     * @throws Exception
+     */
     public static function getPHPExcelObject()
     {
         if( isset( self::$_oPHPExcel ) )
