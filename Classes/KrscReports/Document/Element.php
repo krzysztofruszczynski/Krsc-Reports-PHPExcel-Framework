@@ -33,16 +33,18 @@ class KrscReports_Document_Element
     public function addElement( $oElement, $sGroupName = 'document1' )
     {
         $this->_aElements[$sGroupName][] = $oElement;
+        return $this;
     }
     
     public function setGroupName( $sGroupName )
     {
         $this->_sGroupName = $sGroupName;
+        return $this;
     }
     
-    public function afterConstructDocument() {}
+    public function afterConstructDocument() { return $this; }
     
-    protected function beforeConstructDocument() {}
+    public function beforeConstructDocument() { return $this; }
     
     /**
      * Method iterating over all elements in composite
@@ -61,6 +63,8 @@ class KrscReports_Document_Element
                 $oElement->afterConstructDocument();
             }
         }
+        
+        return $this;
     }
 }
 ?>
