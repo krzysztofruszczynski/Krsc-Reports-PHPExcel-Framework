@@ -17,33 +17,47 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders extends KrscReports_Type_Exc
     
     protected function _getAllBorders()
     {
-        
+        return array();
     }
-    
     
     protected function _getLeft()
     {
-        
+        return array();
+    }
+    
+    protected function _getRight()
+    {
+        return array();
     }
     
     protected function _getTop()
     {
-        
+        return array();
     }
     
     protected function _getBottom()
     {
-        
+        return array();
     }
     
     protected function _getDiagonal()
     {
-        
+        return array();
     }
     
     protected function _getDiagonalDirection()
     {
+        return array();
+    }
+    
+    protected function _attachToArray( $aOutput, $sKey, $aStyle )
+    {
+        if( !empty( $aStyle ) )
+        {
+            $aOutput[$sKey] = $aStyle;
+        }
         
+        return $aOutput;
     }
     
     /**
@@ -52,13 +66,15 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders extends KrscReports_Type_Exc
     public function getStyleArray() 
     {
         $aOutput = array();
-        $aOutput['allborders'] = $this->_getAllBorders();
-        $aOutput['left'] = $this->_getLeft();
-        $aOutput['top'] = $this->_getTop();
-        $aOutput['right'] = $this->_getRight();
-        $aOutput['bottom'] = $this->_getBottom();
-        $aOutput['diagonal'] = $this->_getDiagonal();
-        $aOutput['diagonaldirection'] = $this->_getDiagonalDirection();
+        
+        $aOutput = $this->_attachToArray( $aOutput, 'allborders', $this->_getAllBorders() );
+        $aOutput = $this->_attachToArray( $aOutput, 'left', $this->_getLeft() );
+        $aOutput = $this->_attachToArray( $aOutput, 'right', $this->_getRight() );
+        $aOutput = $this->_attachToArray( $aOutput, 'bottom', $this->_getBottom() );
+        $aOutput = $this->_attachToArray( $aOutput, 'top', $this->_getTop() );
+        $aOutput = $this->_attachToArray( $aOutput, 'diagonal', $this->_getDiagonal() );
+        $aOutput = $this->_attachToArray( $aOutput, 'diagonaldirection', $this->_getDiagonalDirection() );
+        
         return $aOutput;
     }
 }

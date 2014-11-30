@@ -4,7 +4,9 @@
  */
 interface KrscReports_Type_Excel_PHPExcel_Style_Iterator_IIterator
 {
-    public function hasNextStyle();
+    public function hasNextElement();
     
-    public function getStyleArray();
+    public function getStyleElement();
+    
+    public function resetIterator();
 }
