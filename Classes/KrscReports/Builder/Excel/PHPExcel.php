@@ -72,5 +72,15 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
         }
         
     }
+    
+    /**
+     * Method setting actual style key (can be set from element layer)
+     * @param String $sStyleKey
+     * @param Boolean $bIfStyleNotExistsSelectDefault
+     * @return Boolean true if style was found, false otherwise
+     */
+    public function setStyleKey( $sStyleKey, $bIfStyleNotExistsSelectDefault = false )
+    {
+        return $this->_oCell->setStyleKey( $sStyleKey, $bIfStyleNotExistsSelectDefault );
+    }
 }
-?>
