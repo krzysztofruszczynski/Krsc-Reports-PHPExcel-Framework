@@ -8,7 +8,7 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders extends KrscR
     {
         $aOutput = array();
         $aOutput[static::KEY_STYLE] = PHPExcel_Style_Border::BORDER_DASHDOTDOT;
-        $aOutput[static::KEY_COLOR][static::KEY_COLOR_RGB] = PHPExcel_Style_Color::COLOR_DARKGREEN;
+        $aOutput[static::KEY_COLOR] = self::_getColorArray( PHPExcel_Style_Color::COLOR_DARKGREEN );
         return $aOutput;
     }
     
@@ -16,7 +16,7 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders extends KrscR
     {
         $aOutput = array();
         $aOutput[static::KEY_STYLE] = PHPExcel_Style_Border::BORDER_DASHDOTDOT;
-        $aOutput[static::KEY_COLOR][static::KEY_COLOR_RGB] = PHPExcel_Style_Color::COLOR_BLACK;
+        $aOutput[static::KEY_COLOR] = self::_getColorArray( PHPExcel_Style_Color::COLOR_BLACK );
         return $aOutput;
     }
 }

@@ -13,8 +13,6 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders extends KrscReports_Type_Exc
     
     const KEY_COLOR = 'color';
     
-    const KEY_COLOR_RGB = 'rgb';
-    
     protected function _getAllBorders()
     {
         return array();
@@ -48,16 +46,6 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders extends KrscReports_Type_Exc
     protected function _getDiagonalDirection()
     {
         return array();
-    }
-    
-    protected function _attachToArray( $aOutput, $sKey, $aStyle )
-    {
-        if( !empty( $aStyle ) )
-        {
-            $aOutput[$sKey] = $aStyle;
-        }
-        
-        return $aOutput;
     }
     
     /**
