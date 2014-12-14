@@ -1,32 +1,40 @@
 <?php
 
 /**
- * constructDocument() is still abstract
+ * Extension of abstract builder suitable with PHPExcel. Contains functionality closely connect with PHPExcel.
+ * Method constructDocument() is still abstract and needs to be implemented further.
+ * 
+ * @category KrscReports
+ * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Excel
 {   
     /**
-     * @var PHPExcel 
+     * @var PHPExcel instance of PHPExcel used while adding new data to spreadsheets
      */
     protected static $_oPHPExcel;
     
     /**
-     * @var KrscReports_Type_Excel_PHPExcel_Cell 
+     * @var KrscReports_Type_Excel_PHPExcel_Cell object responsible for creating cell inside Excel spreadsheet
      */
     protected $_oCell;
     
     /**
-     * 
-     * @param KrscReports_Type_Excel_PHPExcel_Cell $oCell
+     * Method for setting objects responsible for creating cell inside Excel spreadsheet.
+     * @param KrscReports_Type_Excel_PHPExcel_Cell $oCell object to be set to create cells inside Excel spreadsheet
+     * @return KrscReports_Builder_Excel_PHPExcel object on which method was executed
      */
     public function setCellObject( $oCell )
     {
         $this->_oCell = $oCell;
+        return $this;
     }
     
     /**
-     * @todo : zrobić statyczną zmienną opisującą aktualną grupę? 
+     * Method for setting PHPExcel object inside class.
+     * @param PHPExcel $oPHPExcel PHPExcel object to be used while building Excel spreadsheets
+     * @return void
      */
     public static function setPHPExcelObject( PHPExcel $oPHPExcel )
     {
@@ -34,9 +42,9 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
     }
     
     /**
-     * 
-     * @return PHPExcel
-     * @throws Exception
+     * Method returning PHPExcel object stored inside a class.
+     * @return PHPExcel stored PHPExcel object
+     * @throws Exception thrown when PHPExcel has not been set before (possibly only via self::setPHPExcelObject)
      */
     public static function getPHPExcelObject()
     {
@@ -48,6 +56,11 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
         throw new Exception( 'PhpExcel object not set in KrscReports_Builder_Excel_PHPExcel::setPhpExcelObject( PhpExcel $oPhpExcel )' );
     }
 
+    /**
+     * Method for setting group name for current builder (used for Excel spreadsheet name).
+     * @param string $sGroupName group name to be set (means that current builder will write to Excel spreadsheet with the same name)
+     * @return KrscReports_Builder_Excel_PHPExcel object on which method was executed
+     */
     public function setGroupName( $sGroupName )
     {
         $this->_sGroupName = $sGroupName;
@@ -71,13 +84,15 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
             self::$_oPHPExcel->setActiveSheetIndexByName( $sGroupName );
         }
         
+        return $this;
     }
     
     /**
-     * Method setting actual style key (can be set from element layer)
-     * @param String $sStyleKey
-     * @param Boolean $bIfStyleNotExistsSelectDefault
-     * @return Boolean true if style was found, false otherwise
+     * Method setting actual style key (can be set from element layer).
+     * @param string $sStyleKey style key to be set
+     * @param boolean $bIfStyleNotExistsSelectDefault (by default false) if style key was not found and parameter is true, 
+     * there would be default style set; otherwise (if false) previously used style would continue
+     * @return boolean true if style was found, false otherwise
      */
     public function setStyleKey( $sStyleKey, $bIfStyleNotExistsSelectDefault = false )
     {

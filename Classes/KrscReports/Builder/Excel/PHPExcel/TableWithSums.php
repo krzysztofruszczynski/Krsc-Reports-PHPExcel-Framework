@@ -2,35 +2,49 @@
 
 /**
  * Table with possibility to add column sum at the end (extension from normal table builder). 
+ * 
+ * @category KrscReports
+ * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 class KrscReports_Builder_Excel_PHPExcel_TableWithSums extends KrscReports_Builder_Excel_PHPExcel_ExampleTable implements KrscReports_Builder_Interface_Table
 {
     /**
-     * @var Array columns which are to sum 
+     * @var array columns which are to sum (each column name is next array value
      */
     protected $_aColumnsToSum;
     
     /**
-     * @var Integer start height of rows (for formulas) 
+     * @var integer height of first row with data (to be used by formulas) 
      */
     protected $_iStartHeightOfRows;
     
     /**
-     * 
-     * @param String $sColumnName add column which will have sum formula under table rows
+     * Method for adding columns, which will have sum formula under rows.
+     * @param string $sColumnName name of the column which will have sum formula under table rows
+     * @return KrscReports_Builder_Excel_PHPExcel_TableWithSums object on which method was executed
      */
     public function addColumnToSum( $sColumnName )
     {
         $this->_aColumnsToSum[] = $sColumnName;
+        return $this;
     }
     
+    /**
+     * Action done when table rows has to be displayed (increments height with each row, remembers height of first row with data).
+     * @return void
+     */
     public function setRows() 
     {
         $this->_iStartHeightOfRows = $this->_iActualHeight;
         parent::setRows();
     }
     
+    /**
+     * Action done when table ends. If columns for sum formula have been added, it creates a field under the table with sum formula
+     * (under particular column).
+     * @return void
+     */
     public function endTable() 
     {
         parent::endTable();
