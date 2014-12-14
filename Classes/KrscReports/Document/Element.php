@@ -6,6 +6,16 @@
 class KrscReports_Document_Element
 {
     /**
+     * number of lines between elements in the spreadsheet
+     */
+    const LINES_BETWEEN_ELEMENTS = 2;
+    
+    /**
+     * default name of group
+     */
+    const DEFAULT_GROUP_NAME = 'document1';
+    
+    /**
      * @var Array array where group name is a key and value is an array with elements
      */
     protected $_aElements = array();
@@ -23,14 +33,14 @@ class KrscReports_Document_Element
     /**
      * @var String name of group to which belongs this element 
      */
-    protected $_sGroupName = '';
+    protected $_sGroupName = self::DEFAULT_GROUP_NAME;
     /* później
     public function addOrModifyGroup( $sGroupName, $iNumber )
     {
         
     }
     */
-    public function addElement( $oElement, $sGroupName = 'document1' )
+    public function addElement( $oElement, $sGroupName = self::DEFAULT_GROUP_NAME )
     {
         $this->_aElements[$sGroupName][] = $oElement;
         return $this;
@@ -58,9 +68,15 @@ class KrscReports_Document_Element
             foreach( $aGroupElements as $oElement )
             {
                 $oElement->setInnerGroupName( $sGroupName );
+                
+                // setting place of an element
+                $oElement->setStartHeight( isset( $this->_aActualHeights[$sGroupName] ) ? $this->_aActualHeights[$sGroupName] + self::LINES_BETWEEN_ELEMENTS : 1, false );
+                
                 $oElement->beforeConstructDocument();
                 $oElement->constructDocument();
                 $oElement->afterConstructDocument();
+                
+                $this->_aActualHeights[$sGroupName] = $oElement->getActualHeight();
             }
         }
         

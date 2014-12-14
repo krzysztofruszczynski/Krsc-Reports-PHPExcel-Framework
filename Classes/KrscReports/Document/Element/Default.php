@@ -31,13 +31,40 @@ class KrscReports_Document_Element_Default extends KrscReports_Document_Element
     public function beforeConstructDocument()
     {
         $this->_oBuilder->setStartWidth( ( isset( $this->_aActualWidths[$this->_sGroupName] ) ? $this->_aActualWidths[$this->_sGroupName] : 0 ) );
-        $this->_oBuilder->setStartHeight( ( isset( $this->_aActualHeights[$this->_sGroupName] ) ? $this->_aActualHeights[$this->_sGroupName] : 1 ) );
+        $this->_oBuilder->setStartHeight( ( isset( $this->_aActualHeights[$this->_sGroupName] ) ? $this->_aActualHeights[$this->_sGroupName] : 1 ), false );
         return $this;
     }
     
-    public function afterConstructDocument()
+    /**
+     * 
+     * @param Integer $iStartWidth (starts from 0)
+     */
+    public function setStartWidth( $iStartWidth )
     {
-        $this->_aActualWidths[$this->_sGroupName] = $this->_oBuilder->getActualWidth();
+        $this->_aActualWidths[$this->_sGroupName] = $iStartWidth;
+    }
+    
+    /**
+     * 
+     * @param Integer $iStartHeight (starts with 1)
+     */
+    public function setStartHeight( $iStartHeight, $bForceHeight = true )
+    {
+        $this->_aActualHeights[$this->_sGroupName] = $iStartHeight;
+        
+        if( $bForceHeight )
+        {   // height of element is set manually
+            $this->_oBuilder->setStartHeight( $iStartHeight );
+        }
+    }
+    
+    public function getActualHeight()
+    {
+        return $this->_oBuilder->getActualHeight();
+    }
+    
+    public function afterConstructDocument()
+    {   
         $this->_aActualHeights[$this->_sGroupName] = $this->_oBuilder->getActualHeight();
         return $this;
     }
