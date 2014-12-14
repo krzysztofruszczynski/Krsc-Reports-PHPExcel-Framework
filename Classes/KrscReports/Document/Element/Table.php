@@ -22,8 +22,11 @@ class KrscReports_Document_Element_Table extends KrscReports_Document_Element_De
     const STYLE_ROW = 'row';
     
     /**
-     * @todo: 
+     * style name for summary row (for example with sums)
      */
+    const STYLE_SUMMARY = 'summary';
+    
+    
     public function constructDocument() 
     {
         $this->_oBuilder->setStyleKey( KrscReports_Type_Excel_PHPExcel_Style::KEY_DEFAULT );
@@ -37,6 +40,7 @@ class KrscReports_Document_Element_Table extends KrscReports_Document_Element_De
         $this->_oBuilder->setStyleKey( self::STYLE_ROW );
         $this->_oBuilder->setRows();
         
+        $this->_oBuilder->setStyleKey( self::STYLE_SUMMARY );
         $this->_oBuilder->endTable();
     }
 }
