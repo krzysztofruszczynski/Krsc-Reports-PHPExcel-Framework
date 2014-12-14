@@ -12,8 +12,8 @@ abstract class KrscReports_Builder_Abstract
     
     protected $_iActualWidth = 0;
     
-    protected $_iActualHeight = 0;
-    
+    protected $_iActualHeight;
+        
     /**
      * @var Array 
      */
@@ -24,9 +24,17 @@ abstract class KrscReports_Builder_Abstract
         $this->_iActualWidth = $iStartWidth;
     }
     
-    public function setStartHeight( $iStartHeight )
+    /**
+     * 
+     * @param Integer $iStartHeight
+     * @param Boolean $bForceHeight if set to true, height is set even if someone else set it previous manually (by default true)
+     */
+    public function setStartHeight( $iStartHeight, $bForceHeight = true )
     {
-        $this->_iActualHeight = $iStartHeight;
+        if( !isset( $this->_iActualHeight ) || $bForceHeight )
+        {
+            $this->_iActualHeight = $iStartHeight; 
+        }               
     }
     
     /**
@@ -58,4 +66,3 @@ abstract class KrscReports_Builder_Abstract
     
     abstract public function constructDocument();
 }
-?>
