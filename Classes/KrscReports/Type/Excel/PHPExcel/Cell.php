@@ -80,15 +80,18 @@ class KrscReports_Type_Excel_PHPExcel_Cell
        return $bIsValid;
     }
     
-    public function constructCell( $iColumnId, $iRowId )
+    public function getColumnDimension( $iColumnId )
     {
-        //die( var_dump( $this->_oStyle->getStyleArray() ) );
-        
+        return self::$_oPHPExcel->getActiveSheet()->getColumnDimensionByColumn( $iColumnId )->getColumnIndex();
+    }
+    
+    public function constructCell( $iColumnId, $iRowId )
+    {        
         // setting styles
         self::$_oPHPExcel->getActiveSheet()->getStyleByColumnAndRow( $iColumnId, $iRowId )->applyFromArray( $this->_oStyle->getStyleArray( $this->_sStyleKey ) );
         
         // constructing phpexcel element
-        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue );
+        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue );        
     }
     
 }
