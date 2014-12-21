@@ -1,6 +1,10 @@
 <?php
 /**
- * Use of composite design pattern. 
+ * Class responsible for aggregating elements inside groups (use of composite design pattern).
+ * Object of this class is able to construct document consisting of all elements stored in it. 
+ * 
+ * @category KrscReports
+ * @package KrscReports_Document
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 class KrscReports_Document_Element
@@ -16,48 +20,65 @@ class KrscReports_Document_Element
     const DEFAULT_GROUP_NAME = 'document1';
     
     /**
-     * @var Array array where group name is a key and value is an array with elements
+     * @var array array where group name is a key and value is an array with elements
      */
     protected $_aElements = array();
     
     /**
-     * @var Array array where group name is a key and value is actual width for this group
+     * @var array array where group name is a key and value is actual width for this group
      */
     protected $_aActualWidths = array();
     
     /**
-     * @var Array array where group name is a key and value is actual height for this group
+     * @var array array where group name is a key and value is actual height for this group
      */
     protected $_aActualHeights = array();
     
     /**
-     * @var String name of group to which belongs this element 
+     * @var string name of group to which belongs this element 
      */
     protected $_sGroupName = self::DEFAULT_GROUP_NAME;
-    /* później
-    public function addOrModifyGroup( $sGroupName, $iNumber )
-    {
-        
-    }
-    */
+    
+    /**
+     * Method inserts subsequent element into specified group.
+     * @param KrscReports_Document_Element $oElement element to be inserted
+     * @param string $sGroupName name of group, to which inserting element belongs to (if null, default name of group is used)
+     * @return KrscReports_Document_Element object on which method was executed
+     */
     public function addElement( $oElement, $sGroupName = self::DEFAULT_GROUP_NAME )
     {
         $this->_aElements[$sGroupName][] = $oElement;
         return $this;
     }
     
+    /**
+     * Method sets group name for the whole object.
+     * @param string $sGroupName name of group to be set
+     * @return KrscReports_Document_Element object on which method was executed
+     */
     public function setGroupName( $sGroupName )
     {
         $this->_sGroupName = $sGroupName;
         return $this;
     }
     
+    /**
+     * Code which is executed after creating document.
+     * @return KrscReports_Document_Element object on which method was executed
+     */
     public function afterConstructDocument() { return $this; }
     
+    /**
+     * Code which is executed before creating document.
+     * @return KrscReports_Document_Element object on which method was executed
+     */
     public function beforeConstructDocument() { return $this; }
     
     /**
-     * Method iterating over all elements in composite
+     * Method iterating over all elements in composite. Before invoking method 
+     * with the same name (composite design pattern), it sets group name, height and invokes
+     * code to be executed before and after creating document.
+     * @return KrscReports_Document_Element object on which method was executed
      */
     public function constructDocument()
     {
@@ -76,6 +97,7 @@ class KrscReports_Document_Element
                 $oElement->constructDocument();
                 $oElement->afterConstructDocument();
                 
+                // updating actual height
                 $this->_aActualHeights[$sGroupName] = $oElement->getActualHeight();
             }
         }
@@ -83,4 +105,3 @@ class KrscReports_Document_Element
         return $this;
     }
 }
-?>
