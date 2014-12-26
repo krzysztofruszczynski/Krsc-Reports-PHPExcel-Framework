@@ -1,8 +1,9 @@
 <?php
 /**
- * Class which one object represents one cell. It applies styles, value and type of cell.
+ * Class which object represents cell. It applies styles, value and type of cell.
  * At the end cell with given coordinates and properties can be constructed (methods inside class
- * use directly PHPExcel commands). 
+ * use directly PHPExcel commands). Object properties can be changed multiple times and the same intance of
+ * class can create as many cells as user requests.
  * 
  * @category KrscReports
  * @package KrscReports_Type
@@ -112,7 +113,8 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     
     /**
      * Method creates cell with previously set properties on given in method's input coordinates 
-     * (with one object with set properties more than one cell can be created).
+     * (with one object with set properties more than one cell can be created; set properties can be changed
+     * and new cells with new properties can be constructed from the same instance of object).
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param integer $iRowId numeric coordinate of row (starts from 1)
      * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
