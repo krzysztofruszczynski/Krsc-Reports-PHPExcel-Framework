@@ -43,6 +43,9 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     public function __construct()
     {
         self::$_oPHPExcel = KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject();
+        
+        // creates default object for managing style collection to handle situations, when user does not set style object
+        $this->_oStyle = new KrscReports_Type_Excel_PHPExcel_Style();
     }
     
     /**
