@@ -13,10 +13,10 @@ ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
 // setting own autoloader
-require_once( dirname(__FILE__) . '/Autoloader.php' );
+require_once( dirname(__FILE__) . '/Classes/KrscReports/Autoloader.php' );
 
 /** Include PHPExcel */
-require_once dirname(__FILE__) . '/../PHPExcel.php';
+require_once dirname(__FILE__) . '/Classes/PHPExcel.php';
 
 
 KrscReports_Report_ExampleReport::createObjects();
