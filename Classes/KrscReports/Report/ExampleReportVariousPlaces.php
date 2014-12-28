@@ -52,7 +52,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         
         $oBuilder2 = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
         $oBuilder2->setCellObject( $oCell );
-        $oBuilder2->setData( array( array( 'I kolumna' => '5', 'II kolumna' => '6' ), array( 'First column' => '7', 'Second column' => '8' ) ) );
+        $oBuilder2->setData( array( array( 'I column' => '5', 'II column' => '6' ), array( 'First column' => '7', 'Second column' => '8' ) ) );
         
         
         $oElementTable2 = new KrscReports_Document_Element_Table();
@@ -62,7 +62,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         
         $oBuilder3 = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
         $oBuilder3->setCellObject( $oCell );
-        $oBuilder3->setData( array( array( 'I kolumna' => '55', 'II kolumna' => '66' ), array( 'First column' => '77', 'Second column' => '88' ) ) );
+        $oBuilder3->setData( array( array( 'I column' => '55', 'II column' => '66' ), array( 'First column' => '77', 'Second column' => '88' ) ) );
                 
         $oElementTable3 = new KrscReports_Document_Element_Table();
         $oElementTable3->setBuilder( $oBuilder3 );
@@ -72,7 +72,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         
         $oBuilder4 = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
         $oBuilder4->setCellObject( $oCell );
-        $oBuilder4->setData( array( array( 'I kolumna' => '155', 'II kolumna' => '166' ), array( 'First column' => '177', 'Second column' => '188' ) ) );
+        $oBuilder4->setData( array( array( 'I column' => '155', 'II column' => '166' ), array( 'First column' => '177', 'Second column' => '188' ) ) );
                 
         $oElementTable4 = new KrscReports_Document_Element_Table();
         $oElementTable4->setBuilder( $oBuilder4 );

@@ -60,17 +60,17 @@ class KrscReports_Report_ExampleReportTableWithSums extends KrscReports_Report_E
         
         $oBuilder2 = new KrscReports_Builder_Excel_PHPExcel_TableWithSums();
         $oBuilder2->setCellObject( $oCell );
-        $oBuilder2->setData( array( array( 'I kolumna' => '5', 'II kolumna' => '6' ), array( 'I kolumna' => '7', 'II kolumna' => '8' ), array( 'I kolumna' => '-1', 'II kolumna' => '4' ) ) );
-        $oBuilder2->addColumnToSum( 'I kolumna' );
-        $oBuilder2->addColumnToSum( 'II kolumna' );
+        $oBuilder2->setData( array( array( 'I column' => '5', 'II column' => '6' ), array( 'I column' => '7', 'II column' => '8' ), array( 'I column' => '-1', 'II column' => '4' ) ) );
+        $oBuilder2->addColumnToSum( 'I column' );
+        $oBuilder2->addColumnToSum( 'II column' );
         
         $oElementTable2 = new KrscReports_Document_Element_Table();
         $oElementTable2->setBuilder( $oBuilder2 );
         
         $oBuilder3 = new KrscReports_Builder_Excel_PHPExcel_TableWithSums();
         $oBuilder3->setCellObject( $oCell );
-        $oBuilder3->setData( array( array( 'I kolumna' => '5', 'II kolumna' => '6' ), array( 'I kolumna' => '7', 'II kolumna' => '8' ) ) );
-        $oBuilder3->addColumnToSum( 'I kolumna' );
+        $oBuilder3->setData( array( array( 'I column' => '5', 'II column' => '6' ), array( 'I column' => '7', 'II column' => '8' ) ) );
+        $oBuilder3->addColumnToSum( 'I column' );
         
         $oElementTable3 = new KrscReports_Document_Element_Table();
         $oElementTable3->setBuilder( $oBuilder3 );
