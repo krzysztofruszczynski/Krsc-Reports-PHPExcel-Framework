@@ -35,9 +35,9 @@
 class KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill extends KrscReports_Type_Excel_PHPExcel_Style_Fill
 {
     /**
-     * @var string color of fillment in rgb (by default yellow)
+     * @var string color of fillment in rgb (light green)
      */
-    protected $_sFillColor = PHPExcel_Style_Color::COLOR_YELLOW;
+    protected $_sFillColor = 'CCCC00';
     
     /**
      * Method setting color of fillment.
