@@ -42,18 +42,28 @@ ini_set('display_startup_errors', TRUE);
 require_once( dirname(__FILE__) . '/Classes/KrscReports/Autoloader.php' );
 
 /** Include PHPExcel */
-require_once dirname(__FILE__) . '/Classes/PHPExcel.php';
+if( file_exists( dirname(__FILE__) . '/Classes/PHPExcel.php' ) )
+{
+    require_once dirname(__FILE__) . '/Classes/PHPExcel.php';
+}
+else
+{
+    die('Has not found PHPExcel. Please put sources in Classes folder.');
+}
 
 
 KrscReports_Report_ExampleReport::createObjects();
 
 if( isset( $_GET[KrscReports_Report_ExampleReport::INPUT_REPORT_ID] ) )
 {
+    // remove possible previously set headers
+    header_remove();
+    
     // header for content type of output
-    header('Content-type: application/vnd.ms-excel');
-
+    header("Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    
     // header for outputted filename
-    //header('Content-Disposition: attachment; filename="file.xlsx"');
+    header('Content-Disposition: attachment; filename="Krsc_Example_' . $_GET[KrscReports_Report_ExampleReport::INPUT_REPORT_ID] . '.xlsx"');
 
     // report generation
     KrscReports_Report_ExampleReport::generateReport( $_GET[KrscReports_Report_ExampleReport::INPUT_REPORT_ID] );
