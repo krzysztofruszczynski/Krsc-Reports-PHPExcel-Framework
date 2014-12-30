@@ -1,6 +1,6 @@
 KrscReports
 ===========
-In order to run, this project needs PHPExcel. Put PHPExcel source in Classes folder. Then load in your browser Examples.php file from the main folder and see the possibilities of this library. Live demo is here (currently with pre-release version - works not correctly on MS Excel): [http://www.ruszczynski.eu/krsc/Examples.php]
+In order to run, this project needs PHPExcel. Put PHPExcel source in Classes folder. Then load in your browser Examples.php file from the main folder and see the possibilities of this library. Live demo is here: [http://www.ruszczynski.eu/krsc/Examples.php]
 
 The concept of application presented by tutorial
 ===========
