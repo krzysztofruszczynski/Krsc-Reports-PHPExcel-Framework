@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.1, 2014-12-29
  */
 
 /**
