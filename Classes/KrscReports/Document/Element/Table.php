@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Document
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.1, 2016-11-12
  */
 
 /**
@@ -55,6 +55,23 @@ class KrscReports_Document_Element_Table extends KrscReports_Document_Element_De
     const STYLE_SUMMARY = 'summary';
     
     /**
+     * @var Boolean if true, header row is created
+     */
+    protected $_bConstructHeaderRow = true;
+
+
+    /**
+     * Setter for flag deciding whether to construct header row.
+     * @param boolean $bConstructHeaderRow flag set tot true, if header row will be constructed
+     * @return KrscReports_Document_Element_Table object on which method was executed
+     */
+    public function setIfContructHeaderRow( $bConstructHeaderRow )
+    {
+        $this->_bConstructHeaderRow = $bConstructHeaderRow;
+        return $this;
+    }
+
+    /**
      * Method responsible for creating document. Invokes methods specific for table builders.
      * @return KrscReports_Document_Element_Default object on which method was executed
      */
@@ -69,9 +86,12 @@ class KrscReports_Document_Element_Table extends KrscReports_Document_Element_De
         $this->_oBuilder->beginTable();
         
         // creating header row
-        $this->_oBuilder->setStyleKey( self::STYLE_HEADER_ROW );
-        $this->_oBuilder->setHeaderRow();
-        
+        if( $this->_bConstructHeaderRow )
+        {
+            $this->_oBuilder->setStyleKey( self::STYLE_HEADER_ROW );
+            $this->_oBuilder->setHeaderRow();
+        }
+           
         // insert rows with data
         $this->_oBuilder->setStyleKey( self::STYLE_ROW );
         $this->_oBuilder->setRows();

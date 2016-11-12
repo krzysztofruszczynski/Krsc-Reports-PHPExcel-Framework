@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.1, 2016-11-12
  */
 
 /**
@@ -131,13 +131,34 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     }
     
     /**
+     * Method for getting column dimension.
+     * @param integer $iColumnId
+     * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
+     */
+    protected function _getColumnDimensionByColumn( $iColumnId )
+    {
+        return self::$_oPHPExcel->getActiveSheet()->getColumnDimensionByColumn( $iColumnId ); 
+    }
+
+    /**
      * Method returns letter coordinate for numeric coordinate of column.
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @return string letter coordinate of given column
      */
     public function getColumnDimension( $iColumnId )
     {
-        return self::$_oPHPExcel->getActiveSheet()->getColumnDimensionByColumn( $iColumnId )->getColumnIndex();
+        return $this->_getColumnDimensionByColumn( $iColumnId )->getColumnIndex();        
+    }
+
+    /**
+     * Method sets autosize parameter for specified column.
+     * @param integer $iColumnId numeric coordinate of column (starts from 0)
+     * @param boolean $bAutoSize flag for column autosize
+     * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
+     */
+    public function setColumnDimensionAutosize( $iColumnId, $bAutoSize = true )
+    {
+        return $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize( $bAutoSize );
     }
     
     /**
@@ -154,7 +175,7 @@ class KrscReports_Type_Excel_PHPExcel_Cell
         self::$_oPHPExcel->getActiveSheet()->getStyleByColumnAndRow( $iColumnId, $iRowId )->applyFromArray( $this->_oStyle->getStyleArray( $this->_sStyleKey ) );
         
         // constructing phpexcel element
-        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue );        
+        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue, true);    
         
         return $this;
     }

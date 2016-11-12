@@ -22,30 +22,35 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.1, 2016-11-12
+ * @version 1.0.1, 2016-10-03
  */
 
 /**
- * Builder responsible for creating example table.
+ * Builder responsible for creating table, where each row can have different style set.
  * 
  * @category KrscReports
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Builder_Excel_PHPExcel_ExampleTable extends KrscReports_Builder_Excel_PHPExcel implements KrscReports_Builder_Interface_Table
+class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReports_Builder_Excel_PHPExcel_ExampleTable implements KrscReports_Builder_Interface_Table
 {
+    /**
+     * style name for row with holiday
+     */
+    const STYLE_ROW_DIFFERENT = 'row_different';
+
+    /**
+     * name of column which has info about style of each row (in this situation: true or false for switching between styles)
+     */
+    const DATA_STYLE_COLUMN = 'column_style';
+
     /**
      * Action done when table begins.
      * @return void
      */
     public function beginTable() 
     {
-        $iIterator = 0;
-
-        foreach( $this->_aData[0] as $sColumnName => $mColumnValue )
-        {
-            $this->_oCell->setColumnDimensionAutosize( $this->_iActualWidth + $iIterator++, true );
-        }
+        parent::beginTable();
     }
 
     /**
@@ -54,7 +59,7 @@ class KrscReports_Builder_Excel_PHPExcel_ExampleTable extends KrscReports_Builde
      */
     public function endTable() 
     {
-        
+        parent::endTable();
     }
 
     /**
@@ -67,6 +72,10 @@ class KrscReports_Builder_Excel_PHPExcel_ExampleTable extends KrscReports_Builde
         
         foreach( $this->_aData[0] as $sColumnName => $mColumnValue )
         {
+            if( $sColumnName == self::DATA_STYLE_COLUMN )
+            {	/* no column header for style column */
+        	continue;
+            }
             $this->_oCell->setValue( $sColumnName );
             $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
         }
@@ -81,13 +90,25 @@ class KrscReports_Builder_Excel_PHPExcel_ExampleTable extends KrscReports_Builde
      */
     public function setRows() 
     {
-        
         foreach( $this->_aData as $aRow )
         {   // iterating over rows
             $iIterator = 0;
+            if( isset( $aRow[self::DATA_STYLE_COLUMN] ) )
+            {	
+            	if( $aRow[self::DATA_STYLE_COLUMN] )
+	        {
+                    $this->setStyleKey( self::STYLE_ROW_DIFFERENT );
+	        } else {
+                    $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
+	        }
+	        unset($aRow[self::DATA_STYLE_COLUMN]);
+            }
+            
+
             foreach( $aRow as $mColumnValue )
             {
                 $this->_oCell->setValue( $mColumnValue );
+
                 $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
             }
             
@@ -104,5 +125,4 @@ class KrscReports_Builder_Excel_PHPExcel_ExampleTable extends KrscReports_Builde
     {
         
     }
-
 }

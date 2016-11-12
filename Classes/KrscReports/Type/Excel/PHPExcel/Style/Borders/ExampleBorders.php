@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.1, 2016-11-12
  */
 
 /**
@@ -41,7 +41,7 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders extends KrscR
     protected function _getAllBorders()
     {
         $aOutput = array();
-        $aOutput[static::KEY_STYLE] = PHPExcel_Style_Border::BORDER_DASHDOTDOT;
+        $aOutput[static::KEY_STYLE] = PHPExcel_Style_Border::BORDER_DOUBLE;
         $aOutput[static::KEY_COLOR] = self::_getColorArray( PHPExcel_Style_Color::COLOR_DARKGREEN );
         return $aOutput;
     }
@@ -53,7 +53,7 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders extends KrscR
     protected function _getRight()
     {
         $aOutput = array();
-        $aOutput[static::KEY_STYLE] = PHPExcel_Style_Border::BORDER_DASHDOTDOT;
+        $aOutput[static::KEY_STYLE] = PHPExcel_Style_Border::BORDER_DOUBLE;
         $aOutput[static::KEY_COLOR] = self::_getColorArray( PHPExcel_Style_Color::COLOR_BLACK );
         return $aOutput;
     }
