@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.1, 2016-10-03
+ * @version 1.0.2, 2016-10-03
  */
 
 /**
@@ -94,10 +94,10 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
         {   // iterating over rows
             $iIterator = 0;
             if( isset( $aRow[self::DATA_STYLE_COLUMN] ) )
-            {	
-            	if( $aRow[self::DATA_STYLE_COLUMN] )
+            {	// if value false - default style; otherwise - style key provided by column
+            	if( $aRow[self::DATA_STYLE_COLUMN] !== false )
 	        {
-                    $this->setStyleKey( self::STYLE_ROW_DIFFERENT );
+                    $this->setStyleKey( $aRow[self::DATA_STYLE_COLUMN] );
 	        } else {
                     $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
 	        }

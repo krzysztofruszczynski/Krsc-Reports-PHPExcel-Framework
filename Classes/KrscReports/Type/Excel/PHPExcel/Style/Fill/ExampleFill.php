@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.1, 2014-12-29
+ * @version 1.0.2, 2016-11-13
  */
 
 /**
@@ -35,9 +35,44 @@
 class KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill extends KrscReports_Type_Excel_PHPExcel_Style_Fill
 {
     /**
+     * hex value for light green color
+     */
+    const COLOR_LIGHT_GREEN = '00CC99';
+    
+    /**
+     * hex value for green color
+     */
+    const COLOR_GREEN = '00CC00';
+    
+    /**
+     * hex value for dark green color
+     */
+    const COLOR_DARK_GREEN = '008000';
+    
+    /**
+     * hex value for dark yellow
+     */
+    const COLOR_DARK_YELLOW = 'CCCC00';
+    
+    /**
+     * hex value for light blue
+     */
+    const COLOR_LIGHT_BLUE = '3399FF';
+    
+    /**
+     * hex value for orange
+     */
+    const COLOR_ORANGE = 'FF9900';
+    
+    /**
+     * hex value for red
+     */
+    const COLOR_RED = 'CC3300';
+    
+    /**
      * @var string color of fillment in rgb (light green)
      */
-    protected $_sFillColor = 'CCCC00';
+    protected $_sFillColor = self::COLOR_LIGHT_GREEN;
     
     /**
      * Method setting color of fillment.
