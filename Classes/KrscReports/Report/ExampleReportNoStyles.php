@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.3, 2016-11-20
  */
 
 /**
@@ -52,7 +52,7 @@ class KrscReports_Report_ExampleReportNoStyles extends KrscReports_Report_Exampl
         KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
         $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
         
-        $oBuilder = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
+        $oBuilder = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
         $oBuilder->setCellObject( $oCell );
         $oBuilder->setData( array( array( 'First column' => '1', 'Second column' => '2' ), array( 'First column' => '3', 'Second column' => '4' ) ) );
         
@@ -61,7 +61,7 @@ class KrscReports_Report_ExampleReportNoStyles extends KrscReports_Report_Exampl
         $oElementTable->setBuilder( $oBuilder );
         
         
-        $oBuilder2 = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
+        $oBuilder2 = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
         $oBuilder2->setCellObject( $oCell );
         $oBuilder2->setData( array( array( 'First column' => '5', 'Second column' => '6' ), array( 'First column' => '7', 'Second column' => '8' ) ) );
         

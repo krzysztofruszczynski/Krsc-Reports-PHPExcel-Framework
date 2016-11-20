@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.3, 2016-11-20
  */
 
 /**
@@ -55,7 +55,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         $oCollectionDefault->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders() );
         
         $oCollectionRow = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
-        $oCollectionRow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill() );
+        $oCollectionRow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic() );
         $oCollectionRow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
         
         $oStyle = new KrscReports_Type_Excel_PHPExcel_Style();
@@ -67,7 +67,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
         $oCell->setStyleObject( $oStyle );
         
-        $oBuilder = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
+        $oBuilder = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
         $oBuilder->setCellObject( $oCell );
         $oBuilder->setData( array( array( 'First column' => '1', 'Second column' => '2' ), array( 'First column' => '3', 'Second column' => '4' ) ) );
         
@@ -76,7 +76,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         $oElementTable->setBuilder( $oBuilder );
         $oElementTable->setStartWidth(1);
         
-        $oBuilder2 = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
+        $oBuilder2 = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
         $oBuilder2->setCellObject( $oCell );
         $oBuilder2->setData( array( array( 'I column' => '5', 'II column' => '6' ), array( 'First column' => '7', 'Second column' => '8' ) ) );
         
@@ -86,7 +86,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         $oElementTable2->setStartWidth( 3 );
         $oElementTable2->setStartHeight( 15 );
         
-        $oBuilder3 = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
+        $oBuilder3 = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
         $oBuilder3->setCellObject( $oCell );
         $oBuilder3->setData( array( array( 'I column' => '55', 'II column' => '66' ), array( 'First column' => '77', 'Second column' => '88' ) ) );
                 
@@ -96,7 +96,7 @@ class KrscReports_Report_ExampleReportVariousPlaces extends KrscReports_Report_E
         $oElementTable3->setStartHeight( 14 );
         
         
-        $oBuilder4 = new KrscReports_Builder_Excel_PHPExcel_ExampleTable();
+        $oBuilder4 = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
         $oBuilder4->setCellObject( $oCell );
         $oBuilder4->setData( array( array( 'I column' => '155', 'II column' => '166' ), array( 'First column' => '177', 'Second column' => '188' ) ) );
                 

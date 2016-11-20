@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.3, 2016-11-20
  */
 
 /**
@@ -55,11 +55,11 @@ class KrscReports_Report_ExampleReportTableWithSums extends KrscReports_Report_E
         $oCollectionDefault->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders() );
         
         $oCollectionRow = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
-        $oCollectionRow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill() );
+        $oCollectionRow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic() );
         $oCollectionRow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
         
-        $oFill = new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill();
-        $oFill->setFillColor( 'CCCCCC' ); // gray
+        $oFill = new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic();
+        $oFill->setColor( KrscReports_Type_Excel_PHPExcel_Style_Default::COLOR_GRAY );
         $oCollectionSummary = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
         $oCollectionSummary->addStyleElement( $oFill );
         $oCollectionSummary->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
@@ -70,7 +70,6 @@ class KrscReports_Report_ExampleReportTableWithSums extends KrscReports_Report_E
         $oStyle->setStyleCollection( $oCollectionRow, KrscReports_Document_Element_Table::STYLE_ROW );
         $oStyle->setStyleCollection( $oCollectionSummary, KrscReports_Document_Element_Table::STYLE_SUMMARY );
         
-        //die( var_dump( $oStyle->getStyleArray( KrscReports_Document_Element_Table::STYLE_ROW ) ) );
         KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
         $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
         $oCell->setStyleObject( $oStyle );

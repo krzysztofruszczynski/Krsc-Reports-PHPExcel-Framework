@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.3, 2016-11-20
  */
 
 /**
@@ -44,6 +44,50 @@ abstract class KrscReports_Type_Excel_PHPExcel_Style_Default
      * key for array element specifying color
      */
     const KEY_COLOR_RGB = 'rgb';
+    
+    /**
+     * hex value for light green color
+     */
+    const COLOR_LIGHT_GREEN = '66FF66';
+    
+    /**
+     * hex value for light blue
+     */
+    const COLOR_LIGHT_BLUE = '3399FF';
+    
+    /**
+     * hex value for orange
+     */
+    const COLOR_ORANGE = 'FF9900';
+    
+    /**
+     * hex value for gray
+     */
+    const COLOR_GRAY = 'CCCCCC';
+    
+    /**
+     * @var KrscReports_Logic_Color business logic for colors
+     */
+    protected $_oLogicColor;
+    
+    /**
+     * Constructor enabling default settings.
+     * @return void
+     */
+    public function __construct() 
+    {
+        $this->setDefaultSettings();
+    }
+    
+    /**
+     * Method enabling default settings for this particular object.
+     * @return KrscReports_Type_Excel_PHPExcel_Style_Default object on which method was executed
+     */
+    public function setDefaultSettings()
+    {
+        $this->_oLogicColor = new KrscReports_Logic_Color();
+        return $this;
+    }
     
     /**
      * Method creating array with style properties to be implemented to PHPExcel cell.

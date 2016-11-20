@@ -22,7 +22,7 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.2, 2016-11-13
+ * @version 1.0.3, 2016-11-20
  */
 
 /**
@@ -42,12 +42,17 @@ class KrscReports_Report_ExampleReportDifferentStyles extends KrscReports_Report
     /**
      * hex style with dark yellow fill
      */
-    const STYLE_ROW_DARK_YELLOW = 'style_dark_yellow';
+    const STYLE_ROW_YELLOW = 'style_dark_yellow';
     
     /**
      * key style with orange fill
      */
     const STYLE_ROW_ORANGE = 'style_orange';
+    
+    /**
+     * key style for gradient fill (from orange to red)
+     */
+    const STYLE_ROW_ORANGE_TO_RED = 'style_orange_to_red';
     
     /**
      * key style with red fill
@@ -74,40 +79,50 @@ class KrscReports_Report_ExampleReportDifferentStyles extends KrscReports_Report
         $oCollectionDefault->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders() );
         
         $oCollectionRowLightGreen = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
-        $oCollectionRowLightGreen->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill() );
+        $oCollectionRowLightGreen->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic() );
         $oCollectionRowLightGreen->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
         
-        $oFillDarkYellow = new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill();
-        $oFillDarkYellow->setFillColor( KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill::COLOR_DARK_YELLOW );
-        $oCollectionDarkYellow = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
-        $oCollectionDarkYellow->addStyleElement( $oFillDarkYellow );
-        $oCollectionDarkYellow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
+        $oFillYellow = new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic();
+        $oFillYellow->setColor( PHPExcel_Style_Color::COLOR_YELLOW );
+        $oCollectionYellow = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
+        $oCollectionYellow->addStyleElement( $oFillYellow );
+        $oCollectionYellow->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
         
-        $oFillRed = new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill();
-        $oFillRed->setFillColor( KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill::COLOR_RED );
+        $oFillRed = new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic();
+        $oFillRed->setColor( PHPExcel_Style_Color::COLOR_RED );
         $oCollectionRowRed = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
         $oCollectionRowRed->addStyleElement( $oFillRed );
         $oCollectionRowRed->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
         
-        $oFillDarkGreen = new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill();
-        $oFillDarkGreen->setFillColor( KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill::COLOR_DARK_GREEN );
+        $oFillDarkGreen = new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic();
+        $oFillDarkGreen->setColor( PHPExcel_Style_Color::COLOR_DARKGREEN );
         $oCollectionDarkGreen = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
         $oCollectionDarkGreen->addStyleElement( $oFillDarkGreen );
         $oCollectionDarkGreen->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
         
-        $oFillOrange = new KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill();
-        $oFillOrange->setFillColor( KrscReports_Type_Excel_PHPExcel_Style_Fill_ExampleFill::COLOR_ORANGE );
+        $oFillOrange = new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic();
+        $oFillOrange->setColor( KrscReports_Type_Excel_PHPExcel_Style_Default::COLOR_ORANGE );
         $oCollectionOrange = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
         $oCollectionOrange->addStyleElement( $oFillOrange );
         $oCollectionOrange->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
         
+        $oFillOrangeToRed = new KrscReports_Type_Excel_PHPExcel_Style_Fill_Basic();
+        $oFillOrangeToRed->setStartColor( KrscReports_Type_Excel_PHPExcel_Style_Default::COLOR_ORANGE );
+        $oFillOrangeToRed->setEndColor( PHPExcel_Style_Color::COLOR_RED );
+        $oFillOrangeToRed->setType( PHPExcel_Style_Fill::FILL_PATTERN_LIGHTVERTICAL );
+        $oFillOrangeToRed->setRotation( 45 );
+        $oCollectionOrangeToRed = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
+        $oCollectionOrangeToRed->addStyleElement( $oFillOrangeToRed );
+        $oCollectionOrangeToRed->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders() );
+        
         $oStyle = new KrscReports_Type_Excel_PHPExcel_Style();
         $oStyle->setStyleCollection( $oCollectionDefault );
         $oStyle->setStyleCollection( $oCollectionRowLightGreen, KrscReports_Document_Element_Table::STYLE_ROW );
-        $oStyle->setStyleCollection( $oCollectionDarkYellow, self::STYLE_ROW_DARK_YELLOW );
+        $oStyle->setStyleCollection( $oCollectionYellow, self::STYLE_ROW_YELLOW );
         $oStyle->setStyleCollection( $oCollectionRowRed, self::STYLE_ROW_RED );
         $oStyle->setStyleCollection( $oCollectionDarkGreen, self::STYLE_ROW_DARK_GREEN );
         $oStyle->setStyleCollection( $oCollectionOrange, self::STYLE_ROW_ORANGE );
+        $oStyle->setStyleCollection( $oCollectionOrangeToRed, self::STYLE_ROW_ORANGE_TO_RED );
         
         KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
         $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
@@ -118,8 +133,9 @@ class KrscReports_Report_ExampleReportDifferentStyles extends KrscReports_Report
         $oBuilder->setData( 
             array( 
                 array( 'Place' => 'New York City', 'Height above sea level' => '12 m', KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles::DATA_STYLE_COLUMN => self::STYLE_ROW_DARK_GREEN ), 
-                array( 'Place' => 'Mount Strzelecki', 'Height above sea level' => '756 m', KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles::DATA_STYLE_COLUMN => self::STYLE_ROW_DARK_YELLOW ),
+                array( 'Place' => 'Mount Strzelecki', 'Height above sea level' => '756 m', KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles::DATA_STYLE_COLUMN => self::STYLE_ROW_YELLOW ),
                 array( 'Place' => 'Mount Kosciuszko', 'Height above sea level' => '2228 m', KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles::DATA_STYLE_COLUMN => self::STYLE_ROW_ORANGE ),
+                array( 'Place' => 'Mount Kilimanjaro', 'Height above sea level' => '5895 m', KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles::DATA_STYLE_COLUMN => self::STYLE_ROW_ORANGE_TO_RED ),
                 array( 'Place' => 'Mount Everest', 'Height above sea level' => '8848 m', KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles::DATA_STYLE_COLUMN => self::STYLE_ROW_RED )
             ) 
         );

@@ -26,31 +26,26 @@
  */
 
 /**
- * Builder responsible for creating table, where each row can have different style set.
+ * Builder responsible for creating example table.
  * 
  * @category KrscReports
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReports_Builder_Excel_PHPExcel_TableBasic implements KrscReports_Builder_Interface_Table
+class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_Excel_PHPExcel implements KrscReports_Builder_Interface_Table
 {
-    /**
-     * style name for row with holiday
-     */
-    const STYLE_ROW_DIFFERENT = 'row_different';
-
-    /**
-     * name of column which has info about style of each row (in this situation: true or false for switching between styles)
-     */
-    const DATA_STYLE_COLUMN = 'column_style';
-
     /**
      * Action done when table begins.
      * @return void
      */
     public function beginTable() 
     {
-        parent::beginTable();
+        $iIterator = 0;
+
+        foreach( $this->_aData[0] as $sColumnName => $mColumnValue )
+        {
+            $this->_oCell->setColumnDimensionAutosize( $this->_iActualWidth + $iIterator++, true );
+        }
     }
 
     /**
@@ -59,7 +54,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
      */
     public function endTable() 
     {
-        parent::endTable();
+        
     }
 
     /**
@@ -72,10 +67,6 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
         
         foreach( $this->_aData[0] as $sColumnName => $mColumnValue )
         {
-            if( $sColumnName == self::DATA_STYLE_COLUMN )
-            {	/* no column header for style column */
-        	continue;
-            }
             $this->_oCell->setValue( $sColumnName );
             $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
         }
@@ -90,30 +81,13 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
      */
     public function setRows() 
     {
+        
         foreach( $this->_aData as $aRow )
         {   // iterating over rows
             $iIterator = 0;
-            if( isset( $aRow[self::DATA_STYLE_COLUMN] ) )
-            {	/**
-                 *  if value false - default style; 
-                 *  otherwise - style key provided by column as string - apply to all cells
-                 *  if an array - column name is array key and value - style key
-                 *    default style for columns not specified here - under empty key  array(''=> value)  
-                 */
-            	if( $aRow[self::DATA_STYLE_COLUMN] !== false )
-	        {
-                    $this->setStyleKey( $aRow[self::DATA_STYLE_COLUMN] );
-	        } else {
-                    $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
-	        }
-	        unset($aRow[self::DATA_STYLE_COLUMN]);
-            }
-            
-
             foreach( $aRow as $mColumnValue )
             {
                 $this->_oCell->setValue( $mColumnValue );
-
                 $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
             }
             
@@ -130,4 +104,5 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
     {
         
     }
+
 }
