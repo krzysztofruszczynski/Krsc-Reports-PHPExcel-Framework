@@ -22,11 +22,11 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.0.3, 2016-11-27
  */
 
 /**
- * Example report creating two tables in different worksheets with borders and fillment (difference in style between header and rows) in PHPExcel. 
+ * Example report creating one table with different row's styles in PHPExcel. 
  * 
  * @category KrscReports
  * @package KrscReports_Report
@@ -35,12 +35,12 @@
 class KrscReports_Report_ExampleReportDifferentStyles extends KrscReports_Report_ExampleReport
 {
     /**
-     * key style with light blue fill
+     * key style with dark green fill
      */
     const STYLE_ROW_DARK_GREEN = 'style_dark_green';
     
     /**
-     * hex style with dark yellow fill
+     * key style with dark yellow fill
      */
     const STYLE_ROW_YELLOW = 'style_dark_yellow';
     

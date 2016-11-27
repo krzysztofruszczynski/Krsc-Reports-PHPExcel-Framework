@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.0.3, 2016-11-27
  */
 
 /**
@@ -39,6 +39,11 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
      */
     const STYLE_ROW_DIFFERENT = 'row_different';
 
+    /**
+     * key in array representing default style for cell
+     */
+    const STYLE_CELL_DEFAULT = '';
+    
     /**
      * name of column which has info about style of each row (in this situation: true or false for switching between styles)
      */
@@ -85,6 +90,53 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
     }
 
     /**
+     * Method handling style for given column.
+     * @param string $sColumnName name of column being actually analysed
+     * @param array $aColumnStyles array for styles in analysed row
+     * @return void
+     */
+    protected function _handleColumnStyle( $sColumnName, $aColumnStyles )
+    {
+        if( isset( $aColumnStyles[$sColumnName] ) )
+        {   // setting style specific for that column
+            $this->setStyleKey( $aColumnStyles[$sColumnName] );
+        } else if( isset( $aColumnStyles[self::STYLE_CELL_DEFAULT] ))
+        {   // setting style specific for that row
+            $this->setStyleKey( $aColumnStyles[self::STYLE_CELL_DEFAULT] );
+        } else
+        {   // setting default style for row (no info about column and default row style)
+            $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
+        }
+    }
+    
+    /**
+     * Method extracting informations about styles for cells in a row.
+     * @param array|string $mDataStyleColumn if value false - default style; 
+     *      otherwise - style key provided by column as string - apply to all cells;
+     *      if an array - column name is array key and value - style key;
+     *      default style for columns not specified here if an array of styles is provided - under default key ( self::STYLE_CELL_DEFAULT )
+     * @return array|string|boolean array with styles for row or name of style for row or false if no customized styles are provided
+     */
+    protected function _getColumnStyles( $mDataStyleColumn )
+    {
+        if( $mDataStyleColumn !== false && !is_array( $mDataStyleColumn )  )
+	{   // one style for whole row
+            $this->setStyleKey( $mDataStyleColumn );
+            $mColumnStyles = $mDataStyleColumn;
+	} else {    // style applied when value is false or element is an array
+            $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
+            $mColumnStyles = false;
+	}
+                
+        if( is_array( $mDataStyleColumn ) )
+        {   // array with names of columns as key and values, which are style keys 
+            $mColumnStyles = $mDataStyleColumn;
+        }
+        
+        return $mColumnStyles;
+    }
+    
+    /**
      * Action done when table rows has to be displayed (increments height with each row).
      * @return void
      */
@@ -94,24 +146,22 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
         {   // iterating over rows
             $iIterator = 0;
             if( isset( $aRow[self::DATA_STYLE_COLUMN] ) )
-            {	/**
-                 *  if value false - default style; 
-                 *  otherwise - style key provided by column as string - apply to all cells
-                 *  if an array - column name is array key and value - style key
-                 *    default style for columns not specified here - under empty key  array(''=> value)  
-                 */
-            	if( $aRow[self::DATA_STYLE_COLUMN] !== false )
-	        {
-                    $this->setStyleKey( $aRow[self::DATA_STYLE_COLUMN] );
-	        } else {
-                    $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
-	        }
-	        unset($aRow[self::DATA_STYLE_COLUMN]);
+            {	
+                $aColumnStyles = $this->_getColumnStyles( $aRow[self::DATA_STYLE_COLUMN] ); 
+	        unset( $aRow[self::DATA_STYLE_COLUMN] );
+            } else {    // for this row we have no info about styles
+                $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
             }
             
-
-            foreach( $aRow as $mColumnValue )
+            $bIsStyleForEachRow = isset( $aColumnStyles ) && is_array($aColumnStyles);
+            
+            foreach( $aRow as $sColumnName => $mColumnValue )
             {
+                if( $bIsStyleForEachRow )
+                {
+                    $this->_handleColumnStyle( $sColumnName, $aColumnStyles );
+                }
+                
                 $this->_oCell->setValue( $mColumnValue );
 
                 $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
