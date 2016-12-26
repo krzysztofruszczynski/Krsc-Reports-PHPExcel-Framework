@@ -22,7 +22,7 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.0.3, 2016-12-26
  */
 
 /**
@@ -40,7 +40,7 @@ class KrscReports_Report_ExampleReportManyTables extends KrscReports_Report_Exam
      */
     public function getDescription()
     {
-        return 'Report with two tables in one worksheet (one after the other, done automatically) with advanced styling.';
+        return 'Report with two tables in one worksheet (one after the other, done automatically, custom number of lines between elements) with advanced styling.';
     }
     
     /**
@@ -85,6 +85,7 @@ class KrscReports_Report_ExampleReportManyTables extends KrscReports_Report_Exam
        
         // adding table to spreadsheet
         $oElement = new KrscReports_Document_Element();
+        $oElement->setLinesBetweenElements( 3 );
         $oElement->addElement( $oElementTable );
         $oElement->addElement( $oElementTable2 );
         

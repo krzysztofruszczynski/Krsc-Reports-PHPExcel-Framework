@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2016 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@
  * @package KrscReports_Document
  * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.3, 2016-12-06
  */
 
 /**
@@ -34,11 +34,11 @@
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 class KrscReports_Document_Element
-{
+{   
     /**
-     * number of lines between elements in the spreadsheet
+     * default number of lines between elements in the spreadsheet
      */
-    const LINES_BETWEEN_ELEMENTS = 2;
+    const LINES_BETWEEN_ELEMENTS_DEFAULT = 2;
     
     /**
      * default name of group
@@ -64,6 +64,11 @@ class KrscReports_Document_Element
      * @var string name of group to which belongs this element 
      */
     protected $_sGroupName = self::DEFAULT_GROUP_NAME;
+ 
+    /**
+     * @var integer number of lines between elements in the spreadsheet
+     */
+    protected $_iLinesBetweenElements = self::LINES_BETWEEN_ELEMENTS_DEFAULT;
     
     /**
      * Method inserts subsequent element into specified group.
@@ -85,6 +90,17 @@ class KrscReports_Document_Element
     public function setGroupName( $sGroupName )
     {
         $this->_sGroupName = $sGroupName;
+        return $this;
+    }
+    
+    /**
+     * Setter for number of lines between elements in the spreadsheet.
+     * @param integer $iLinesBetweenElements new number of lines between elements in the spreadsheet
+     * @return KrscReports_Document_Element object on which method was executed
+     */
+    public function setLinesBetweenElements( $iLinesBetweenElements )
+    {
+        $this->_iLinesBetweenElements = $iLinesBetweenElements;
         return $this;
     }
     
@@ -117,7 +133,7 @@ class KrscReports_Document_Element
                 $oElement->setInnerGroupName( $sGroupName );
                 
                 // setting place of an element
-                $oElement->setStartHeight( isset( $this->_aActualHeights[$sGroupName] ) ? $this->_aActualHeights[$sGroupName] + self::LINES_BETWEEN_ELEMENTS : 1, false );
+                $oElement->setStartHeight( isset( $this->_aActualHeights[$sGroupName] ) ? $this->_aActualHeights[$sGroupName] + $this->_iLinesBetweenElements : 1, false );
                 
                 $oElement->beforeConstructDocument();
                 $oElement->constructDocument();

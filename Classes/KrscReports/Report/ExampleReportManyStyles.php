@@ -22,7 +22,7 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.0.3, 2016-12-26
  */
 
 /**
@@ -61,7 +61,6 @@ class KrscReports_Report_ExampleReportManyStyles extends KrscReports_Report_Exam
         $oStyle->setStyleCollection( $oCollectionDefault );
         $oStyle->setStyleCollection( $oCollectionRow, KrscReports_Document_Element_Table::STYLE_ROW );
         
-        //die( var_dump( $oStyle->getStyleArray( KrscReports_Document_Element_Table::STYLE_ROW ) ) );
         KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
         $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
         $oCell->setStyleObject( $oStyle );
