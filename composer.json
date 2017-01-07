@@ -1,5 +1,5 @@
 {
-    "name": "krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework",
+    "name": "krsc/Krsc-Reports-PHPExcel-Framework", 
     "description": "KrscReports is a php library written in order to create complex PHPExcel files.",
     "keywords": ["PhpExcel", "Framework", "Excel"],
     "homepage": "https://github.com/krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework/blob/master/README.md",
@@ -12,6 +12,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=5.5.0",
+        "phpoffice/phpexcel": "^1." 
     }
 }
