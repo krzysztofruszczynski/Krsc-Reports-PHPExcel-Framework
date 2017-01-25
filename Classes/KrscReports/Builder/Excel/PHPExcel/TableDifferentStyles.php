@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-27
+ * @version 1.0.6, 2017-01-25
  */
 
 /**
@@ -119,8 +119,10 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
      */
     protected function _getColumnStyles( $mDataStyleColumn )
     {
-        if( $mDataStyleColumn !== false && !is_array( $mDataStyleColumn )  )
-	{   // one style for whole row
+        if( $mDataStyleColumn !== false && !is_array( $mDataStyleColumn )  ) {   // one style for whole row
+            if( $mDataStyleColumn === true ) {
+                $mDataStyleColumn = self::STYLE_ROW_DIFFERENT;
+            }
             $this->setStyleKey( $mDataStyleColumn );
             $mColumnStyles = $mDataStyleColumn;
 	} else {    // style applied when value is false or element is an array
