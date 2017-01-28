@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Logic
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.0.6, 2017-01-28
  */
 
 /**
@@ -42,8 +42,11 @@ class KrscReports_Logic_Color
      */
     public function filterRgb( $sColor )
     {
-        if( strlen( $sColor ) == 8 )
-        {
+        if( stripos( $sColor, '#') !== false ) { /* for handling data from html 5 input with color */
+            $sColor = str_replace( '#', '', $sColor );
+        }
+        
+        if( strlen( $sColor ) == 8 ) {
             return substr( $sColor, 2 );
         } else {
             return $sColor;
