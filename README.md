@@ -1,21 +1,23 @@
 KrscReports
 ===========
-In order to run, this project needs PHPExcel. Put PHPExcel source in Classes folder or install it via composer. Then load in your browser Examples.php file from the main folder and see the possibilities of this library. Live demo is here: [http://www.ruszczynski.eu/krsc/Examples.php]
+In order to run, this project needs PHPExcel. Put PHPExcel source in Classes folder or install it via composer. Then load in your browser Examples.php file from the main folder and see the possibilities of this library. Live demo is here: [https://www.krsc.ruszczynski.eu/reports/example/list]
 
 Install via composer
 ===========
-To install this application via composer, please add this to your composer.json file:
+To install this application via composer, create composer.json file with that content (or add it to existing composer.json file):
 <pre>
+{
 "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework"
         }
-    ]
+    ],
 
 "require-dev": {
         "krsc/Krsc-Reports-PHPExcel-Framework": "1.*"
     }
+}
 </pre>
 Tested with Symfony 3.<br/>
 
