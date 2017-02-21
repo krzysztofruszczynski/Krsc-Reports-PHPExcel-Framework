@@ -15,7 +15,7 @@ To install this application via composer, create composer.json file with that co
     ],
 
 "require-dev": {
-        "krsc/Krsc-Reports-PHPExcel-Framework": "1.*"
+        "krsc/krsc-reports-phpexcel-framework": "1.*"
     }
 }
 </pre>
