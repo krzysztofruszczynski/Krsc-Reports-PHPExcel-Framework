@@ -6,18 +6,13 @@ Install via composer
 ===========
 To install this application via composer, create composer.json file with that content (or add it to existing composer.json file):
 <pre>
-{
-"repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework"
-        }
-    ],
-
-"require-dev": {
-        "krsc/krsc-reports-phpexcel-framework": "1.*"
+"require": {
+        "krsc/krsc-reports-phpexcel-framework": "^1.0"
     }
-}
+</pre>
+You can also use this command:
+<pre>
+composer require krsc/krsc-reports-phpexcel-framework
 </pre>
 Tested with Symfony 3.<br/>
 
