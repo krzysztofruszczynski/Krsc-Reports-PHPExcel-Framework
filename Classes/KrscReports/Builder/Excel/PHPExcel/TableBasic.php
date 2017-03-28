@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.0.8, 2017-03-28
  */
 
 /**
@@ -35,16 +35,44 @@
 class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_Excel_PHPExcel implements KrscReports_Builder_Interface_Table
 {
     /**
+     * @var boolean flag if table is filtered (default false)
+     */
+    protected $_bAutoFilter = false;
+    
+    /**
+     * Method setting auto filter property.
+     * @param boolean $bAutoFilter flag if table is filtered (default: true)
+     * @return KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles object on which this method was executed
+     */
+    public function setAutoFilter( $bAutoFilter = true )
+    {
+        $this->_bAutoFilter = $bAutoFilter;
+        return $this;
+    }
+    
+    /**
      * Action done when table begins.
      * @return void
      */
     public function beginTable() 
     {
-        $iIterator = 0;
-
-        foreach( $this->_aData[0] as $sColumnName => $mColumnValue )
+        $iIterator = 0;        
+        
+        $aColumnNames = $this->getColumnNames();
+        
+        if( $this->_bAutoFilter )
+        {            
+            $this->_oCell->setAutoFilter( $this->_iActualWidth, ($this->_iActualWidth + count( $aColumnNames ) - 1), $this->_iActualHeight );
+        }
+            
+        foreach( $aColumnNames as $sColumnName )
         {
-            $this->_oCell->setColumnDimensionAutosize( $this->_iActualWidth + $iIterator++, true );
+            if( !$this->_oCell->isColumnFixedSizeIsSet( $iIterator ) )
+            {
+                $this->_oCell->setColumnDimensionAutosize( $this->_iActualWidth + $iIterator, true );
+            }
+            
+            $iIterator++;
         }
     }
 
@@ -65,7 +93,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
     {
         $iIterator = 0;
         
-        foreach( $this->_aData[0] as $sColumnName => $mColumnValue )
+        foreach( $this->getColumnNames() as $sColumnName )
         {
             $this->_oCell->setValue( $sColumnName );
             $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );

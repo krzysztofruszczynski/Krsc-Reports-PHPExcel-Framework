@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.8, 2017-03-27
  */
 
 /**
@@ -54,6 +54,11 @@ abstract class KrscReports_Builder_Abstract
      * @var array data set by user to display 
      */
     protected $_aData;
+    
+    /**
+     * @var array subsequent elements are titles for subsequent columns (if we don't want to use those from provided data or there are no data)
+     */
+    protected $_aColumnNames;
     
     /**
      * Method for setting start width for the builder.
@@ -92,6 +97,34 @@ abstract class KrscReports_Builder_Abstract
         $this->_aData = $aData;
         return $this;
         
+    }
+    
+    /**
+     * Method setting titles for columns (if we don't want to use those from provided data or there are no data).
+     * @param array $aColumnNames subsequent elements are titles for subsequent columns
+     * @return KrscReports_Builder_Abstract object on which method was executed
+     */
+    public function setColumnNames( $aColumnNames )
+    {
+        $this->_aColumnNames = $aColumnNames;
+        return $this;
+    }
+    
+    /**
+     * Method returning column names according to data provided by user.
+     * @return array column names
+     */
+    public function getColumnNames()
+    {        
+        if ( !isset( $this->_aColumnNames ) && isset( $this->_aData[0] ) )
+        {
+            $this->_aColumnNames = array_keys( $this->_aData[0] );
+        } else if ( !isset( $this->_aColumnNames ) )
+        {
+            $this->_aColumnNames = array('No data to show');
+        }
+        
+        return $this->_aColumnNames;
     }
     
     /**

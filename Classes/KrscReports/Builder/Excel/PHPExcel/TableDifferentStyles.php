@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.6, 2017-01-25
+ * @version 1.0.8, 2017-03-28
  */
 
 /**
@@ -33,7 +33,7 @@
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReports_Builder_Excel_PHPExcel_TableBasic implements KrscReports_Builder_Interface_Table
-{
+{   
     /**
      * style name for row with holiday
      */
@@ -72,23 +72,21 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
      * @return void
      */
     public function setHeaderRow() 
-    {
-        $iIterator = 0;
-        
-        foreach( $this->_aData[0] as $sColumnName => $mColumnValue )
+    {        
+        foreach( $this->getColumnNames() as $iColumnIndex => $sColumnName )
         {
             if( $sColumnName == self::DATA_STYLE_COLUMN )
             {	/* no column header for style column */
         	continue;
             }
             $this->_oCell->setValue( $sColumnName );
-            $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
+            $this->_oCell->constructCell( $this->_iActualWidth + $iColumnIndex, $this->_iActualHeight );
         }
         
         // adding one row in registry
         $this->_iActualHeight++;
     }
-
+    
     /**
      * Method handling style for given column.
      * @param string $sColumnName name of column being actually analysed
@@ -174,12 +172,4 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
         }
     }
     
-    /**
-     * Action responsible for creating document (while creating table not used but has to be implemented).
-     * @return void
-     */
-    public function constructDocument()    
-    {
-        
-    }
 }

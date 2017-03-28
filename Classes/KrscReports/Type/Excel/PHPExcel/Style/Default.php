@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.0.8, 2017-03-28
  */
 
 /**
@@ -64,6 +64,11 @@ abstract class KrscReports_Type_Excel_PHPExcel_Style_Default
      * hex value for gray
      */
     const COLOR_GRAY = 'CCCCCC';
+    
+    /**
+     * hex value for light gray
+     */
+    const COLOR_LIGHT_GRAY = 'EEE9E9';
     
     /**
      * @var KrscReports_Logic_Color business logic for colors

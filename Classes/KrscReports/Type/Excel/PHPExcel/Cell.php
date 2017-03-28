@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,15 +20,15 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.2, 2016-11-12
+ * @version 1.0.8, 2017-03-28
  */
 
 /**
  * Class which object represents cell. It applies styles, value and type of cell.
  * At the end cell with given coordinates and properties can be constructed (methods inside class
- * use directly PHPExcel commands). Object properties can be changed multiple times and the same intance of
+ * use directly PHPExcel commands). Object properties can be changed multiple times and the same instance of
  * class can create as many cells as user requests.
  * 
  * @category KrscReports
@@ -51,6 +51,11 @@ class KrscReports_Type_Excel_PHPExcel_Cell
      * @var string type of current cell 
      */
     protected $_sType;
+    
+    /**
+     * @var array key is columnId, value is column fixed size  
+     */
+    protected $_aColumnFixedSizes = array();
     
     /**
      * @var KrscReports_Type_Excel_PHPExcel_Style object for managing style collections
@@ -159,6 +164,41 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     public function setColumnDimensionAutosize( $iColumnId, $bAutoSize = true )
     {
         return $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize( $bAutoSize );
+    }
+    
+    /**
+     * Method checks whether fixed size for this column is already set.
+     * @param integer $iColumnId numeric id of column
+     * @return boolean true if fixed size is already set, false otherwise
+     */
+    public function isColumnFixedSizeIsSet( $iColumnId )
+    {
+        return isset( $this->_aColumnFixedSizes[$iColumnId] );
+    }
+    
+    /**
+     * Method setting fixed size for specific column.
+     * @param integer $iColumnId numeric id of column
+     * @param double $dFixedSize width of column
+     * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
+     */
+    public function setColumnFixedSize( $iColumnId, $dFixedSize )
+    {
+        $this->_aColumnFixedSizes[$iColumnId] = $dFixedSize;
+        return $this->_getColumnDimensionByColumn( $iColumnId )->setWidth( $dFixedSize );
+    }
+    
+    /**
+     * Method setting auto filter for table.
+     * @param integer $iColumnIdMin begin of range with filter
+     * @param integer $iColumnIdMax end of range with filter 
+     * @param integer $iHeaderRowHeight absolute height of row with header
+     * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
+     */
+    public function setAutoFilter( $iColumnIdMin, $iColumnIdMax, $iHeaderRowHeight )
+    {
+        self::$_oPHPExcel->getActiveSheet()->setAutoFilterByColumnAndRow( $iColumnIdMin, $iHeaderRowHeight, $iColumnIdMax, $iHeaderRowHeight );
+        return $this;
     }
     
     /**
