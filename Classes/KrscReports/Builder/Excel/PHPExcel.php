@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.0.9, 2017-04-11
  */
 
 /**
@@ -36,7 +36,17 @@
 abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Excel
 {   
     /**
-     * @var PHPExcel instance of PHPExcel used while adding new data to spreadsheets
+     * Maximum number of signs allowed in group name
+     */
+    const GROUP_NAME_LENGTH_LIMIT = 31;
+    
+    /**
+     * Array with illegal signs inside group name (key: illegal sign, value: replacement)
+     */
+    const GROUP_NAME_ILLEGAL_SIGNS = array( '*' => '', ':' => '_', '/' => '_', '\\' => '_', '?' => '_', '[' => '_', ']' => '_' );        
+            
+    /**
+     * @var \PHPExcel instance of PHPExcel used while adding new data to spreadsheets
      */
     protected static $_oPHPExcel;
     
@@ -82,12 +92,24 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
     }
 
     /**
+     * Method filtering group name in order to be compatible with Excel naming standards (length and lack of some signs).
+     * @param string $sGroupName name of group (excel spreadsheet) to be filtered
+     * @return string filtered group name
+     */
+    public static function filterGroupName( $sGroupName )
+    {
+        $sGroupName = strtr( $sGroupName, self::GROUP_NAME_ILLEGAL_SIGNS );
+        return substr( $sGroupName, 0, self::GROUP_NAME_LENGTH_LIMIT );
+    }
+    
+    /**
      * Method for setting group name for current builder (used for Excel spreadsheet name).
      * @param string $sGroupName group name to be set (means that current builder will write to Excel spreadsheet with the same name)
      * @return KrscReports_Builder_Excel_PHPExcel object on which method was executed
      */
     public function setGroupName( $sGroupName )
     {
+        $sGroupName = self::filterGroupName( $sGroupName );       
         $this->_sGroupName = $sGroupName;
         
         try
@@ -110,6 +132,25 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
         }
         
         return $this;
+    }
+    
+    /**
+     * Method for setting file properties
+     * @param array $aDocumentProperties property name is key (must have a set method), property value is array value
+     * @return KrscReports_Builder_Excel_PHPExcel object on which method was executed
+     */
+    public static function setDocumentProperties( $aDocumentProperties )
+    {
+        $oProperties = self::$_oPHPExcel->getProperties();
+        
+        foreach ( $aDocumentProperties as $sPropertyName => $sPropertyValue ) 
+        {
+            $sMethodName = 'set' . $sPropertyName;
+            if ( method_exists( $oProperties, $sMethodName ) ) 
+            {
+                $oProperties->$sMethodName( $sPropertyValue );
+            }
+        }
     }
     
     /**

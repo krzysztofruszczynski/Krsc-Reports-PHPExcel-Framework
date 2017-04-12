@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.8, 2017-03-28
+ * @version 1.0.9, 2017-04-10
  */
 
 /**
@@ -150,6 +150,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
                 $aColumnStyles = $this->_getColumnStyles( $aRow[self::DATA_STYLE_COLUMN] ); 
 	        unset( $aRow[self::DATA_STYLE_COLUMN] );
             } else {    // for this row we have no info about styles
+                unset( $aColumnStyles ); // if exists from previous iteration
                 $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
             }
             

@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.8, 2017-03-28
+ * @version 1.0.9, 2017-04-11
  */
 
 /**
@@ -77,6 +77,15 @@ class KrscReports_Type_Excel_PHPExcel_Cell
         
         // creates default object for managing style collection to handle situations, when user does not set style object
         $this->_oStyle = new KrscReports_Type_Excel_PHPExcel_Style();
+    }
+    
+    /**
+     * Method returns current style object (useful for adding new styles).
+     * @return KrscReports_Type_Excel_PHPExcel_Style currently set style object
+     */
+    public function getStyleObject()
+    {
+        return $this->_oStyle;
     }
     
     /**
@@ -185,6 +194,7 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     public function setColumnFixedSize( $iColumnId, $dFixedSize )
     {
         $this->_aColumnFixedSizes[$iColumnId] = $dFixedSize;
+        $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize( false );
         return $this->_getColumnDimensionByColumn( $iColumnId )->setWidth( $dFixedSize );
     }
     
