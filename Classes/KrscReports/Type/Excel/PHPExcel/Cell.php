@@ -111,6 +111,17 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     }
     
     /**
+     * Getter for cell value (from loaded file or from PHPExcel object created during script execution) 
+     * @param integer $iColumnId numeric coordinate of column (starts from 0)
+     * @param integer $iRowId numeric coordinate of row (starts from 1)
+     * @return mixed value for selected cell
+     */
+    public function getCellValue( $iColumnId, $iRowId )
+    {
+        return self::$_oPHPExcel->getActiveSheet()->getCellByColumnAndRow( $iColumnId, $iRowId )->getValue();
+    }
+    
+    /**
      * Method setting type of cell.
      * @param string $sType type of cell to be set
      * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed

@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.2, 2016-10-02
+ * @version 1.0.9, 2017-04-12
  */
 
 /**
@@ -34,6 +34,11 @@
  */
 class KrscReports_File
 {
+        /**
+         * value for file type for Excel 2007
+         */
+        const FILE_TYPE_EXCEL = 'Excel2007';
+    
 	/**
 	 * @var Boolean if true, writes header, when false - not
 	 */
@@ -60,6 +65,16 @@ class KrscReports_File
 	 * @var Object object responsible for creation of file
 	 */
 	protected $_oWriter;
+        
+        /**
+         * @var Object object responsible for reading of file
+         */
+        protected $_oReader;
+        
+        /**
+         * @var string selected file type (used by PHPExcel writer and reader)
+         */
+        protected $_sFileType = self::FILE_TYPE_EXCEL;
 
 	/**
 	 * Setter for file name.
@@ -101,14 +116,39 @@ class KrscReports_File
 		{	// previously set - no changes
 
 		} else if( is_null( $oWriter ) ) {
-			// @TODO: make Excel2007 phrase as customizable variable
-                        $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), 'Excel2007');
+                        $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
 		} else {
 			$this->_oWriter = $oWriter;
 		}
 
 		return $this;
 	}
+        
+        /**
+         * Setter for reader.
+         * @param Object $oReader (by default null - then PHPExcel reader is used)
+         * @return KrscReports_File object on which method was executed
+         */
+        public function setReader( $oReader = null )
+        {
+            if( isset( $this->_oReader ) )
+            {	// previously set - no changes
+
+            } else if( is_null( $oReader ) ) {
+                $this->_oReader = PHPExcel_IOFactory::createReader( $this->_sFileType );
+
+                if( $this->_oReader->canRead( $this->_sFileName ) ) {
+                    KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( $this->_oReader->load( $this->_sFileName ) );
+                } else {
+                    throw new Exception('Unable to read file: ' . $this->_sFileName );
+                }
+                
+            } else {
+		$this->_oReader = $oReader;
+            }
+            
+            return $this;
+        }
 
         /**
          * Method for creating file (with headers if configured).
