@@ -7,7 +7,7 @@ Install via composer
 To install this application via composer, create composer.json file with that content (or add it to existing composer.json file):
 <pre>
 "require": {
-        "krsc/krsc-reports-phpexcel-framework": "^1.0"
+        "krsc/krsc-reports-phpexcel-framework": "v1.x"
     }
 </pre>
 You can also use this command:
