@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.9, 2017-04-12
+ * @version 1.1.0, 2017-04-25
  */
 
 /**
@@ -55,7 +55,7 @@ class KrscReports_Import_TableImport
     protected $_aColumnNames;
     
     /**
-     * @var string if this symbol is present in column name, that means, it is obligatory (symbol would be removed in output array) 
+     * @var string if this symbol is present in column name, that means, it is obligatory 
      */
     protected $_sRequiredSymbol;
     
@@ -111,7 +111,7 @@ class KrscReports_Import_TableImport
     /**
      * Loading of file.
      * @param string $fileName path to file
-     * @return KrscReports_Import_TableImport object, on which this method was executed
+     * @return KrscReports_File instance of class responsible for handling creation of file
      */
     public function loadFile( $fileName )
     {
@@ -120,7 +120,7 @@ class KrscReports_Import_TableImport
         $oFile->setReader();
         
         $this->setCellObject();
-        return $this;
+        return $oFile;
     }
     
     /**
@@ -194,7 +194,7 @@ class KrscReports_Import_TableImport
                 
                 if( empty( $mColumnValue ) && $aRequiredColumns[$iColumnPosition] ) { // column is empty, but is required
                     $mImportedRow = self::ROW_WITH_ERROR_VALUE;
-                    continue;
+                    break;
                 } else {
                     $mImportedRow[$iColumnPosition] = $mColumnValue;
                 }

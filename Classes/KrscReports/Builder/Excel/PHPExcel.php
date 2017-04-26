@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.9, 2017-04-11
+ * @version 1.1.0, 2017-04-11
  */
 
 /**

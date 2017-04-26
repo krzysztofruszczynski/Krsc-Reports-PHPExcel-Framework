@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.9, 2017-04-12
+ * @version 1.1.0, 2017-04-25
  */
 
 /**
@@ -39,6 +39,11 @@ class KrscReports_File
          */
         const FILE_TYPE_EXCEL = 'Excel2007';
     
+        /**
+         * if true, then charts are displayed in output file
+         */
+        const INCLUDE_CHARTS = true;
+        
 	/**
 	 * @var Boolean if true, writes header, when false - not
 	 */
@@ -104,7 +109,7 @@ class KrscReports_File
 
 		return $this;
 	}
-
+        
         /**
          * Setter for writer.
          * @param Object $oWriter (by default null - then PHPExcel writer is used)
@@ -117,6 +122,7 @@ class KrscReports_File
 
 		} else if( is_null( $oWriter ) ) {
                         $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
+                        $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
 		} else {
 			$this->_oWriter = $oWriter;
 		}
@@ -167,10 +173,20 @@ class KrscReports_File
 	    	// header for outputted filename
 	    	header('Content-Disposition: attachment; filename="' . $this->_sFileName . '.' . $this->_sExtension . '"');
             }
-	
-            $this->setWriter();
 
 	    // Write file to the browser
-	    $this->_oWriter->save('php://output');
+            $this->createFileWithPath();	    
 	}
+        
+        /**
+         * Save file under specified path.
+         * @param string $sPath path, under which file would be created (default: php://output )
+         * @param boolean $bAddExtension if true, extension is automatically added to file name ( with . )
+         */
+        public function createFileWithPath( $sPath = 'php://output', $bAddExtension = false )
+        {
+            $this->setWriter();
+            
+            $this->_oWriter->save( $bAddExtension ? sprintf('%s.%s', $sPath, $this->_sExtension ) : $sPath );
+        }
 }

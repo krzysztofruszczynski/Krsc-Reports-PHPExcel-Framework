@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.2, 2016-11-12
+ * @version 1.1.0, 2017-04-26
  */
 
 /**
@@ -58,6 +58,6 @@ else
     
     echo '</ul>';
     
-    echo '<p>Copyright (c) Krzysztof Ruszczyński 2014-2016 ( <a href="http://www.ruszczynski.eu">http://www.ruszczynski.eu</a> ). This library uses LGPL licence and works only with PHPExcel.';
+    echo '<p>Copyright (c) Krzysztof Ruszczyński 2014-2017 ( <a href="http://www.ruszczynski.eu">http://www.ruszczynski.eu</a> ). This library uses LGPL licence and works only with PHPExcel.';
     echo '</body></html>';
 }

@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.9, 2017-04-13
+ * @version 1.1.0, 2017-04-25
  */
 
 /**
@@ -42,11 +42,12 @@ class KrscReports_Type_Excel_PHPExcel_CellStubTest extends KrscReports_Type_Exce
      * @var array data to be returned by stubbed cell object
      */
     protected $_aImportData = array(
-        1 => array(  'first column', 'second column*' ),
-        2 => array( 'row1 col1', 'row1 col2' ),
-        3 => array( 'row2 col1', '' ),
-        4 => array( 'row3 col1', 'row3 col2' ),
-        5 => array( '', '' )
+        1 => array(  'first column', 'second column*', 'third column' ),
+        2 => array( 'row1 col1', 'row1 col2', '' ),
+        3 => array( 'row2 col1', '', '' ),
+        4 => array( 'row3 col1', 'row3 col2', '' ),
+        5 => array( 'row4 col1', '', 'row4 col3' ),
+        6 => array( '', '', '' )
     );
     
     /**
@@ -86,7 +87,7 @@ class KrscReports_Import_TableImportTest extends PHPUnit_Framework_TestCase {
     /**
      * @var array columns in import
      */
-    protected $_aColumnNames = array( 'first column', 'second column*' );
+    protected $_aColumnNames = array( 'first column', 'second column*', 'third column' );
     
     /**
      * @var string symbol which is part of required column name
@@ -97,18 +98,20 @@ class KrscReports_Import_TableImportTest extends PHPUnit_Framework_TestCase {
      * @var array values expected in import without specifying required column symbol
      */
     protected $_aImportProperExpected = array(
-        array( 'row1 col1', 'row1 col2' ),
-        array( 'row2 col1', '' ),
-        array( 'row3 col1', 'row3 col2' )
+        array( 'row1 col1', 'row1 col2', '' ),
+        array( 'row2 col1', '', '' ),
+        array( 'row3 col1', 'row3 col2', '' ),
+        array( 'row4 col1', '', 'row4 col3' )
     );
     
     /**
      * @var array values expected in import with one row without required column filled
      */
     protected $_aImportRequiredExpected = array(
-        array( 'row1 col1', 'row1 col2' ),
+        array( 'row1 col1', 'row1 col2', '' ),
         KrscReports_Import_TableImport::ROW_WITH_ERROR_VALUE,
-        array( 'row3 col1', 'row3 col2' )
+        array( 'row3 col1', 'row3 col2', '' ),
+        KrscReports_Import_TableImport::ROW_WITH_ERROR_VALUE
     );
     
     /**

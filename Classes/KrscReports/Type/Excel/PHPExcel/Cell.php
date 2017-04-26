@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.9, 2017-04-11
+ * @version 1.1.0, 2017-04-25
  */
 
 /**
@@ -223,6 +223,20 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     }
     
     /**
+     * Method set styles for cell.
+     * @param integer $iColumnId numeric coordinate of column (starts from 0)
+     * @param integer $iRowId numeric coordinate of row (starts from 1)
+     * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
+     */
+    public function constructCellStyles( $iColumnId, $iRowId )
+    {
+        // setting styles
+        self::$_oPHPExcel->getActiveSheet()->getStyleByColumnAndRow( $iColumnId, $iRowId )->applyFromArray( $this->_oStyle->getStyleArray( $this->_sStyleKey ) );
+        
+        return $this;
+    }
+    
+    /**
      * Method creates cell with previously set properties on given in method's input coordinates 
      * (with one object with set properties more than one cell can be created; set properties can be changed
      * and new cells with new properties can be constructed from the same instance of object).
@@ -232,8 +246,7 @@ class KrscReports_Type_Excel_PHPExcel_Cell
      */
     public function constructCell( $iColumnId, $iRowId )
     {        
-        // setting styles
-        self::$_oPHPExcel->getActiveSheet()->getStyleByColumnAndRow( $iColumnId, $iRowId )->applyFromArray( $this->_oStyle->getStyleArray( $this->_sStyleKey ) );
+        $this->constructCellStyles( $iColumnId, $iRowId );
         
         // constructing phpexcel element
         self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue, true);    
