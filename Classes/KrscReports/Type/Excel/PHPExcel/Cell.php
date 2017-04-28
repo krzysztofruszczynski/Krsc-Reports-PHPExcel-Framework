@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-25
+ * @version 1.1.1, 2017-04-28
  */
 
 /**
@@ -219,6 +219,19 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     public function setAutoFilter( $iColumnIdMin, $iColumnIdMax, $iHeaderRowHeight )
     {
         self::$_oPHPExcel->getActiveSheet()->setAutoFilterByColumnAndRow( $iColumnIdMin, $iHeaderRowHeight, $iColumnIdMax, $iHeaderRowHeight );
+        return $this;
+    }
+    
+    /**
+     * Method setting comment for cell.
+     * @param integer $iColumnId numeric coordinate of column (starts from 0)
+     * @param integer $iRowId numeric coordinate of row (starts from 1)
+     * @param string $sComment content of comment
+     * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
+     */
+    public function constructCellComment( $iColumnId, $iRowId, $sComment )
+    {
+        self::$_oPHPExcel->getActiveSheet()->getCommentByColumnAndRow( $iColumnId, $iRowId )->getText()->createTextRun( $sComment );
         return $this;
     }
     

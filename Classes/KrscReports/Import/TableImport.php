@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-25
+ * @version 1.1.1, 2017-04-28
  */
 
 /**
@@ -35,9 +35,9 @@
 class KrscReports_Import_TableImport
 {
     /**
-     * value for row, on which occurred error while importing 
+     * Text for column in invalidRows variable, on which occurred error while importing (caused by not having required field) 
      */
-    const ROW_WITH_ERROR_VALUE = false;
+    const IMPORT_ERROR_TEXT = 'This column is required';
     
     /**
      * @var integer row number with header for imported table (starts from 1)
@@ -58,6 +58,16 @@ class KrscReports_Import_TableImport
      * @var string if this symbol is present in column name, that means, it is obligatory 
      */
     protected $_sRequiredSymbol;
+    
+    /**
+     * @var boolean if true, zero as string, integer and float is allowed in required columns
+     */
+    protected $_bAllowZeroStringForRequired = true;
+    
+    /**
+     * @var array subsequent keys are row numbers, which are invalid - value is array with incorrect column indexes as keys (values: error text); if array is empty, then whole import is correct
+     */
+    protected $_aInvalidRows = array();
     
     /**
      * @var KrscReports_Type_Excel_PHPExcel_Cell cell object
@@ -175,6 +185,15 @@ class KrscReports_Import_TableImport
     }
     
     /**
+     * Getter for array with invalid rows.
+     * @return array subsequent keys are row numbers, which are invalid - value is array with incorrect column indexes as keys (values: error type); if array is empty, then whole import is correct
+     */
+    public function getInvalidRows()
+    {
+        return $this->_aInvalidRows;
+    }
+    
+    /**
      * Method importing data.
      * IMPORTANT: FIRST COLUMN IS ALWAYS REQUIRED
      * @return array imported data
@@ -185,6 +204,7 @@ class KrscReports_Import_TableImport
         $aRequiredColumns = $this->_getRequiredColumns();
         $this->_checkHeaderRow();
         $aImportedData = array(); 
+        $this->_aInvalidRows = array();
         
         while( !empty( $this->_oCell->getCellValue( $this->_iInitialColumnId, $iSelectedRowId ) ) ) {
             $mImportedRow = array();
@@ -192,12 +212,12 @@ class KrscReports_Import_TableImport
             foreach( $this->_aColumnNames as $iColumnPosition => $sColumnName ) {
                 $mColumnValue = $this->_oCell->getCellValue( $this->_iInitialColumnId + $iColumnPosition, $iSelectedRowId );
                 
-                if( empty( $mColumnValue ) && $aRequiredColumns[$iColumnPosition] ) { // column is empty, but is required
-                    $mImportedRow = self::ROW_WITH_ERROR_VALUE;
-                    break;
-                } else {
-                    $mImportedRow[$iColumnPosition] = $mColumnValue;
+                if( empty( $mColumnValue ) && !( $this->_bAllowZeroStringForRequired && in_array( $mColumnValue, array( '0', 0, 0.0 ), true ) ) 
+                        && $aRequiredColumns[$iColumnPosition] ) { // column is empty, but is required - add this information to invalid rows
+                   $this->_aInvalidRows[count($aImportedData)][$iColumnPosition] = self::IMPORT_ERROR_TEXT;
                 }
+                
+                $mImportedRow[$iColumnPosition] = $mColumnValue;
             }
             
             $aImportedData[] = $mImportedRow;

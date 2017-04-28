@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-25
+ * @version 1.1.1, 2017-04-28
  */
 
 /**
@@ -47,7 +47,11 @@ class KrscReports_Type_Excel_PHPExcel_CellStubTest extends KrscReports_Type_Exce
         3 => array( 'row2 col1', '', '' ),
         4 => array( 'row3 col1', 'row3 col2', '' ),
         5 => array( 'row4 col1', '', 'row4 col3' ),
-        6 => array( '', '', '' )
+        6 => array( 'row5 col1', '0', 'row5 col3' ),
+        7 => array( 'row6 col1', 0, 'row6 col3' ),
+        8 => array( 'row7 col1', 0, false ),
+        9 => array( 'row8 col1', false,'row8 col3' ),
+        10 => array( '', '', '' )
     );
     
     /**
@@ -101,17 +105,17 @@ class KrscReports_Import_TableImportTest extends PHPUnit_Framework_TestCase {
         array( 'row1 col1', 'row1 col2', '' ),
         array( 'row2 col1', '', '' ),
         array( 'row3 col1', 'row3 col2', '' ),
-        array( 'row4 col1', '', 'row4 col3' )
+        array( 'row4 col1', '', 'row4 col3' ),
+        array( 'row5 col1', '0', 'row5 col3' ),
+        array( 'row6 col1', 0, 'row6 col3' ),
+        array( 'row7 col1', 0, false ),
+        array( 'row8 col1', false,'row8 col3' )
     );
     
-    /**
-     * @var array values expected in import with one row without required column filled
-     */
-    protected $_aImportRequiredExpected = array(
-        array( 'row1 col1', 'row1 col2', '' ),
-        KrscReports_Import_TableImport::ROW_WITH_ERROR_VALUE,
-        array( 'row3 col1', 'row3 col2', '' ),
-        KrscReports_Import_TableImport::ROW_WITH_ERROR_VALUE
+    protected $_aRequiredInvalidRows = array( 
+        1 => array(1 => KrscReports_Import_TableImport::IMPORT_ERROR_TEXT ), 
+        3 => array(1 => KrscReports_Import_TableImport::IMPORT_ERROR_TEXT ),
+        7 => array(1 => KrscReports_Import_TableImport::IMPORT_ERROR_TEXT )
     );
     
     /**
@@ -152,7 +156,8 @@ class KrscReports_Import_TableImportTest extends PHPUnit_Framework_TestCase {
      */
     public function testGetProperImportedData() 
     {
-        $this->assertEquals( $this->_aImportProperExpected, $this->object->getImportedData() );
+        $this->assertSame( $this->_aImportProperExpected, $this->object->getImportedData() );
+        $this->assertSame( array(), $this->object->getInvalidRows() );
     }
     
     /**
@@ -162,7 +167,8 @@ class KrscReports_Import_TableImportTest extends PHPUnit_Framework_TestCase {
     public function testGetRequiredImportedData() 
     {   
         $this->object->setRequiredSymbol( $this->_sRequiredSymbol );
-        $this->assertEquals( $this->_aImportRequiredExpected, $this->object->getImportedData() );
+        $this->assertSame( $this->_aImportProperExpected, $this->object->getImportedData() );
+        $this->assertSame( $this->_aRequiredInvalidRows, $this->object->getInvalidRows() );
     }
     
     /**
@@ -176,7 +182,7 @@ class KrscReports_Import_TableImportTest extends PHPUnit_Framework_TestCase {
         $aColumnNames[0] = $aColumnNames[0] . 'invalidHeader';
         
         $this->object->setColumnNames( $aColumnNames );
-        $this->assertEquals( $this->_aImportProperExpected, $this->object->getImportedData() );
+        $this->assertSame( $this->_aImportProperExpected, $this->object->getImportedData() );
     }
 
 }
