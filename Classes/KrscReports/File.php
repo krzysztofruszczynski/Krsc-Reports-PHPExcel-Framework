@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-25
+ * @version 1.1.1, 2017-05-04
  */
 
 /**
@@ -43,6 +43,11 @@ class KrscReports_File
          * if true, then charts are displayed in output file
          */
         const INCLUDE_CHARTS = true;
+        
+        /**
+         * if true, then document at the end is always set to first site
+         */
+        const RETURN_TO_FIRST_SITE = true;
         
 	/**
 	 * @var Boolean if true, writes header, when false - not
@@ -123,6 +128,9 @@ class KrscReports_File
 		} else if( is_null( $oWriter ) ) {
                         $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
                         $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
+                        if ( self::RETURN_TO_FIRST_SITE ) {
+                            KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
+                        }                       
 		} else {
 			$this->_oWriter = $oWriter;
 		}
