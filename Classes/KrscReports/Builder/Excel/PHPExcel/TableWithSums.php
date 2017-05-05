@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.1.2, 2017-05-01
  */
 
 /**
@@ -32,7 +32,7 @@
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Builder_Excel_PHPExcel_TableWithSums extends KrscReports_Builder_Excel_PHPExcel_TableBasic implements KrscReports_Builder_Interface_Table
+class KrscReports_Builder_Excel_PHPExcel_TableWithSums extends KrscReports_Builder_Excel_PHPExcel_TableTitle
 {
     /**
      * @var array columns which are to sum (each column name is next array value
@@ -74,20 +74,21 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithSums extends KrscReports_Build
     {
         parent::endTable();
         
+        if ( isset( $this->_aColumnsToSum ) ) {
+            foreach( $this->_aColumnsToSum as $sColumnName )
+            {   // add sum formula for each column
+                // position of summed column
+                $iPosition = array_search( $sColumnName, array_keys( $this->_aData[0] ) );
+
+                $sColumnCoordinate = $this->_oCell->getColumnDimension( $iPosition );
+                $sFormula = sprintf( '=SUM(%s%d:%s%d)', $sColumnCoordinate, $this->_iStartHeightOfRows, $sColumnCoordinate, ($this->_iActualHeight-1) );
+
+                $this->_oCell->setValue( $sFormula );
+                $this->_oCell->constructCell( $this->_iActualWidth +  $iPosition, $this->_iActualHeight );
+            }
         
-        foreach( $this->_aColumnsToSum as $sColumnName )
-        {   // add sum formula for each column
-            // position of summed column
-            $iPosition = array_search( $sColumnName, array_keys( $this->_aData[0] ) );
-            
-            $sColumnCoordinate = $this->_oCell->getColumnDimension( $iPosition );
-            $sFormula = sprintf( '=SUM(%s%d:%s%d)', $sColumnCoordinate, $this->_iStartHeightOfRows, $sColumnCoordinate, ($this->_iActualHeight-1) );
-            
-            $this->_oCell->setValue( $sFormula );
-            $this->_oCell->constructCell( $this->_iActualWidth +  $iPosition, $this->_iActualHeight );
-        }
-        
-        $this->_iActualHeight++;
+            $this->_iActualHeight++;
+        }        
     }
 }
     

@@ -22,11 +22,11 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-20
+ * @version 1.1.2, 2017-05-05
  */
 
 /**
- * Example report creating chart pie in PHPExcel.
+ * Example report creating chart pie and bar chart in PHPExcel.
  *  
  * @category KrscReports
  * @package KrscReports_Report
@@ -94,7 +94,7 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
      * Method adding one row of data.
      * @param string $sProductName name of product in a row
      * @param string $sProductPrice prive of product in a row
-     * @param integer $iProductAvailibility values from const from that class with prefix AVAILIBILITY_LEVEL
+     * @param integer $iProductAvailibility values from constant from that class with prefix AVAILIBILITY_LEVEL
      * @return KrscReports_Report_ExampleReportDifferentCellStyles object, on which method was executed
      */
     protected function _addRow( $sProductName, $sProductPrice, $iProductAvailibility )
@@ -121,61 +121,6 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
     }
     
     /**
-     * Method creating chart pie components.
-     */
-    protected function _createChartPie()
-    {
-        $aDataseriesLabels1 = array(
-        new PHPExcel_Chart_DataSeriesValues('String', 'document1!$A$1:$B$1', NULL),
-        );
-
-        $aXAxisTickValues1 = array(
-            new PHPExcel_Chart_DataSeriesValues('String', 'document1!$A$2:$A$6', NULL),
-        );
-
-        $aDataSeriesValues1 = array(
-            new PHPExcel_Chart_DataSeriesValues('Number', 'document1!$B$2:$B$6', NULL),
-        );
-        
-        $series1 = new PHPExcel_Chart_DataSeries(
-            PHPExcel_Chart_DataSeries::TYPE_PIECHART,
-            PHPExcel_Chart_DataSeries::GROUPING_STACKED,
-            range(0, count($aDataSeriesValues1)-1),
-            $aDataseriesLabels1,
-            $aXAxisTickValues1,
-            $aDataSeriesValues1
-        );
-
-        $oLayout1 = new PHPExcel_Chart_Layout();
-        //$oLayout1->setShowBubbleSize( true );
-        //$oLayout1->setShowLegendKey( true );
-        //$oLayout1->setShowLeaderLines( TRUE );
-        //$oLayout1->setShowVal(TRUE);
-        
-        $oLayout1->setShowPercent(TRUE);
-        
-        $oPlotarea1 = new PHPExcel_Chart_PlotArea($oLayout1, array($series1));
-        $oLegend1 = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
-        $oTitle1 = new PHPExcel_Chart_Title(''/*Test Pie Chart'*/);
-
-        $oChart1 = new PHPExcel_Chart(
-            'chart1',
-             $oTitle1,
-             $oLegend1,
-             $oPlotarea1,
-             true,
-             0,
-             NULL,
-             NULL
-        );
-
-        $oChart1->setTopLeftPosition('A7');
-        $oChart1->setBottomRightPosition('D15');
-        
-        KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->getActiveSheet()->addChart( $oChart1 );
-    }
-    
-    /**
      * Method generating report.
      * @return void
      */
@@ -184,11 +129,30 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
         KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
         $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
         
-        $oBuilder = new KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles();
+        $oBuilder = new KrscReports_Builder_Excel_PHPExcel_TableCurrent();
         $oBuilder->setCellObject( $oCell );
         
         $this->_setData();
         $oBuilder->setData( $this->_aData );
+        
+        $oGraph = $oBuilder->addNewGraph();
+        $oGraph->setCellObject( $oCell );
+        $oGraph->setPlotCategoryColumnName( self::COLUMN_PRODUCT_NAME );
+        $oGraph->setPlotValuesColumnName( self::COLUMN_PRODUCT_PRICE );
+        $oGraph->setPlotType();
+        $oGraph->setLayout();
+        $oGraph->setGrouping();
+        $oGraph->setChartTitle('');
+        
+        $oGraph = $oBuilder->addNewGraph();
+        $oGraph->setGraphSize( 10 );
+        $oGraph->setCellObject( $oCell );
+        $oGraph->setPlotCategoryColumnName( self::COLUMN_PRODUCT_NAME );
+        $oGraph->setPlotValuesColumnName( self::COLUMN_PRODUCT_PRICE );
+        $oGraph->setPlotType( PHPExcel_Chart_DataSeries::TYPE_BARCHART );
+        $oGraph->setLayout();
+        $oGraph->setGrouping();
+        $oGraph->setChartTitle('');
         
         // creation of element responsible for creating table
         $oElementTable = new KrscReports_Document_Element_Table();
@@ -200,13 +164,12 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
         
         $oElement->beforeConstructDocument();
         $oElement->constructDocument();
-        $this->_createChartPie();
         $oElement->afterConstructDocument();
     }
 
     public function getDescription() 
     {
-        return 'Report creating chart pie.';
+        return 'Report creating chart pie and bar chart.';
     }
 
 }
