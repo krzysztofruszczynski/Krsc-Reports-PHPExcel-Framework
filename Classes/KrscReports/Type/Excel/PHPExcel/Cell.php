@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.1, 2017-04-28
+ * @version 1.1.2, 2017-04-28
  */
 
 /**
@@ -157,7 +157,7 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     
     /**
      * Method for getting column dimension.
-     * @param integer $iColumnId
+     * @param integer $iColumnId column index (starts from 0)
      * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
      */
     protected function _getColumnDimensionByColumn( $iColumnId )

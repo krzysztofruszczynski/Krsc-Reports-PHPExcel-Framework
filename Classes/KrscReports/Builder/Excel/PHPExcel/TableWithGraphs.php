@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.2, 2017-05-05
+ * @version 1.1.2, 2017-05-08
  */
 
 /**
@@ -40,12 +40,45 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
     protected $_aGraphs;
     
     /**
+     * @var integer number of columns between subsequent graphs (and table and first graph)
+     */
+    protected $_iNumberOfColumnsBetweenGraphs = 1;
+    
+    /**
+     * @var string suffix for worksheet name, in which charts would be showed (if not set - than showed in the same worksheet)
+     */
+    protected $_sChartWorksheetSuffix;
+    
+    /**
+     * Setter for number of columns between subsequent graphs.
+     * @param integer $iNumberOfColumnsBetweenGraphs number of columns between subsequent graphs (and table and first graph)
+     * @return KrscReports_Builder_Excel_PHPExcel_TableWithGraphs object, on which this method was executed
+     */
+    public function setNumberOfColumnsBetweenGraphs( $iNumberOfColumnsBetweenGraphs )
+    {
+        $this->_iNumberOfColumnsBetweenGraphs = $iNumberOfColumnsBetweenGraphs;
+        return $this;
+    }
+    
+    /**
+     * Setter for chart worksheet suffix.
+     * @param string $sChartWorksheetSuffix suffix for worksheet name, in which charts would be showed
+     * @return KrscReports_Builder_Excel_PHPExcel_TableWithGraphs object, on which this method was executed
+     */
+    public function setChartWorksheetSuffix( $sChartWorksheetSuffix )
+    {
+        $this->_sChartWorksheetSuffix = $sChartWorksheetSuffix;
+        return $this;
+    }
+    
+    /**
      * Method adding new graph associated with table.
      * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic new graph (on which settings can be made)
      */
     public function addNewGraph()
     {
         $oNewGraph = new KrscReports_Builder_Excel_PHPExcel_Graph_Basic();
+        $oNewGraph->setCellObject( $this->_oCell );
         $this->_aGraphs[] = $oNewGraph;
         return $oNewGraph;
     }
@@ -58,7 +91,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
     {
         parent::endTable();
         
-        $iSizeOfGraphs = 0;
+        $iColumnSizeOfGraphs = 0;
         if ( isset( $this->_aGraphs ) ) {
             foreach ( $this->_aGraphs as $oGraph ) {    // action made for every graph
                 /* @var $oGraph KrscReports_Builder_Excel_PHPExcel_GraphBasic */
@@ -68,7 +101,9 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
                 $iPlotCategoryColumnIndex = array_search( $oGraph->getPlotCategoryColumnName(), $this->getColumnNames() );
                 $iPlotValuesColumnIndex = array_search( $oGraph->getPlotValuesColumnName(), $this->getColumnNames() );
                 
-                $oGraph->setGroupName( $this->_sGroupName );
+                $oGraph->setGroupName( $this->_sGroupName . ( isset( $this->_sChartWorksheetSuffix ) ? $this->_sChartWorksheetSuffix : '' ) );
+                $oGraph->setSourceGroupName( $this->_sGroupName );                
+                
                 $aPlotLabels = $oGraph->getPlotLabels();
                 
                 if ( empty( $aPlotLabels ) ) {  // labels were not previously set
@@ -78,9 +113,13 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
                 $oGraph->setPlotCategory( $this->_iActualWidth + $iPlotCategoryColumnIndex, $this->_iStartHeightOfRows, $this->_iActualWidth + $iPlotCategoryColumnIndex, $this->_iStartHeightOfRows + count( $this->_aData ) - 1 );
                 $oGraph->setPlotValues( $this->_iActualWidth + $iPlotValuesColumnIndex, $this->_iStartHeightOfRows, $this->_iActualWidth + $iPlotValuesColumnIndex, $this->_iStartHeightOfRows + count( $this->_aData ) - 1  );
                 
-                $oGraph->setGraphPosition( $this->_iActualWidth + $iSizeOfGraphs + $iNumberOfColumns + 2, $this->_iStartHeightOfRows );
-                
-                $iSizeOfGraphs += $oGraph->getGraphSize() + 2;                
+                if ( isset( $this->_sChartWorksheetSuffix ) ) {
+                    $oGraph->setGraphPosition( $this->_iActualWidth + $iColumnSizeOfGraphs, $this->_iStartHeightOfRows - 1 );
+                } else {
+                    $oGraph->setGraphPosition( $this->_iActualWidth + $iColumnSizeOfGraphs + $iNumberOfColumns + $this->_iNumberOfColumnsBetweenGraphs, $this->_iStartHeightOfRows - 1 );
+                }
+                     
+                $iColumnSizeOfGraphs += $oGraph->getGraphColumnSize() + $this->_iNumberOfColumnsBetweenGraphs;                
                 $oGraph->attachChart();
             }
         }        

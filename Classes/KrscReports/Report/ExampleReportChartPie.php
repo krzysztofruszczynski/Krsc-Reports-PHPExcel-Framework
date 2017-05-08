@@ -136,22 +136,18 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
         $oBuilder->setData( $this->_aData );
         
         $oGraph = $oBuilder->addNewGraph();
-        $oGraph->setCellObject( $oCell );
         $oGraph->setPlotCategoryColumnName( self::COLUMN_PRODUCT_NAME );
         $oGraph->setPlotValuesColumnName( self::COLUMN_PRODUCT_PRICE );
         $oGraph->setPlotType();
         $oGraph->setLayout();
-        $oGraph->setGrouping();
         $oGraph->setChartTitle('');
         
         $oGraph = $oBuilder->addNewGraph();
-        $oGraph->setGraphSize( 10 );
-        $oGraph->setCellObject( $oCell );
+        $oGraph->setGraphSize( 10, 6 );
         $oGraph->setPlotCategoryColumnName( self::COLUMN_PRODUCT_NAME );
         $oGraph->setPlotValuesColumnName( self::COLUMN_PRODUCT_PRICE );
         $oGraph->setPlotType( PHPExcel_Chart_DataSeries::TYPE_BARCHART );
         $oGraph->setLayout();
-        $oGraph->setGrouping();
         $oGraph->setChartTitle('');
         
         // creation of element responsible for creating table

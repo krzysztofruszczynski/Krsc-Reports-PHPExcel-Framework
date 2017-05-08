@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.2, 2017-05-05
+ * @version 1.1.2, 2017-05-08
  */
 
 /**
@@ -40,7 +40,7 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     protected $_sPlotType;
     
     /**
-     * @var string value for grouping for chart 
+     * @var string value for grouping for chart (IF SET - MS EXCEL DON'T DISPLAY REPORTS)
      */
     protected $_sGrouping;
     
@@ -80,9 +80,24 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     protected $_sBottomRightPosition;
     
     /**
-     * @var integer height and width of graphs (number of rows and columns) 
+     * @var integer width of graphs (number of columns) 
      */
-    protected $_iGraphSize = 8;
+    protected $_iGraphColumnSize = 8;
+    
+    /**
+     * @var integer height of graphs (number of rows) 
+     */
+    protected $_iGraphRowSize = 8;
+    
+    /**
+     * @var integer (if + value, then offset at the beginning, if -, than at the end)
+     */
+    protected $_iRowOffset = 0;
+    
+    /**
+     * @var integer (if + value, then offset at the beginning, if -, than at the end) - second offset (range can be limited from both sides at the same time)
+     */
+    protected $_iRowOffsetSecond = 0;
     
     /**
      * @var string name of column with values for plot category (if graph associated with table)
@@ -95,6 +110,11 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     protected $_sPlotValuesColumnName;
     
     /**
+     * @var string name of group (worksheet), from which data to graph are taken
+     */
+    protected $_sSourceGroupName;
+    
+    /**
      * Setter for default settings for graph.
      * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic object, on which method was executed
      */
@@ -102,7 +122,6 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     {
         $this->setPlotType();
         $this->setLayout();
-        $this->setGrouping();
         $this->setChartTitle('');
         
         return $this;
@@ -136,7 +155,7 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     }
     
     /**
-     * Setter for grouping plot type.
+     * Setter for grouping plot type. IF GROUPING NOT NULL THAN EXCEL HAVE PROBLEMS WITH DISPLAYING IT.
      * @param string $sGrouping type of grouping
      * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic object, on which method was executed
      */
@@ -151,19 +170,53 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
      * @param integer $iSize number of columns and rows for this diagram
      * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic object, on which method was executed
      */
-    public function setGraphSize( $iSize )
+    public function setGraphSize( $iColumnSize, $iRowSize )
     {
-        $this->_iGraphSize = $iSize;
+        $this->_iGraphColumnSize = $iColumnSize;
+        $this->_iGraphRowSize = $iRowSize;
         return $this;
     }
     
     /**
-     * Getter for graph size.
-     * @return integer number of columns and rows for this diagram
+     * Getter for graph column size.
+     * @return integer number of columns for this diagram
      */
-    public function getGraphSize()
+    public function getGraphColumnSize()
     {
-        return $this->_iGraphSize;
+        return $this->_iGraphColumnSize;
+    }
+    
+    /**
+     * Getter for graph row size.
+     * @return integer number of rows for this diagram
+     */
+    public function getGraphRowSize()
+    {
+        return $this->_iGraphRowSize;
+    }
+    
+    /**
+     * Setting offset (can be from both sides).
+     * @param integer $iRowOffset (if + value, then offset at the beginning, if -, than at the end)
+     * @param integer $iRowOffsetSecond (if + value, then offset at the beginning, if -, than at the end) - second offset (range can be limited from both sides at the same time)
+     * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic object, on which method was executed
+     */
+    public function setRowsOffset( $iRowOffset = 0, $iRowOffsetSecond = 0 )
+    {
+        $this->_iRowOffset = $iRowOffset;
+        $this->_iRowOffsetSecond = $iRowOffsetSecond;
+        return $this;
+    }
+    
+    /**
+     * Setter for name of group (worksheet), from which data to graph are taken.
+     * @param string $sSourceGroupName name of group (worksheet), from which data to graph are taken
+     * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic object, on which method was executed
+     */
+    public function setSourceGroupName( $sSourceGroupName )
+    {
+        $this->_sSourceGroupName = $sSourceGroupName;
+        return $this;
     }
     
     /**
@@ -175,7 +228,7 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     public function setGraphPosition( $iColumnId, $iRowId )
     {
         $this->setTopLeftPosition( $iColumnId, $iRowId );
-        $this->setBottomRightPosition( $iColumnId + $this->_iGraphSize, $iRowId + $this->_iGraphSize );
+        $this->setBottomRightPosition( $iColumnId + $this->_iGraphColumnSize, $iRowId + $this->_iGraphRowSize );
         return $this;
     }
     
@@ -233,8 +286,20 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     {
         $sDataSourcePattern = '%s!$%s$%d:$%s$%d';
         
+        if ( $this->_iRowOffset < 0 ) {   // offset at the end of column
+            $iEndRowId += $this->_iRowOffset;
+        } else if ( $this->_iRowOffset > 0 ) {
+            $iStartRowId += $this->_iRowOffset;
+        }
+        
+        if ( $this->_iRowOffsetSecond < 0 ) {   // offset at the end of column
+            $iEndRowId += $this->_iRowOffsetSecond;
+        } else if ( $this->_iRowOffsetSecond > 0 ) {
+            $iStartRowId += $this->_iRowOffsetSecond;
+        }
+        
         $aPatternArguments = array();
-        $aPatternArguments[] = $this->_sGroupName;
+        $aPatternArguments[] = isset( $this->_sSourceGroupName ) ? $this->_sSourceGroupName : $this->_sGroupName;
         $aPatternArguments[] = $this->_oCell->getColumnDimension( $iStartColumnId );
         $aPatternArguments[] = $iStartRowId;
         $aPatternArguments[] = $this->_oCell->getColumnDimension( $iEndColumnId );
@@ -242,7 +307,15 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
         
         $sDataSource = vsprintf( $sDataSourcePattern, $aPatternArguments );
         
-        return new PHPExcel_Chart_DataSeriesValues( $sType, $sDataSource, NULL );
+        
+        if ( $iStartColumnId == $iEndColumnId ) {
+            $iNumberOfElements = $iEndRowId - $iStartRowId;
+        } else {
+            $iNumberOfElements = $iEndColumnId - $iStartColumnId;
+        }
+        $iNumberOfElements++;
+        
+        return new PHPExcel_Chart_DataSeriesValues( $sType, $sDataSource, NULL, $iNumberOfElements );
     }
     
     /**
@@ -347,11 +420,12 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     {
         $oSeries = new PHPExcel_Chart_DataSeries(
             $this->_sPlotType,
-            $this->_sGrouping,
+            $this->_sGrouping, // IF GROUPING NOT NULL THAN EXCEL HAVE PROBLEMS WITH DISPLAYING IT
             range(0, count( $this->_aPlotValues )-1),
             $this->_aPlotLabels,
             $this->_aPlotCategory,
-            $this->_aPlotValues
+            $this->_aPlotValues,
+            PHPExcel_Chart_DataSeries::DIRECTION_VERTICAL
         );
         
         $oPlotarea = new PHPExcel_Chart_PlotArea( $this->_oLayout, array( $oSeries ) );
