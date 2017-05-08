@@ -43,7 +43,7 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
     /**
      * Array with illegal signs inside group name (key: illegal sign, value: replacement)
      */
-    const GROUP_NAME_ILLEGAL_SIGNS = array( '*' => '', ':' => '_', '/' => '_', '\\' => '_', '?' => '_', '[' => '_', ']' => '_' );        
+    const GROUP_NAME_ILLEGAL_SIGNS = 'a:7:{s:1:"*";s:0:"";s:1:":";s:1:"_";s:1:"/";s:1:"_";s:1:"\";s:1:"_";s:1:"?";s:1:"_";s:1:"[";s:1:"_";s:1:"]";s:1:"_";}';        
             
     /**
      * @var \PHPExcel instance of PHPExcel used while adding new data to spreadsheets
@@ -98,7 +98,7 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
      */
     public static function filterGroupName( $sGroupName )
     {
-        $sGroupName = strtr( $sGroupName, self::GROUP_NAME_ILLEGAL_SIGNS );
+        $sGroupName = strtr( $sGroupName, unserialize( self::GROUP_NAME_ILLEGAL_SIGNS ) );
         return substr( $sGroupName, 0, self::GROUP_NAME_LENGTH_LIMIT );
     }
     
