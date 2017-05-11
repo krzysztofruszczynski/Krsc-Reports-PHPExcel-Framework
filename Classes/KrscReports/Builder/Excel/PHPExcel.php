@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-11
+ * @version 1.1.4, 2017-05-11
  */
 
 /**
@@ -41,9 +41,21 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
     const GROUP_NAME_LENGTH_LIMIT = 31;
     
     /**
+     * array (
+     *   '*' => '',
+     *   ':' => '_',
+     *   '/' => '_',
+     *   '\\' => '_',
+     *   '?' => '_',
+     *   '[' => '_',
+     *   ']' => '_',
+     *   ' ' => '_',
+     * )
+     *
      * Array with illegal signs inside group name (key: illegal sign, value: replacement)
+     * Note: space is allowed for excel spreadsheet names, but causes problems with name ranges for PHPExcel (for example with graphs)
      */
-    const GROUP_NAME_ILLEGAL_SIGNS = 'a:7:{s:1:"*";s:0:"";s:1:":";s:1:"_";s:1:"/";s:1:"_";s:1:"\";s:1:"_";s:1:"?";s:1:"_";s:1:"[";s:1:"_";s:1:"]";s:1:"_";}';        
+    const GROUP_NAME_ILLEGAL_SIGNS = 'a:8:{s:1:"*";s:0:"";s:1:":";s:1:"_";s:1:"/";s:1:"_";s:1:"\";s:1:"_";s:1:"?";s:1:"_";s:1:"[";s:1:"_";s:1:"]";s:1:"_";s:1:" ";s:1:"_";}';        
             
     /**
      * @var \PHPExcel instance of PHPExcel used while adding new data to spreadsheets
