@@ -22,7 +22,7 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.2, 2017-05-05
+ * @version 1.1.5, 2017-05-15
  */
 
 /**
@@ -156,7 +156,7 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
         
         // adding table to spreadsheet
         $oElement = new KrscReports_Document_Element();
-        $oElement->addElement( $oElementTable );
+        $oElement->addElement( $oElementTable, 'table with charts' );
         
         $oElement->beforeConstructDocument();
         $oElement->constructDocument();

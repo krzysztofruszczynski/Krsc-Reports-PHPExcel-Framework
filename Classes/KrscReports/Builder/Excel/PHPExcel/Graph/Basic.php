@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.2, 2017-05-08
+ * @version 1.1.5, 2017-05-15
  */
 
 /**
@@ -284,7 +284,7 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
      */
     protected function _createDataSeriesValues( $iStartColumnId, $iStartRowId, $iEndColumnId, $iEndRowId, $sType = 'String' )
     {
-        $sDataSourcePattern = '%s!$%s$%d:$%s$%d';
+        $sDataSourcePattern = "'%s'!$%s$%d:$%s$%d";
         
         if ( $this->_iRowOffset < 0 ) {   // offset at the end of column
             $iEndRowId += $this->_iRowOffset;

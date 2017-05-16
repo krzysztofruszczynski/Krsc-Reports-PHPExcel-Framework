@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.4, 2017-05-11
+ * @version 1.1.5, 2017-05-15
  */
 
 /**
@@ -49,13 +49,11 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
      *   '?' => '_',
      *   '[' => '_',
      *   ']' => '_',
-     *   ' ' => '_',
      * )
      *
      * Array with illegal signs inside group name (key: illegal sign, value: replacement)
-     * Note: space is allowed for excel spreadsheet names, but causes problems with name ranges for PHPExcel (for example with graphs)
      */
-    const GROUP_NAME_ILLEGAL_SIGNS = 'a:8:{s:1:"*";s:0:"";s:1:":";s:1:"_";s:1:"/";s:1:"_";s:1:"\";s:1:"_";s:1:"?";s:1:"_";s:1:"[";s:1:"_";s:1:"]";s:1:"_";s:1:" ";s:1:"_";}';        
+    const GROUP_NAME_ILLEGAL_SIGNS = 'a:7:{s:1:"*";s:0:"";s:1:":";s:1:"_";s:1:"/";s:1:"_";s:1:"\";s:1:"_";s:1:"?";s:1:"_";s:1:"[";s:1:"_";s:1:"]";s:1:"_";}';        
             
     /**
      * @var \PHPExcel instance of PHPExcel used while adding new data to spreadsheets
@@ -106,11 +104,17 @@ abstract class KrscReports_Builder_Excel_PHPExcel extends KrscReports_Builder_Ex
     /**
      * Method filtering group name in order to be compatible with Excel naming standards (length and lack of some signs).
      * @param string $sGroupName name of group (excel spreadsheet) to be filtered
+     * @param boolean $bReplaceSpaces if true, then spaces in group name are replaced with underscore (default: false)
      * @return string filtered group name
      */
-    public static function filterGroupName( $sGroupName )
+    public static function filterGroupName( $sGroupName, $bReplaceSpaces = false )
     {
         $sGroupName = strtr( $sGroupName, unserialize( self::GROUP_NAME_ILLEGAL_SIGNS ) );
+        
+        if ( $bReplaceSpaces ) {
+            $sGroupName = str_replace( ' ', '_', $sGroupName );
+        }
+        
         return substr( $sGroupName, 0, self::GROUP_NAME_LENGTH_LIMIT );
     }
     
