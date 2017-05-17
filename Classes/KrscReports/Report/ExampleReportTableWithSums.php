@@ -2,10 +2,10 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
+ * modify it under the termls of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 1.1.5, 2017-05-17
  */
 
 /**
@@ -41,7 +41,7 @@ class KrscReports_Report_ExampleReportTableWithSums extends KrscReports_Report_E
      */
     public function getDescription()
     {
-        return 'Report with three tables in one worksheet (one after the other, done automatically) with advanced styling. For some columns below last row there is a sum formula.';
+        return 'Report with three tables in one worksheet (one after the other, with customized distance between them) with advanced styling. For some columns below last row there is a sum formula.';
     }
     
     /**
@@ -91,6 +91,7 @@ class KrscReports_Report_ExampleReportTableWithSums extends KrscReports_Report_E
         
         $oElementTable2 = new KrscReports_Document_Element_Table();
         $oElementTable2->setBuilder( $oBuilder2 );
+        $oElementTable2->setLinesBetweenElements(1);
         
         $oBuilder3 = new KrscReports_Builder_Excel_PHPExcel_TableWithSums();
         $oBuilder3->setCellObject( $oCell );
@@ -99,6 +100,7 @@ class KrscReports_Report_ExampleReportTableWithSums extends KrscReports_Report_E
         
         $oElementTable3 = new KrscReports_Document_Element_Table();
         $oElementTable3->setBuilder( $oBuilder3 );
+        $oElementTable3->setLinesBetweenElements(3);
         
         // adding table to spreadsheet
         $oElement = new KrscReports_Document_Element();

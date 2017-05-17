@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Document
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-12-06
+ * @version 1.1.5, 2017-05-17
  */
 
 /**
@@ -94,14 +94,23 @@ class KrscReports_Document_Element
     }
     
     /**
-     * Setter for number of lines between elements in the spreadsheet.
-     * @param integer $iLinesBetweenElements new number of lines between elements in the spreadsheet
+     * Setter for number of lines between elements in the spreadsheet for this particular element.
+     * @param integer $iLinesBetweenElements new number of lines between elements in the spreadsheet for this particular element
      * @return KrscReports_Document_Element object on which method was executed
      */
     public function setLinesBetweenElements( $iLinesBetweenElements )
     {
         $this->_iLinesBetweenElements = $iLinesBetweenElements;
         return $this;
+    }
+    
+    /**
+     * Getter for number of lines between elements in the spreadsheet.
+     * @return integer number of lines between elements in the spreadsheet for this particular element
+     */
+    public function getLinesBetweenElements()
+    {
+        return $this->_iLinesBetweenElements;
     }
     
     /**
@@ -133,7 +142,7 @@ class KrscReports_Document_Element
                 $oElement->setInnerGroupName( $sGroupName );
                 
                 // setting place of an element
-                $oElement->setStartHeight( isset( $this->_aActualHeights[$sGroupName] ) ? $this->_aActualHeights[$sGroupName] + $this->_iLinesBetweenElements : 1, false );
+                $oElement->setStartHeight( isset( $this->_aActualHeights[$sGroupName] ) ? $this->_aActualHeights[$sGroupName] + $oElement->getLinesBetweenElements() : 1, false );
                 
                 $oElement->beforeConstructDocument();
                 $oElement->constructDocument();
