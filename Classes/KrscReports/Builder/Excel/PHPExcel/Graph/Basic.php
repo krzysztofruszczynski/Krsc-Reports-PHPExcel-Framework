@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.5, 2017-05-15
+ * @version 1.1.5, 2017-05-22
  */
 
 /**
@@ -100,6 +100,11 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     protected $_iRowOffsetSecond = 0;
     
     /**
+     * @var integer iterator for knowing, which data series for plot values is actually being set 
+     */
+    protected $_iPlotValuesIterator = 0;
+    
+    /**
      * @var string name of column with values for plot category (if graph associated with table)
      */
     protected $_sPlotCategoryColumnName;
@@ -113,6 +118,11 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
      * @var string name of group (worksheet), from which data to graph are taken
      */
     protected $_sSourceGroupName;
+    
+    /**
+     * @var array|string color of graph (optional, not supported by PHPExcel 1.8.1, supported by https://github.com/krzysztofruszczynski/PHPExcel.git (1.8.2) )
+     */
+    protected $_mFillColor = null;
     
     /**
      * Setter for default settings for graph.
@@ -272,7 +282,7 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
         
         return $this->_oTitle;
     }
-    
+        
     /**
      * Method setting data series.
      * @param integer $iStartColumnId numeric coordinate of initial column for data series (starts from 0)
@@ -280,9 +290,10 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
      * @param integer $iEndColumnId numeric coordinate of end column for data series (starts from 0)
      * @param integer $iEndRowId numeric coordinate of end row for data series (starts from 1)
      * @param string $sType type of data (default: String)
+     * @param string|array $mFillColor color of data series (optional, not supported by PHPExcel 1.8.1, supported by https://github.com/krzysztofruszczynski/PHPExcel.git (1.8.2) ))
      * @return PHPExcel_Chart_DataSeriesValues data series created
      */
-    protected function _createDataSeriesValues( $iStartColumnId, $iStartRowId, $iEndColumnId, $iEndRowId, $sType = 'String' )
+    protected function _createDataSeriesValues($iStartColumnId, $iStartRowId, $iEndColumnId, $iEndRowId, $sType = 'String', $mFillColor = null)
     {
         $sDataSourcePattern = "'%s'!$%s$%d:$%s$%d";
         
@@ -314,8 +325,12 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
             $iNumberOfElements = $iEndColumnId - $iStartColumnId;
         }
         $iNumberOfElements++;
-        
-        return new PHPExcel_Chart_DataSeriesValues( $sType, $sDataSource, NULL, $iNumberOfElements );
+
+        if (is_null($mFillColor)) { // version compatible with PHPExcel
+            return new PHPExcel_Chart_DataSeriesValues($sType, $sDataSource, NULL, $iNumberOfElements);
+        } else {    // version not compatible with PHPExcel (supported by https://github.com/krzysztofruszczynski/PHPExcel.git (1.8.2) )
+            return new PHPExcel_Chart_DataSeriesValues($sType, $sDataSource, NULL, $iNumberOfElements, null, null, $mFillColor);
+        }        
     }
     
     /**
@@ -398,6 +413,35 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
     }
     
     /**
+     * Set fill color. Not supported by PHPExcel 1.8.1 . Supported by https://github.com/krzysztofruszczynski/PHPExcel.git (1.8.2) ).
+     *
+     * @param array|string $mFillColor one color for whole graph or array with colors (subsequent values of $mFillColor are data for subsequent data series - on color or array with colors
+     * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic object, on which method was executed
+     */
+    public function setFillColor( $mFillColor )
+    {
+        $this->_mFillColor = $mFillColor;
+        return $this;
+    }
+    
+    /**
+     * Method for getting filled color. Method should be used only once for one series of data (iterator inside method).
+     * @return array|string array with colors or string with color
+     */
+    protected function _getFillColor()
+    {
+        if (is_null($this->_mFillColor) || !is_array($this->_mFillColor)) {
+            return $this->_mFillColor; // one color for whole graph or not set
+        } else {    // array with colors (subsequent values of $this->_mFillColor are data for subsequent data series - on color or array with colors
+            if (isset($this->_mFillColor[$this->_iPlotValuesIterator])) {
+                return $this->_mFillColor[$this->_iPlotValuesIterator++];
+            } else {
+                return null;
+            }
+        }
+    }
+    
+    /**
      * Method setting values (y axis) for graph.
      * @param integer $iStartColumnId numeric coordinate of initial column for values (starts from 0)
      * @param integer $iStartRowId numeric coordinate of initial row for values (starts from 1)
@@ -408,7 +452,7 @@ class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports_Builder
      */
     public function setPlotValues( $iStartColumnId, $iStartRowId, $iEndColumnId, $iEndRowId, $sType = 'Number' )
     {
-        $this->_aPlotValues[] = $this->_createDataSeriesValues( $iStartColumnId, $iStartRowId, $iEndColumnId, $iEndRowId, $sType );
+        $this->_aPlotValues[] = $this->_createDataSeriesValues($iStartColumnId, $iStartRowId, $iEndColumnId, $iEndRowId, $sType, $this->_getFillColor());
         return $this;
     }
     
