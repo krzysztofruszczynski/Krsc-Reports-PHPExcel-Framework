@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 1.1.6, 2017-10-12
  */
 
 /**
@@ -87,8 +87,14 @@ class KrscReports_Autoloader
             return FALSE;
         }
 
+        if (stripos($pClassName, '\\')!==false) {   // for namespaces
+            $classDirectorySeparator = '\\';
+        } else {
+            $classDirectorySeparator = '_';
+        }
+        
         $pClassFilePath = PHPEXCEL_ROOT .
-                          str_replace('_',DIRECTORY_SEPARATOR,$pClassName) .
+                          str_replace($classDirectorySeparator,DIRECTORY_SEPARATOR,$pClassName) .
                           '.php';
 
         if ((file_exists($pClassFilePath) === FALSE) || (is_readable($pClassFilePath) === FALSE)) {
