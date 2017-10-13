@@ -24,7 +24,7 @@ namespace KrscReports;
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.6, 2017-10-13
+ * @version 1.2.0, 2017-10-13
  */
 
 /**
