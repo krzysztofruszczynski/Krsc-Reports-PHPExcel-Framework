@@ -24,7 +24,7 @@ namespace KrscReports;
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.0, 2017-10-13
+ * @version 1.2.1, 2017-11-14
  */
 
 /**
@@ -57,6 +57,16 @@ class Service
     protected $columns;
     
     /**
+     * @var string path, to which file will be generated (optional, if not provided it goes to php output)
+     */
+    protected $path;
+
+    /**
+     * @var \KrscReports_File logic for creating file
+     */
+    protected $file;
+
+    /**
      *
      * @param array  $columns          subsequent elements are names of subsequent columns (to be translated, if second input parameter is provided)
      * @param \KrscReports\ColumnTranslatorService $columnTranslator if translator is provided, column names are translated
@@ -65,8 +75,9 @@ class Service
     public function __construct($columns = array(), $columnTranslator = null, $translatorDomain = '')
     {
         $this->setColumns($columns, $columnTranslator, $translatorDomain);
+        $this->file = new \KrscReports_File();
     }
-    
+
     /**
      * Method for processing column names.
      *
@@ -80,7 +91,7 @@ class Service
         $this->columns = ( is_null($columnTranslator) || empty($columns) ) ? $columns : $columnTranslator->translateColumns($columns, $translatorDomain);
         return $this;
     }
-    
+
     /**
      * Setter for file name.
      *
@@ -92,7 +103,44 @@ class Service
         $this->fileName = $fileName;
         return $this;
     }
-    
+
+    /**
+     * Getter for file name.
+     *
+     * @return string file name for generated report
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * Setter for path of generated report.
+     * @param string $path path, to which file will be generated (with extension, optional, if not provided it goes to php output)
+     * @return \KrscReports\Service object on which this method was executed
+     */
+    public function setPath($path, $addExtension = false)
+    {
+        if ($addExtension) {
+            $path = sprintf('%s.%s', $path, $this->file->getExtension());
+        }
+        $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * Method for getting path of generated report.
+     * @return string|null path of report (with extension) or null when element is not set
+     */
+    public function getPath()
+    {
+        if (!isset($this->path)) {
+            return null;
+        }
+
+        return $this->path;
+    }
+
     /**
      * Setter for spreadsheet name.
      *
@@ -104,7 +152,7 @@ class Service
         $this->spreadsheetName = $spreadsheetName;
         return $this;
     }
-    
+
     /**
      *
      * @param \KrscReports\Views\AbstractView $reportView
@@ -116,7 +164,7 @@ class Service
         $this->reportView->addOptions($options);
         $this->reportView->setDocumentProperties();
     }
-    
+
     /**
      * @return \KrscReports\Views\AbstractView
      */
@@ -124,7 +172,7 @@ class Service
     {
         return $this->reportView;
     }
-    
+
     /**
      * @param array $data
      * @param array $columnNames
@@ -135,16 +183,21 @@ class Service
         $this->reportView->setData($data, $this->columns);
         return $this;
     }
-    
+
     /**
      * Creates file with Excel report.
      */
     public function createReport()
     {
-        $oFile = new \KrscReports_File();
-        $oFile->setFileName($this->fileName);
-     
+        $this->file->setFileName($this->fileName);
+
         $this->reportView->generate($this->spreadsheetName);
-        $oFile->createFile();
+
+        $path = $this->getPath();
+        if (is_null($path)) {   // create report to php output
+            $this->file->createFile();
+        } else {
+            $this->file->createFileWithPath($path);
+        }
     }
 }

@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.1, 2017-05-04
+ * @version 1.2.1, 2017-11-14
  */
 
 /**
@@ -38,17 +38,17 @@ class KrscReports_File
          * value for file type for Excel 2007
          */
         const FILE_TYPE_EXCEL = 'Excel2007';
-    
+
         /**
          * if true, then charts are displayed in output file
          */
         const INCLUDE_CHARTS = true;
-        
+
         /**
          * if true, then document at the end is always set to first site
          */
         const RETURN_TO_FIRST_SITE = true;
-        
+
 	/**
 	 * @var Boolean if true, writes header, when false - not
 	 */
@@ -75,12 +75,12 @@ class KrscReports_File
 	 * @var Object object responsible for creation of file
 	 */
 	protected $_oWriter;
-        
+
         /**
          * @var Object object responsible for reading of file
          */
         protected $_oReader;
-        
+
         /**
          * @var string selected file type (used by PHPExcel writer and reader)
          */
@@ -114,7 +114,16 @@ class KrscReports_File
 
 		return $this;
 	}
-        
+
+        /**
+         * Getter for actually set extension.
+         * @return string extension
+         */
+        public function getExtension()
+        {
+            return $this->_sExtension;
+        }
+
         /**
          * Setter for writer.
          * @param Object $oWriter (by default null - then PHPExcel writer is used)
@@ -137,7 +146,7 @@ class KrscReports_File
 
 		return $this;
 	}
-        
+
         /**
          * Setter for reader.
          * @param Object $oReader (by default null - then PHPExcel reader is used)
@@ -183,9 +192,9 @@ class KrscReports_File
             }
 
 	    // Write file to the browser
-            $this->createFileWithPath();	    
+            $this->createFileWithPath();
 	}
-        
+
         /**
          * Save file under specified path.
          * @param string $sPath path, under which file would be created (default: php://output )
