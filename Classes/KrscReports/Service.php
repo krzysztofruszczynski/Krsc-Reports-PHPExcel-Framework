@@ -139,17 +139,21 @@ class Service
     /**
      * Creates file with Excel report.
      */
-    public function createReport()
+    public function createReport($generateReport = true)
     {
+        if ($generateReport) {
+            $this->reportView->generate($this->spreadsheetName);
+        }
         $oFile = new \KrscReports_File();
         $oFile->setFileName($this->fileName);
-     
-        $this->reportView->generate($this->spreadsheetName);
+
         $oFile->createFile();
     }
 
-    public function createResponse() {
-        $this->reportView->generate($this->spreadsheetName);
+    public function createResponse($generateReport = true) {
+        if ($generateReport) {
+            $this->reportView->generate($this->spreadsheetName);
+        }
         $oFile = new \KrscReports_File();
         $oFile->setFileName($this->fileName);
 
