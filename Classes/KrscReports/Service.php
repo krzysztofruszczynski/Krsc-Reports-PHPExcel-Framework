@@ -147,4 +147,12 @@ class Service
         $this->reportView->generate($this->spreadsheetName);
         $oFile->createFile();
     }
+
+    public function createResponse() {
+        $this->reportView->generate($this->spreadsheetName);
+        $oFile = new \KrscReports_File();
+        $oFile->setFileName($this->fileName);
+
+        return $oFile->createResponse();
+    }
 }
