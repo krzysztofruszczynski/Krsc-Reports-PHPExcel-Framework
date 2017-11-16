@@ -173,21 +173,55 @@ class KrscReports_File
         }
 
         /**
+         * Array with HTTP headers.
+         * @return array each array key is header type, each array value is header value
+         */
+        public function createHeaderArray()
+        {
+            $aHeaders = array();
+            // header for content type of output:
+            $aHeaders['Content-type'] = $this->_aContentTypes[$this->_sExtension];
+            // header for outputted filename:
+            $aHeaders['Content-Disposition'] = 'attachment; filename="' . $this->_sFileName . '.' . $this->_sExtension . '"';
+
+            return $aHeaders;
+        }
+
+        /**
+         * Method setting headers for Symfony response.
+         * @param Object $oHeaders $response->headers property
+         */
+        public function setSymfonyHeaders($oHtmlHeaders)
+        {
+            $aHeaders = $this->createHeaderArray();
+
+            foreach ($aHeaders as $sHeaderKey => $sHeaderValue) {
+                $oHtmlHeaders->set($sHeaderKey, $sHeaderValue);
+            }
+        }
+
+        /**
+         * Method creating headers using PHP header() method.
+         */
+        public function createHeaders()
+        {
+            // remove possible previously set headers:
+            header_remove();
+            $aHeaders = $this->createHeaderArray();
+
+            foreach ($aHeaders as $sHeaderKey => $sHeaderValue) {
+                header(sprintf('%s: %s', $sHeaderKey, $sHeaderValue));
+            }
+        }
+
+        /**
          * Method for creating file (with headers if configured).
          * @return void
          */
         public function createFile()
         {
-            if( $this->_bWriteHeader )
-            {
-                // remove possible previously set headers
-                header_remove();
-
-                // header for content type of output
-                header( 'Content-type: ' . $this->_aContentTypes[$this->_sExtension] );
-
-                // header for outputted filename
-                header('Content-Disposition: attachment; filename="' . $this->_sFileName . '.' . $this->_sExtension . '"');
+            if ($this->_bWriteHeader) {
+                $this->createHeaders();
             }
 
             // Write file to the browser
