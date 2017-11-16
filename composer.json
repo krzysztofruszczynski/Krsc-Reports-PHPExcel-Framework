@@ -14,6 +14,12 @@
     "require": {
         "php": ">=5.5.0"
     },
+    "require-dev": {
+        "phpoffice/phpexcel": "^1.8"
+    },
+    "suggest": {
+        "phpoffice/phpexcel": "Allows to create of reports in excel"
+    },
     "autoload": {
         "psr-0": {
             "KrscReports": "Classes/"
