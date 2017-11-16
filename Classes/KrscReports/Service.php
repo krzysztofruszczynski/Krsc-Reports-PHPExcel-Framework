@@ -24,7 +24,7 @@ namespace KrscReports;
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.1, 2017-11-14
+ * @version 1.2.1, 2017-11-16
  */
 
 /**
@@ -76,6 +76,15 @@ class Service
     {
         $this->setColumns($columns, $columnTranslator, $translatorDomain);
         $this->file = new \KrscReports_File();
+    }
+
+    /**
+     * Getter for object responsible for creating file.
+     * @return \KrscReports_File object creating file
+     */
+    public function getFileObject()
+    {
+        return $this->file;
     }
 
     /**
