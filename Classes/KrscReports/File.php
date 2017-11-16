@@ -49,32 +49,32 @@ class KrscReports_File
          */
         const RETURN_TO_FIRST_SITE = true;
 
-	/**
-	 * @var Boolean if true, writes header, when false - not
-	 */
-	protected $_bWriteHeader = true;
+        /**
+         * @var Boolean if true, writes header, when false - not
+         */
+        protected $_bWriteHeader = true;
 
-	/**
-	 * @var String name of created file
-	 */
-	protected $_sFileName;
+        /**
+         * @var String name of created file
+         */
+        protected $_sFileName;
 
-	/**
-	 * @var String extension of output file (for time being xlsx default, in future allowing more types of extensions)
-	 */
-	protected $_sExtension = 'xlsx';
+        /**
+         * @var String extension of output file (for time being xlsx default, in future allowing more types of extensions)
+         */
+        protected $_sExtension = 'xlsx';
 
-	/**
-	 * @var Array array where key is extension and value is content type for it
-	 */
-	protected $_aContentTypes = array(
-		'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-		);
+        /**
+         * @var Array array where key is extension and value is content type for it
+         */
+        protected $_aContentTypes = array(
+                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
 
-	/**
-	 * @var Object object responsible for creation of file
-	 */
-	protected $_oWriter;
+        /**
+         * @var Object object responsible for creation of file
+         */
+        protected $_oWriter;
 
         /**
          * @var Object object responsible for reading of file
@@ -86,34 +86,34 @@ class KrscReports_File
          */
         protected $_sFileType = self::FILE_TYPE_EXCEL;
 
-	/**
-	 * Setter for file name.
-	 * @param String $sFileName name of file to be created
-	 * @return KrscReports_File object on which method is executed
-	 */
-	public function setFileName( $sFileName )
-	{
-		$this->_sFileName = $sFileName;
-		return $this;
-	}
+        /**
+         * Setter for file name.
+         * @param String $sFileName name of file to be created
+         * @return KrscReports_File object on which method is executed
+         */
+        public function setFileName( $sFileName )
+        {
+            $this->_sFileName = $sFileName;
+            return $this;
+        }
 
-	/**
-	 * Method for setting output extension.
-	 * @param String $sExtension extension to be set
-	 * @return KrscReports_File object on which method is executed
-	 * @throws KrscReports_Exception 
-	 */
-	public function setExtension( $sExtension )
-	{
-		if( array_key_exists( $sExtension, $this->_aContentTypes ) )
-		{
-			$this->_sExtension = $sExtension;
-		} else {
-			throw new KrscReports_Exception_InvalidException( $sExtension );
-		}
+        /**
+         * Method for setting output extension.
+         * @param String $sExtension extension to be set
+         * @return KrscReports_File object on which method is executed
+         * @throws KrscReports_Exception 
+         */
+        public function setExtension( $sExtension )
+        {
+            if( array_key_exists( $sExtension, $this->_aContentTypes ) )
+            {
+                $this->_sExtension = $sExtension;
+            } else {
+                throw new KrscReports_Exception_InvalidException( $sExtension );
+            }
 
-		return $this;
-	}
+            return $this;
+        }
 
         /**
          * Getter for actually set extension.
@@ -129,23 +129,22 @@ class KrscReports_File
          * @param Object $oWriter (by default null - then PHPExcel writer is used)
          * @return KrscReports_File object on which method was executed
          */
-	public function setWriter( $oWriter = null )
-	{
-		if( isset( $this->_oWriter ) )
-		{	// previously set - no changes
+        public function setWriter( $oWriter = null )
+        {
+            if( isset( $this->_oWriter ) ) {   // previously set - no changes
 
-		} else if( is_null( $oWriter ) ) {
-                        $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
-                        $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
-                        if ( self::RETURN_TO_FIRST_SITE ) {
-                            KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
-                        }                       
-		} else {
-			$this->_oWriter = $oWriter;
-		}
+            } else if( is_null( $oWriter ) ) {
+                $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
+                $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
+                if ( self::RETURN_TO_FIRST_SITE ) {
+                    KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
+                }
+            } else {
+                $this->_oWriter = $oWriter;
+            }
 
-		return $this;
-	}
+            return $this;
+        }
 
         /**
          * Setter for reader.
@@ -155,7 +154,7 @@ class KrscReports_File
         public function setReader( $oReader = null )
         {
             if( isset( $this->_oReader ) )
-            {	// previously set - no changes
+            {   // previously set - no changes
 
             } else if( is_null( $oReader ) ) {
                 $this->_oReader = PHPExcel_IOFactory::createReader( $this->_sFileType );
@@ -165,11 +164,11 @@ class KrscReports_File
                 } else {
                     throw new Exception('Unable to read file: ' . $this->_sFileName );
                 }
-                
+
             } else {
-		$this->_oReader = $oReader;
+                $this->_oReader = $oReader;
             }
-            
+
             return $this;
         }
 
@@ -177,23 +176,23 @@ class KrscReports_File
          * Method for creating file (with headers if configured).
          * @return void
          */
-	public function createFile()
-	{
+        public function createFile()
+        {
             if( $this->_bWriteHeader )
             {
-		// remove possible previously set headers
+                // remove possible previously set headers
                 header_remove();
-	    
-	    	// header for content type of output
-	    	header( 'Content-type: ' . $this->_aContentTypes[$this->_sExtension] );
-	    
-	    	// header for outputted filename
-	    	header('Content-Disposition: attachment; filename="' . $this->_sFileName . '.' . $this->_sExtension . '"');
+
+                // header for content type of output
+                header( 'Content-type: ' . $this->_aContentTypes[$this->_sExtension] );
+
+                // header for outputted filename
+                header('Content-Disposition: attachment; filename="' . $this->_sFileName . '.' . $this->_sExtension . '"');
             }
 
-	    // Write file to the browser
+            // Write file to the browser
             $this->createFileWithPath();
-	}
+        }
 
         /**
          * Save file under specified path.
