@@ -194,7 +194,7 @@ abstract class AbstractView
 
         return $this->cell;
     }
-    
+
     /**
      * Method adding column names to data provided in input.
      * @param array $data
@@ -203,31 +203,32 @@ abstract class AbstractView
      */
     protected function addColumnNames( $data, $columnNames = array() )
     {
-        $outputData = $data;
-        
         if( !empty( $columnNames ) ){
+            $outputData = array();
             foreach( $data as $key => $row ){                
                 $styleColumn = ''; // can be string or array
                 if ( isset( $row[self::getStyleColumnName()] ) ) { // removing style element from array before array_combine
                     $styleColumn = $row[self::getStyleColumnName()];
                     unset( $row[self::getStyleColumnName()] );
                 }
-                
+
                 if ( count( $columnNames ) !== count( $row ) ) {
-                    throw new \Exception( sprintf( 'array combine error: (columnNames: %s, row: %s)', var_export( $columnNames, true ), var_export( $row, true ) ) );
+                    throw new \Exception(sprintf( 'Array sizes are not the same: (columnNames: %s, row: %s, rowNo: %s)', count($columnNames), count($row), $key));
                 }
-                
+
                 $outputData[$key] = array_combine( $columnNames, $row );  
-                
+
                 if ( !empty( $styleColumn ) ) { // inserting style element after array_combine
                     $outputData[$key][self::getStyleColumnName()] = $styleColumn;
                 }
             }
+        } else {
+            $outputData = $data;
         }
-        
+
         return $outputData;
     }
-    
+
     /**
      * Method setting data for spreadsheet.
      * @param array $data data for spreadsheet
