@@ -213,7 +213,7 @@ abstract class AbstractView
                 }
                 
                 if ( count( $columnNames ) !== count( $row ) ) {
-                    throw new \Exception( sprintf( 'array combine error: (columnNames: %s, row: %s)', var_export( $columnNames, true ), var_export( $row, true ) ) );
+                    throw new \Exception( sprintf( 'array sizes not same: (columnNames: %d, row: %d, in rowNo: %s)', count( $columnNames ), count( $row ), $key ) );
                 }
                 
                 $outputData[$key] = array_combine( $columnNames, $row );  
