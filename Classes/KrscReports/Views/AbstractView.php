@@ -203,9 +203,8 @@ abstract class AbstractView
      */
     protected function addColumnNames( $data, $columnNames = array() )
     {
-        $outputData = $data;
-        
         if( !empty( $columnNames ) ){
+            $outputData = array();
             foreach( $data as $key => $row ){                
                 $styleColumn = ''; // can be string or array
                 if ( isset( $row[self::getStyleColumnName()] ) ) { // removing style element from array before array_combine
@@ -223,8 +222,10 @@ abstract class AbstractView
                     $outputData[$key][self::getStyleColumnName()] = $styleColumn;
                 }
             }
+        } else {
+            $outputData = $data;
         }
-        
+
         return $outputData;
     }
     
