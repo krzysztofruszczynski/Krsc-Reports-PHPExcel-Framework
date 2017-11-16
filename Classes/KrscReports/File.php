@@ -197,4 +197,22 @@ class KrscReports_File
             
             $this->_oWriter->save( $bAddExtension ? sprintf('%s.%s', $sPath, $this->_sExtension ) : $sPath );
         }
+
+        public function createResponse()
+        {
+            $this->setWriter();
+            $writer = $this->_oWriter;
+
+            $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($writer) {
+                $writer->save('php://output');
+            }); // same as $response = $Liuggio_ExcelBundle_Factory->createStreamedResponse($writer);
+
+            $htmlHeaders = $response->headers;
+            $htmlHeaders->set('Content-Type', $this->_aContentTypes[$this->_sExtension].'; charset=utf-8');
+            $htmlHeaders->set('Pragma', 'public');
+            $htmlHeaders->set('Content-Disposition', $htmlHeaders->makeDisposition(
+                $htmlHeaders::DISPOSITION_ATTACHMENT,
+                $this->fileName.$this->_sExtension
+            ));
+        }
 }
