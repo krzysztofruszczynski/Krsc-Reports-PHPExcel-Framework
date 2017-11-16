@@ -55,9 +55,9 @@ class KrscReports_File
         protected $_bWriteHeader = true;
 
         /**
-         * @var String name of created file
+         * @var string name of created file (if not additionally set, default value is used)
          */
-        protected $_sFileName;
+        protected $_sFileName = 'report';
 
         /**
          * @var String extension of output file (for time being xlsx default, in future allowing more types of extensions)
