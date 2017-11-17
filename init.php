@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2017 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.2, 2016-11-12
+ * @version 1.2.1, 2017-11-17
  */
 
 // Error reporting 
@@ -30,15 +30,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
-// setting own autoloader
-require_once( dirname(__FILE__) . '/Classes/KrscReports/Autoloader.php' );
-
-/** Include PHPExcel */
-if( file_exists( dirname(__FILE__) . '/Classes/PHPExcel.php' ) )
-{
-    require_once dirname(__FILE__) . '/Classes/PHPExcel.php';
-}
-else
-{
-    die('Has not found PHPExcel. Please put sources in Classes folder.');
+// setting composer autoloader
+$sComposerAutoLoaderPath = dirname(__FILE__) . '/vendor/autoload.php';
+if (file_exists($sComposerAutoLoaderPath)) {
+    require_once $sComposerAutoLoaderPath;
+} else {
+    die('Please install composer dependencies (via "composer install" command).');
 }
