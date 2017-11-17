@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.1, 2017-05-04
+ * @version 1.2.1, 2017-11-14
  */
 
 /**
@@ -38,106 +38,114 @@ class KrscReports_File
          * value for file type for Excel 2007
          */
         const FILE_TYPE_EXCEL = 'Excel2007';
-    
+
         /**
          * if true, then charts are displayed in output file
          */
         const INCLUDE_CHARTS = true;
-        
+
         /**
          * if true, then document at the end is always set to first site
          */
         const RETURN_TO_FIRST_SITE = true;
-        
-	/**
-	 * @var Boolean if true, writes header, when false - not
-	 */
-	protected $_bWriteHeader = true;
 
-	/**
-	 * @var String name of created file
-	 */
-	protected $_sFileName;
+        /**
+         * @var Boolean if true, writes header, when false - not
+         */
+        protected $_bWriteHeader = true;
 
-	/**
-	 * @var String extension of output file (for time being xlsx default, in future allowing more types of extensions)
-	 */
-	protected $_sExtension = 'xlsx';
+        /**
+         * @var string name of created file (if not additionally set, default value is used)
+         */
+        protected $_sFileName = 'report';
 
-	/**
-	 * @var Array array where key is extension and value is content type for it
-	 */
-	protected $_aContentTypes = array(
-		'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-		);
+        /**
+         * @var String extension of output file (for time being xlsx default, in future allowing more types of extensions)
+         */
+        protected $_sExtension = 'xlsx';
 
-	/**
-	 * @var Object object responsible for creation of file
-	 */
-	protected $_oWriter;
-        
+        /**
+         * @var Array array where key is extension and value is content type for it
+         */
+        protected $_aContentTypes = array(
+                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+
+        /**
+         * @var Object object responsible for creation of file
+         */
+        protected $_oWriter;
+
         /**
          * @var Object object responsible for reading of file
          */
         protected $_oReader;
-        
+
         /**
          * @var string selected file type (used by PHPExcel writer and reader)
          */
         protected $_sFileType = self::FILE_TYPE_EXCEL;
 
-	/**
-	 * Setter for file name.
-	 * @param String $sFileName name of file to be created
-	 * @return KrscReports_File object on which method is executed
-	 */
-	public function setFileName( $sFileName )
-	{
-		$this->_sFileName = $sFileName;
-		return $this;
-	}
+        /**
+         * Setter for file name.
+         * @param String $sFileName name of file to be created
+         * @return KrscReports_File object on which method is executed
+         */
+        public function setFileName( $sFileName )
+        {
+            $this->_sFileName = $sFileName;
+            return $this;
+        }
 
-	/**
-	 * Method for setting output extension.
-	 * @param String $sExtension extension to be set
-	 * @return KrscReports_File object on which method is executed
-	 * @throws KrscReports_Exception 
-	 */
-	public function setExtension( $sExtension )
-	{
-		if( array_key_exists( $sExtension, $this->_aContentTypes ) )
-		{
-			$this->_sExtension = $sExtension;
-		} else {
-			throw new KrscReports_Exception_InvalidException( $sExtension );
-		}
+        /**
+         * Method for setting output extension.
+         * @param String $sExtension extension to be set
+         * @return KrscReports_File object on which method is executed
+         * @throws KrscReports_Exception 
+         */
+        public function setExtension( $sExtension )
+        {
+            if( array_key_exists( $sExtension, $this->_aContentTypes ) )
+            {
+                $this->_sExtension = $sExtension;
+            } else {
+                throw new KrscReports_Exception_InvalidException( $sExtension );
+            }
 
-		return $this;
-	}
-        
+            return $this;
+        }
+
+        /**
+         * Getter for actually set extension.
+         * @return string extension
+         */
+        public function getExtension()
+        {
+            return $this->_sExtension;
+        }
+
         /**
          * Setter for writer.
          * @param Object $oWriter (by default null - then PHPExcel writer is used)
          * @return KrscReports_File object on which method was executed
          */
-	public function setWriter( $oWriter = null )
-	{
-		if( isset( $this->_oWriter ) )
-		{	// previously set - no changes
+        public function setWriter( $oWriter = null )
+        {
+            if( isset( $this->_oWriter ) ) {   // previously set - no changes
 
-		} else if( is_null( $oWriter ) ) {
-                        $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
-                        $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
-                        if ( self::RETURN_TO_FIRST_SITE ) {
-                            KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
-                        }                       
-		} else {
-			$this->_oWriter = $oWriter;
-		}
+            } else if( is_null( $oWriter ) ) {
+                $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
+                $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
+                if ( self::RETURN_TO_FIRST_SITE ) {
+                    KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
+                }
+            } else {
+                $this->_oWriter = $oWriter;
+            }
 
-		return $this;
-	}
-        
+            return $this;
+        }
+
         /**
          * Setter for reader.
          * @param Object $oReader (by default null - then PHPExcel reader is used)
@@ -146,7 +154,7 @@ class KrscReports_File
         public function setReader( $oReader = null )
         {
             if( isset( $this->_oReader ) )
-            {	// previously set - no changes
+            {   // previously set - no changes
 
             } else if( is_null( $oReader ) ) {
                 $this->_oReader = PHPExcel_IOFactory::createReader( $this->_sFileType );
@@ -156,36 +164,70 @@ class KrscReports_File
                 } else {
                     throw new Exception('Unable to read file: ' . $this->_sFileName );
                 }
-                
+
             } else {
-		$this->_oReader = $oReader;
+                $this->_oReader = $oReader;
             }
-            
+
             return $this;
+        }
+
+        /**
+         * Array with HTTP headers.
+         * @return array each array key is header type, each array value is header value
+         */
+        public function createHeaderArray()
+        {
+            $aHeaders = array();
+            // header for content type of output:
+            $aHeaders['Content-type'] = $this->_aContentTypes[$this->_sExtension];
+            // header for outputted filename:
+            $aHeaders['Content-Disposition'] = 'attachment; filename="' . $this->_sFileName . '.' . $this->_sExtension . '"';
+
+            return $aHeaders;
+        }
+
+        /**
+         * Method setting headers for Symfony response.
+         * @param Object $oHeaders $response->headers property
+         */
+        public function setSymfonyHeaders($oHtmlHeaders)
+        {
+            $aHeaders = $this->createHeaderArray();
+
+            foreach ($aHeaders as $sHeaderKey => $sHeaderValue) {
+                $oHtmlHeaders->set($sHeaderKey, $sHeaderValue);
+            }
+        }
+
+        /**
+         * Method creating headers using PHP header() method.
+         */
+        public function createHeaders()
+        {
+            // remove possible previously set headers:
+            header_remove();
+            $aHeaders = $this->createHeaderArray();
+
+            foreach ($aHeaders as $sHeaderKey => $sHeaderValue) {
+                header(sprintf('%s: %s', $sHeaderKey, $sHeaderValue));
+            }
         }
 
         /**
          * Method for creating file (with headers if configured).
          * @return void
          */
-	public function createFile()
-	{
-            if( $this->_bWriteHeader )
-            {
-		// remove possible previously set headers
-                header_remove();
-	    
-	    	// header for content type of output
-	    	header( 'Content-type: ' . $this->_aContentTypes[$this->_sExtension] );
-	    
-	    	// header for outputted filename
-	    	header('Content-Disposition: attachment; filename="' . $this->_sFileName . '.' . $this->_sExtension . '"');
+        public function createFile()
+        {
+            if ($this->_bWriteHeader) {
+                $this->createHeaders();
             }
 
-	    // Write file to the browser
-            $this->createFileWithPath();	    
-	}
-        
+            // Write file to the browser
+            $this->createFileWithPath();
+        }
+
         /**
          * Save file under specified path.
          * @param string $sPath path, under which file would be created (default: php://output )

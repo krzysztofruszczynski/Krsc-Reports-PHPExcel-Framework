@@ -120,7 +120,7 @@ abstract class AbstractView
     {
         $this->columnTranslator = $columnTranslator;
     }
-    
+
     /**
      * Method for setting document properties. To be executed after options are set.
      */
@@ -128,16 +128,19 @@ abstract class AbstractView
     {
         switch ( $this->selectedSettings ) {
             case self::SETTINGS_PHPEXCEL:
-                if ( isset( $this->columnTranslator ) ) {
-                    // translate properties
-                    $this->options[self::KEY_DOCUMENT_PROPERTIES] = $this->columnTranslator->translateColumns( $this->options[self::KEY_DOCUMENT_PROPERTIES], ( isset( $this->options[self::KEY_TRANSLATOR_DOMAIN] ) ? $this->options[self::KEY_TRANSLATOR_DOMAIN] : '' ) );
+                if (isset($this->options[self::KEY_DOCUMENT_PROPERTIES])) {
+                    if ( isset( $this->columnTranslator ) ) {
+                        // translate properties
+                        $this->options[self::KEY_DOCUMENT_PROPERTIES] = $this->columnTranslator->translateColumns( $this->options[self::KEY_DOCUMENT_PROPERTIES], ( isset( $this->options[self::KEY_TRANSLATOR_DOMAIN] ) ? $this->options[self::KEY_TRANSLATOR_DOMAIN] : '' ) );
+                    }
+
+                    \KrscReports_Builder_Excel_PHPExcel::setDocumentProperties( $this->options[self::KEY_DOCUMENT_PROPERTIES] );
                 }
-                
-                \KrscReports_Builder_Excel_PHPExcel::setDocumentProperties( $this->options[self::KEY_DOCUMENT_PROPERTIES] );
+
                 break;
         }
     }
-    
+
     /**
      * Getter for column style name (can be override). Works only if settings via constructor were properly set.
      * @return string name of column with styles
@@ -194,7 +197,7 @@ abstract class AbstractView
 
         return $this->cell;
     }
-    
+
     /**
      * Method adding column names to data provided in input.
      * @param array $data
@@ -211,13 +214,13 @@ abstract class AbstractView
                     $styleColumn = $row[self::getStyleColumnName()];
                     unset( $row[self::getStyleColumnName()] );
                 }
-                
+
                 if ( count( $columnNames ) !== count( $row ) ) {
-                    throw new \Exception( sprintf( 'array combine error: (columnNames: %s, row: %s)', var_export( $columnNames, true ), var_export( $row, true ) ) );
+                    throw new \Exception(sprintf( 'Array sizes are not the same: (columnNames: %s, row: %s, rowNo: %s)', count($columnNames), count($row), $key));
                 }
-                
+
                 $outputData[$key] = array_combine( $columnNames, $row );  
-                
+
                 if ( !empty( $styleColumn ) ) { // inserting style element after array_combine
                     $outputData[$key][self::getStyleColumnName()] = $styleColumn;
                 }
@@ -228,7 +231,7 @@ abstract class AbstractView
 
         return $outputData;
     }
-    
+
     /**
      * Method setting data for spreadsheet.
      * @param array $data data for spreadsheet
