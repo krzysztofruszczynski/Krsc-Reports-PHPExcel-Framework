@@ -18,7 +18,7 @@
         "phpoffice/phpexcel": "^1.8"
     },
     "suggest": {
-        "phpoffice/phpexcel": "Allows to create of reports in excel"
+        "phpoffice/phpexcel": "Allows creation of reports in Excel format"
     },
     "autoload": {
         "psr-0": {
