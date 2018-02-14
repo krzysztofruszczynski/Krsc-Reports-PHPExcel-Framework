@@ -78,7 +78,7 @@ abstract class AbstractView
     /**
      * @var array subsequent elements are titles for subsequent columns (if we don't want to use those from provided data or there are no data)
      */
-    protected $columnNames = array();
+    protected $columnNames;
     
     /**
      * @var \KrscReports\Type\Excel\PHPExcel\Style\Bundle\AbstractStyle style builder
