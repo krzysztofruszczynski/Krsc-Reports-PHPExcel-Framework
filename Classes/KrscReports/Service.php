@@ -102,6 +102,16 @@ class Service
     }
 
     /**
+     * Method for getting processed column names.
+     *
+     * @return array processed column names
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
      * Setter for file name.
      *
      * @param  string $fileName file name for generated report
