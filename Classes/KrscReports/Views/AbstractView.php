@@ -24,9 +24,9 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.0, 2017-10-13
+ * @version 1.2.2, 2018-02-14
  */
 
 /**
@@ -78,7 +78,7 @@ abstract class AbstractView
     /**
      * @var array subsequent elements are titles for subsequent columns (if we don't want to use those from provided data or there are no data)
      */
-    protected $columnNames;
+    protected $columnNames = array();
     
     /**
      * @var \KrscReports\Type\Excel\PHPExcel\Style\Bundle\AbstractStyle style builder
@@ -119,6 +119,20 @@ abstract class AbstractView
     public function setColumnTranslator( $columnTranslator )
     {
         $this->columnTranslator = $columnTranslator;
+    }
+
+    /**
+     * Method for processing column names.
+     *
+     * @param  array  $columns  subsequent elements are names of subsequent columns (to be translated)
+     *
+     * @return $this
+     */
+    public function setColumns($columns = array())
+    {
+        $this->columnNames = $this->columnTranslator->translateColumns($columns, (isset( $this->options[self::KEY_TRANSLATOR_DOMAIN]) ? $this->options[self::KEY_TRANSLATOR_DOMAIN] : ''));
+
+        return $this;
     }
 
     /**
@@ -234,18 +248,20 @@ abstract class AbstractView
 
     /**
      * Method setting data for spreadsheet.
+     *
      * @param array $data data for spreadsheet
      * @param array $columnNames subsequent elements are names of columns (optional)
+     *
      * @return AbstractView
      */
-    public function setData( $data, $columnNames = array() )
+    public function setData($data, $columnNames = array())
     {   
-        $this->data = $this->addColumnNames( $data, $columnNames );       
-        
         if( !empty( $columnNames ) ){
             $this->columnNames = $columnNames;
         }
-        
+
+        $this->data = $this->addColumnNames($data, $this->columnNames);
+
         return $this;
     }
     
