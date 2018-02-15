@@ -4,7 +4,7 @@ namespace KrscReports;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@ namespace KrscReports;
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.0, 2017-10-13
+ * @version 1.2.2, 2018-02-15
  */
 
 /**
@@ -51,11 +51,31 @@ class ColumnTranslatorService
     {
         return $this->translator;
     }
-    
+
+    /**
+     * Method translating columns.
+     *
+     * @param array $columns columns before translation
+     * @param string $translatorDomain translator domain
+     *
+     * @return array translated columns
+     */
     public function translateColumns($columns, $translatorDomain)
     {
         foreach ($columns as $key => $value) {
-            $columns[$key] = $this->translator->trans($value, array(), $translatorDomain);
+            if (is_array($value)) { // column consist of more than one translate key
+                $translatedText = '';
+                foreach ($value as $translateKey) {
+                    if (stripos($translateKey, ' ') !== false) { // space inside element - not translate
+                        $translatedText .= $translateKey;
+                    } else {
+                        $translatedText .= $this->translator->trans($translateKey, array(), $translatorDomain);
+                    }
+                }
+                $columns[$key] = $translatedText;
+            } else {
+                $columns[$key] = $this->translator->trans($value, array(), $translatorDomain);
+            }
         }
         
         return $columns;
