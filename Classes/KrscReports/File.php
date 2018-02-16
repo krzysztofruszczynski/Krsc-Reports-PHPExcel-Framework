@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.1, 2017-11-14
+ * @version 1.2.2, 2018-02-16
  */
 
 /**
@@ -136,6 +136,8 @@ class KrscReports_File
             } else if( is_null( $oWriter ) ) {
                 $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
                 $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
+                $this->_oWriter->setPreCalculateFormulas(true);
+
                 if ( self::RETURN_TO_FIRST_SITE ) {
                     KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
                 }
@@ -230,13 +232,15 @@ class KrscReports_File
 
         /**
          * Save file under specified path.
+         *
          * @param string $sPath path, under which file would be created (default: php://output )
          * @param boolean $bAddExtension if true, extension is automatically added to file name ( with . )
+         * @param Object object responsible for creation of file (optional)
          */
-        public function createFileWithPath( $sPath = 'php://output', $bAddExtension = false )
+        public function createFileWithPath($sPath = 'php://output', $bAddExtension = false, $oWriter = null)
         {
-            $this->setWriter();
-            
-            $this->_oWriter->save( $bAddExtension ? sprintf('%s.%s', $sPath, $this->_sExtension ) : $sPath );
+            $this->setWriter($oWriter);
+
+            $this->_oWriter->save($bAddExtension ? sprintf('%s.%s', $sPath, $this->_sExtension ) : $sPath);
         }
 }
