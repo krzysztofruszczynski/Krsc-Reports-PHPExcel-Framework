@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.2, 2018-02-16
+ * @version 1.2.3, 2018-02-19
  */
 
 /**
@@ -45,9 +45,9 @@ class KrscReports_File
         const INCLUDE_CHARTS = true;
 
         /**
-         * if true, then document at the end is always set to first site
+         * @var Boolean if true, then document at the end is always set to first site
          */
-        const RETURN_TO_FIRST_SITE = true;
+        protected $_bReturnToFirstSite = true;
 
         /**
          * @var Boolean if true, writes header, when false - not
@@ -125,6 +125,20 @@ class KrscReports_File
         }
 
         /**
+         * Setter for deciding, if document is always set to first site.
+         *
+         * @param Boolean $returnToFirstSite if true, then document at the end is always set to first site
+         *
+         * @return KrscReports_File object on which method was executed
+         */
+        public function setReturnToFirstSite($returnToFirstSite)
+        {
+            $this->_bReturnToFirstSite = $returnToFirstSite;
+
+            return $this;
+        }
+
+        /**
          * Setter for writer.
          * @param Object $oWriter (by default null - then PHPExcel writer is used)
          * @return KrscReports_File object on which method was executed
@@ -138,7 +152,7 @@ class KrscReports_File
                 $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
                 $this->_oWriter->setPreCalculateFormulas(true);
 
-                if ( self::RETURN_TO_FIRST_SITE ) {
+                if ($this->_bReturnToFirstSite) {
                     KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
                 }
             } else {
