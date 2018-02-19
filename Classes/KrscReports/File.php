@@ -45,9 +45,9 @@ class KrscReports_File
         const INCLUDE_CHARTS = true;
 
         /**
-         * @var Boolean if true, then document at the end is always set to first site
+         * @var Integer|Boolean if false, document is on the last page, 0 (integer) - first site (or any different spreadsheet index)
          */
-        protected $_bReturnToFirstSite = true;
+        protected $_mReturnToSite = 0;
 
         /**
          * @var Boolean if true, writes header, when false - not
@@ -125,15 +125,15 @@ class KrscReports_File
         }
 
         /**
-         * Setter for deciding, if document is always set to first site.
+         * Setter for deciding, if document want to return to given site.
          *
-         * @param Boolean $returnToFirstSite if true, then document at the end is always set to first site
+         * @param Integer|Boolean $mReturnToSite if false, document is on the last page, 0 (integer) - first site (or any different spreadsheet index)
          *
          * @return KrscReports_File object on which method was executed
          */
-        public function setReturnToFirstSite($returnToFirstSite)
+        public function setReturnToSite($mReturnToSite)
         {
-            $this->_bReturnToFirstSite = $returnToFirstSite;
+            $this->_mReturnToSite = $mReturnToSite;
 
             return $this;
         }
@@ -152,8 +152,8 @@ class KrscReports_File
                 $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
                 $this->_oWriter->setPreCalculateFormulas(true);
 
-                if ($this->_bReturnToFirstSite) {
-                    KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex( 0 );
+                if ($this->_mReturnToSite !== false) {
+                    KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex($this->_mReturnToSite);
                 }
             } else {
                 $this->_oWriter = $oWriter;
