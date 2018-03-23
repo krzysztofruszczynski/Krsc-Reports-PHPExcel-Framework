@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.2, 2017-04-28
+ * @version 1.2.4, 2018-03-23
  */
 
 /**
@@ -106,7 +106,13 @@ class KrscReports_Type_Excel_PHPExcel_Cell
      */
     public function setValue( $mValue )
     {
-        $this->_mValue = $mValue;
+        if (is_scalar($mValue) && $mValue != strip_tags((string)$mValue)) { // value contains tag - treat as html
+            $html2rich = new \PHPExcel_Helper_HTML();
+            $this->_mValue = $html2rich->toRichTextObject((string)$mValue);
+        } else {
+            $this->_mValue = $mValue;
+        }
+
         return $this;
     }
     
