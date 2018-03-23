@@ -26,7 +26,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.2, 2018-02-14
+ * @version 1.2.4, 2018-03-23
  */
 
 /**
@@ -130,7 +130,7 @@ abstract class AbstractView
      */
     public function setColumns($columns = array())
     {
-        $this->columnNames = $this->columnTranslator->translateColumns($columns, (isset( $this->options[self::KEY_TRANSLATOR_DOMAIN]) ? $this->options[self::KEY_TRANSLATOR_DOMAIN] : ''));
+        $this->columnNames = $this->columnTranslator->translateColumns($columns, (isset( $this->options[self::KEY_TRANSLATOR_DOMAIN]) ? $this->options[self::KEY_TRANSLATOR_DOMAIN] : null));
 
         return $this;
     }
