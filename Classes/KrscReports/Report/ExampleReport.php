@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-26
+ * @version 1.2.5, 2018-04-19
  */
 
 /**
@@ -55,6 +55,7 @@ abstract class KrscReports_Report_ExampleReport
         new KrscReports_Report_ExampleReportDifferentStyles();
         new KrscReports_Report_ExampleReportDifferentCellStyles();
         new KrscReports_Report_ExampleReportChartPie();
+        new KrscReports_Report_ExampleReportDifferentSizes();
     }
     
     /**
