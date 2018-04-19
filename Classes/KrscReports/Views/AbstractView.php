@@ -49,7 +49,12 @@ abstract class AbstractView
      * key in options where there is array column size (keys - column id starting from 0, values - width of column) 
      */
     const KEY_COLUMN_FIXED_SIZES = 'column_sizes';
-    
+
+    /**
+     * key in options where there is array column size (keys - column id starting from 0, values - max width of column)
+     */
+    const KEY_COLUMN_MAX_SIZES = 'column_max_sizes';
+
     /**
      * key in options for number of rows between subsequent tables
      */
@@ -206,6 +211,12 @@ abstract class AbstractView
         if ( isset( $this->options[self::KEY_COLUMN_FIXED_SIZES] ) && is_array( $this->options[self::KEY_COLUMN_FIXED_SIZES]) ) {
             foreach ( $this->options[self::KEY_COLUMN_FIXED_SIZES] as $columnId => $columnSize ) {
                 $this->cell->setColumnFixedSize( $columnId, $columnSize );
+            }
+        }
+
+        if ( isset( $this->options[self::KEY_COLUMN_MAX_SIZES] ) && is_array( $this->options[self::KEY_COLUMN_MAX_SIZES]) ) {
+            foreach ( $this->options[self::KEY_COLUMN_MAX_SIZES] as $columnId => $columnSize ) {
+                $this->cell->setColumnMaxSize($columnId, $columnSize);
             }
         }
 
