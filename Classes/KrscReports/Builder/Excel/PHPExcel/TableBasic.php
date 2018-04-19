@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.8, 2017-03-28
+ * @version 1.2.5, 2018-04-19
  */
 
 /**
@@ -67,11 +67,13 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
             
         foreach( $aColumnNames as $sColumnName )
         {
-            if( !$this->_oCell->isColumnFixedSizeIsSet( $iIterator ) )
+            if(!$this->_oCell->isColumnFixedSizeIsSet($iIterator))
             {
                 $this->_oCell->setColumnDimensionAutosize( $this->_iActualWidth + $iIterator, true );
+            } else {
+                $this->_oCell->createColumnFixedSize($iIterator);
             }
-            
+
             $iIterator++;
         }
     }
@@ -109,7 +111,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
      */
     public function setRows() 
     {
-        
+
         foreach( $this->_aData as $aRow )
         {   // iterating over rows
             $iIterator = 0;
@@ -118,17 +120,17 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
                 $this->_oCell->setValue( $mColumnValue );
                 $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
             }
-            
+
             // adding one row in registry
             $this->_iActualHeight++;
         }
     }
-    
+
     /**
      * Action responsible for creating document (while creating table not used but has to be implemented).
      * @return void
      */
-    public function constructDocument()    
+    public function constructDocument()
     {
         
     }

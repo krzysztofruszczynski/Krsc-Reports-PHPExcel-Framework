@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.2, 2017-04-28
+ * @version 1.2.5, 2018-04-19
  */
 
 /**
@@ -53,10 +53,15 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     protected $_sType;
     
     /**
-     * @var array key is columnId, value is column fixed size  
+     * @var array|integer key is columnId, value is column fixed size (if integer - value apply to every column)
      */
-    protected $_aColumnFixedSizes = array();
+    protected $_mColumnFixedSizes = array();
     
+    /**
+     * @var array|integer key is columnId, value is column fixed size  (if integer - value apply to every column)
+     */
+    protected $_mColumnMaxSizes = array();
+
     /**
      * @var KrscReports_Type_Excel_PHPExcel_Style object for managing style collections
      */
@@ -185,30 +190,118 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     {
         return $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize( $bAutoSize );
     }
-    
+
     /**
      * Method checks whether fixed size for this column is already set.
+     *
      * @param integer $iColumnId numeric id of column
+     *
      * @return boolean true if fixed size is already set, false otherwise
      */
     public function isColumnFixedSizeIsSet( $iColumnId )
     {
-        return isset( $this->_aColumnFixedSizes[$iColumnId] );
+        $bIsColumnFixedSizeIsSet = false;
+
+        if (!is_array($this->_mColumnFixedSizes) && is_numeric($this->_mColumnFixedSizes)) {
+            $bIsColumnFixedSizeIsSet = true;
+        } else {
+            $bIsColumnFixedSizeIsSet = isset($this->_mColumnFixedSizes[$iColumnId]);
+        }
+
+        return $bIsColumnFixedSizeIsSet;
     }
-    
+
     /**
      * Method setting fixed size for specific column.
-     * @param integer $iColumnId numeric id of column
+     * @param integer|null $iColumnId numeric id of column (null - apply to all columns)
      * @param double $dFixedSize width of column
+     *
+     * @return void PHPExcel_Worksheet_ColumnDimension|void column dimension for selected in input columnId (if set)
+     */
+    public function setColumnFixedSize($iColumnId, $dFixedSize)
+    {
+        if (is_null($iColumnId)) {
+            $this->_mColumnFixedSizes = $dFixedSize;
+        } else {
+            $this->_mColumnFixedSizes[$iColumnId] = $dFixedSize;
+        }
+    }
+
+    /**
+     * Method checks whether max size for this column is already set.
+     *
+     * @param integer $iColumnId numeric id of column
+     *
+     * @return boolean true if max size is already set, false otherwise
+     */
+    public function isColumnMaxSizeIsSet($iColumnId)
+    {
+        $bIsColumnMaxSizeIsSet = false;
+
+        if (!is_array($this->_mColumnMaxSizes) && is_numeric($this->_mColumnMaxSizes)) {
+            $bIsColumnMaxSizeIsSet = true;
+        } else {
+            $bIsColumnMaxSizeIsSet = isset($this->_mColumnMaxSizes[$iColumnId]);
+        }
+
+        return $bIsColumnMaxSizeIsSet;
+    }
+
+    /**
+     * Method for getting max column size.
+     *
+     * @param integer $iColumnId column Id
+     *
+     * @return integer max size of column
+     */
+    public function getColumnMaxSize($iColumnId)
+    {
+        return $this->_mColumnMaxSizes[$iColumnId];
+    }
+
+    /**
+     * Method setting max size for specific column.
+     *
+     * @param integer|null $iColumnId numeric id of column (null - apply to all columns)
+     * @param double $dMaxSize max width of column
+     *
+     * @return void
+     */
+    public function setColumnMaxSize($iColumnId, $dMaxSize)
+    {
+        if (is_null($iColumnId)) {
+            $this->_mColumnMaxSizes = $dMaxSize;
+        } else {
+            $this->_mColumnMaxSizes[$iColumnId] = $dMaxSize;
+        }
+    }
+
+    /**
+     * Method for setting on cell object fixed size for given column.
+     *
+     * @param integer $iColumnId id of column (starts from 0)
+     *
      * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
      */
-    public function setColumnFixedSize( $iColumnId, $dFixedSize )
+    public function createColumnFixedSize($iColumnId)
     {
-        $this->_aColumnFixedSizes[$iColumnId] = $dFixedSize;
-        $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize( false );
-        return $this->_getColumnDimensionByColumn( $iColumnId )->setWidth( $dFixedSize );
+        return $this->createColumnSize($iColumnId, (is_array($this->_mColumnFixedSizes) ? $this->_mColumnFixedSizes[$iColumnId] : $this->_mColumnFixedSizes));
     }
-    
+
+    /**
+     *
+     * @param integer $iColumnId
+     * @param integer $iSize
+     *
+     * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
+     */
+    public function createColumnSize($iColumnId, $iSize)
+    {
+        $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize(false);
+
+        return $this->_getColumnDimensionByColumn( $iColumnId )->setWidth($iSize);
+    }
+
     /**
      * Method setting auto filter for table.
      * @param integer $iColumnIdMin begin of range with filter
@@ -266,5 +359,4 @@ class KrscReports_Type_Excel_PHPExcel_Cell
         
         return $this;
     }
-    
 }
