@@ -208,15 +208,23 @@ abstract class AbstractView
         $this->cell = self::getCellObject();
         $this->cell->setStyleObject( $this->styleBuilder->getStyleObject() );
 
-        if ( isset( $this->options[self::KEY_COLUMN_FIXED_SIZES] ) && is_array( $this->options[self::KEY_COLUMN_FIXED_SIZES]) ) {
-            foreach ( $this->options[self::KEY_COLUMN_FIXED_SIZES] as $columnId => $columnSize ) {
-                $this->cell->setColumnFixedSize( $columnId, $columnSize );
+        if ( isset( $this->options[self::KEY_COLUMN_FIXED_SIZES] )) {
+            if (is_array( $this->options[self::KEY_COLUMN_FIXED_SIZES])) {
+                foreach ( $this->options[self::KEY_COLUMN_FIXED_SIZES] as $columnId => $columnSize ) {
+                    $this->cell->setColumnFixedSize( $columnId, $columnSize );
+                }
+            } else {
+                $this->cell->setColumnFixedSize(null, $this->options[self::KEY_COLUMN_FIXED_SIZES]);
             }
         }
 
-        if ( isset( $this->options[self::KEY_COLUMN_MAX_SIZES] ) && is_array( $this->options[self::KEY_COLUMN_MAX_SIZES]) ) {
-            foreach ( $this->options[self::KEY_COLUMN_MAX_SIZES] as $columnId => $columnSize ) {
-                $this->cell->setColumnMaxSize($columnId, $columnSize);
+        if ( isset( $this->options[self::KEY_COLUMN_MAX_SIZES] )) {
+            if (is_array( $this->options[self::KEY_COLUMN_MAX_SIZES])) {
+                foreach ( $this->options[self::KEY_COLUMN_MAX_SIZES] as $columnId => $columnSize ) {
+                    $this->cell->setColumnMaxSize($columnId, $columnSize);
+                }
+            } else {
+                $this->cell->setColumnMaxSize(null, $this->options[self::KEY_COLUMN_MAX_SIZES]);
             }
         }
 
