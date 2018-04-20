@@ -142,7 +142,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
      */
     public function setRows() 
     {
-        $maxSizeSet = array(); // subsequent keys are columnsIds (iterators) with boolean value
+        $aMaxSizeSet = array(); // subsequent keys are columnsIds (iterators) with boolean value
 
         foreach( $this->_aData as $aRow )
         {   // iterating over rows
@@ -167,12 +167,12 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
                 
                 $this->_oCell->setValue( $mColumnValue );
 
+                $columnSize = $this->getColumnSize($mColumnValue);
                 if ($this->_oCell->isColumnMaxSizeIsSet($iIterator) &&
-                    !isset($maxSizeSet[$iIterator]) &&
-                    is_scalar($mColumnValue) &&
-                    strlen((string)($mColumnValue)) > $this->_oCell->getColumnMaxSize($iIterator)) {
+                    !isset($aMaxSizeSet[$iIterator]) &&
+                     $columnSize > $this->_oCell->getColumnMaxSize($iIterator)) {
                         // max size of column reached - fixed size for column set
-                        $maxSizeSet[$iIterator] = true;
+                        $aMaxSizeSet[$iIterator] = true;
                 }
 
                 $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
@@ -182,10 +182,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
             $this->_iActualHeight++;
         }
 
-        foreach ($maxSizeSet as $columnId => $isMaxSizeSet) {
-            // create fixed size for columns, where max size of column is reached
-            $this->_oCell->createColumnSize($columnId, $this->_oCell->getColumnMaxSize($columnId));
-        }
+        $this->setMaxColumnsSizes($aMaxSizeSet);
     }
     
 }

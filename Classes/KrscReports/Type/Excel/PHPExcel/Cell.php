@@ -256,7 +256,13 @@ class KrscReports_Type_Excel_PHPExcel_Cell
      */
     public function getColumnMaxSize($iColumnId)
     {
-        return $this->_mColumnMaxSizes[$iColumnId];
+        if (is_array($this->_mColumnMaxSizes)) {
+            $iMaxSize = $this->_mColumnMaxSizes[$iColumnId];
+        } else {
+            $iMaxSize = $this->_mColumnMaxSizes;
+        }
+
+        return $iMaxSize;
     }
 
     /**

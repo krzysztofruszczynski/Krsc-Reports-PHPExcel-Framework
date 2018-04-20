@@ -127,6 +127,48 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
     }
 
     /**
+     * Method for getting size of column. If text is divided into lines, size of longest line is given.
+     *
+     * @param mixed $mColumnValue value inserted for cell
+     *
+     * @return int size of columns (number of signs)
+     */
+    public function getColumnSize($mColumnValue)
+    {
+        if ($mColumnValue instanceof PHPExcel_RichText) {
+            // getting text from RichText object
+            $mColumnValue = $mColumnValue->getPlainText();
+        }
+
+        // determing column size (if many lines - take the lognest one)
+        if (is_scalar($mColumnValue)) {
+            if (stripos($mColumnValue, PHP_EOL) !== false) {
+                // text consist of more than one line - the longest chosen
+                $columnSize = max(array_map('strlen', explode(PHP_EOL, $mColumnValue)));
+            } else {
+                $columnSize = strlen((string)($mColumnValue));
+            }
+        } else {
+            $columnSize = null;
+        }
+
+        return $columnSize;
+    }
+
+    /**
+     * Method setting max column sizes.
+     *
+     * @param array $aMaxSizeSet key is column id. For each of column fixed (max) size of column is set.
+     */
+    public function setMaxColumnsSizes($aMaxSizeSet)
+    {
+        foreach ($aMaxSizeSet as $columnId => $isMaxSizeSet) {
+            // create fixed size for columns, where max size of column is reached
+            $this->_oCell->createColumnSize($columnId, $this->_oCell->getColumnMaxSize($columnId));
+        }
+    }
+
+    /**
      * Action responsible for creating document (while creating table not used but has to be implemented).
      * @return void
      */
