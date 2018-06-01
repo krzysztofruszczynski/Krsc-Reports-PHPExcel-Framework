@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.5, 2018-04-19
+ * @version 1.2.6, 2018-06-01
  */
 
 /**
@@ -361,8 +361,30 @@ class KrscReports_Type_Excel_PHPExcel_Cell
         $this->constructCellStyles( $iColumnId, $iRowId );
         
         // constructing phpexcel element
-        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue, true);    
+        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue, true);
         
+        return $this;
+    }
+
+    /**
+     * Method for merging cells.
+     *
+     * @param int $iBeginColumnId begin index of column (counts from 0)
+     * @param int $iBeginRowId begin index of row (counts from 1)
+     * @param int $iEndColumnId end index of column (counts from 0)
+     * @param int $iEndRowId end index of row (counts from 1)
+     *
+     * @return $this
+     */
+    public function mergeCells($iBeginColumnId, $iBeginRowId, $iEndColumnId, $iEndRowId)
+    {
+        if ($iBeginRowId == $iEndRowId) {
+            for ($iSelectedColumnId = $iBeginColumnId; $iSelectedColumnId <= $iEndColumnId; $iSelectedColumnId++) {
+                $this->constructCellStyles($iSelectedColumnId, $iEndRowId);
+            }
+        }
+        self::$_oPHPExcel->getActiveSheet()->mergeCellsByColumnAndRow($iBeginColumnId, $iBeginRowId, $iEndColumnId, $iEndRowId);
+
         return $this;
     }
 }
