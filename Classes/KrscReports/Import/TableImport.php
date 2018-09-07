@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.1, 2017-04-28
+ * @version 1.2.8, 2018-09-07
  */
 
 /**
@@ -34,6 +34,8 @@
  */
 class KrscReports_Import_TableImport
 {
+    use \KrscReports\Import\ReaderTrait;
+
     /**
      * Text for column in invalidRows variable, on which occurred error while importing (caused by not having required field) 
      */
@@ -68,12 +70,7 @@ class KrscReports_Import_TableImport
      * @var array subsequent keys are row numbers, which are invalid - value is array with incorrect column indexes as keys (values: error text); if array is empty, then whole import is correct
      */
     protected $_aInvalidRows = array();
-    
-    /**
-     * @var KrscReports_Type_Excel_PHPExcel_Cell cell object
-     */
-    protected $_oCell;
-    
+
     /**
      * Setter for row number.
      * @param integer $iRowNumberWithHeader row number with header for imported table (starts from 1)
@@ -117,38 +114,7 @@ class KrscReports_Import_TableImport
         $this->_sRequiredSymbol = $sRequiredSymbol;
         return $this;
     }
-    
-    /**
-     * Loading of file.
-     * @param string $fileName path to file
-     * @return KrscReports_File instance of class responsible for handling creation of file
-     */
-    public function loadFile( $fileName )
-    {
-        $oFile = new \KrscReports_File();
-        $oFile->setFileName( $fileName );
-        $oFile->setReader();
-        
-        $this->setCellObject();
-        return $oFile;
-    }
-    
-    /**
-     * Method for setting cell object. Cell object can be constructed only when PHPExcel object was previously set.
-     * @param KrscReports_Type_Excel_PHPExcel_Cell $oCell stub of cell object (by default null)
-     * @return KrscReports_Import_TableImport object, on which this method was executed
-     */
-    public function setCellObject( $oCell = null )
-    {
-        if( is_null( $oCell ) ) {
-            $this->_oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
-        } else {
-            $this->_oCell = $oCell;
-        }
-        
-        return $this;
-    }
-    
+
     /**
      * Method checks, if header row have same columns as declared.
      * @return boolean true if row is correct (otherwise exception is thrown)
@@ -223,7 +189,7 @@ class KrscReports_Import_TableImport
             $aImportedData[] = $mImportedRow;
             $iSelectedRowId++;
         }
-        
+
         return $aImportedData;
     }
 }
