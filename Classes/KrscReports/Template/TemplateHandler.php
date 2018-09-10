@@ -26,7 +26,7 @@ use KrscReports\Import\ReaderTrait;
  * @package KrscReports_Template
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt       LGPL
- * @version 1.2.8, 2018-09-07
+ * @version 1.2.8, 2018-09-10
  */
 
 /**
@@ -153,10 +153,7 @@ class TemplateHandler
 
     public function findCellWithValueInDocument($searchValue, $likeSearch = false)
     {
-        if (!isset(self::$_oPHPExcel)) {
-            self::$_oPHPExcel = \KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject();
-        }
-
+        self::$_oPHPExcel = \KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject();
         $foundInCells = array();
         foreach (self::$_oPHPExcel ->getWorksheetIterator() as $worksheet) {
             $worksheetTitle = $worksheet->getTitle();
