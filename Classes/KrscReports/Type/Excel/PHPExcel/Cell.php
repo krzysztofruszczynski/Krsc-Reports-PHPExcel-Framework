@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.6, 2018-06-01
+ * @version 1.2.8, 2018-09-06
  */
 
 /**
@@ -116,16 +116,30 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     }
     
     /**
-     * Getter for cell value (from loaded file or from PHPExcel object created during script execution) 
+     * Getter for cell value (from loaded file or from PHPExcel object created during script execution)
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param integer $iRowId numeric coordinate of row (starts from 1)
-     * @return mixed value for selected cell
+     *
+     *  @return mixed value for selected cell
      */
-    public function getCellValue( $iColumnId, $iRowId )
+    public function getCellValue($iColumnId, $iRowId)
     {
         return self::$_oPHPExcel->getActiveSheet()->getCellByColumnAndRow( $iColumnId, $iRowId )->getValue();
     }
-    
+
+    /**
+     * Getter for cell value via coordinate (from loaded file or from PHPExcel object created during script execution)
+     *
+     * @param string $sCoordinate cell coordinate (can include spreadsheet reference at the beginning)
+     *
+     * @return mixed value for selected cell
+     */
+    public function getCellValueByCoordinate($sCoordinate)
+    {
+        return self::$_oPHPExcel->getActiveSheet()->getCell($sCoordinate);
+    }
+
     /**
      * Method setting type of cell.
      * @param string $sType type of cell to be set
