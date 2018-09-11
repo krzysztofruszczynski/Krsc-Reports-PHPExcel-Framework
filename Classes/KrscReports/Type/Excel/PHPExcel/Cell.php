@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.8, 2018-09-06
+ * @version 1.2.8, 2018-09-11
  */
 
 /**
@@ -129,15 +129,30 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     }
 
     /**
-     * Getter for cell value via coordinate (from loaded file or from PHPExcel object created during script execution)
+     * Getter for cell via coordinate (from loaded file or from PHPExcel object created during script execution)
      *
      * @param string $sCoordinate cell coordinate (can include spreadsheet reference at the beginning)
      *
      * @return mixed value for selected cell
      */
-    public function getCellValueByCoordinate($sCoordinate)
+    public function getCellByCoordinate($sCoordinate)
     {
         return self::$_oPHPExcel->getActiveSheet()->getCell($sCoordinate);
+    }
+
+    /**
+     * Method for inserting rows before
+     *
+     * @param integer $iRowId number of row, before which new rows will be added
+     * @param integer $iNumberOfRows number of added rows (by default 1)
+     *
+     * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
+     */
+    public function insertNewRowBefore($iRowId, $iNumberOfRows = 1)
+    {
+        self::$_oPHPExcel->getActiveSheet()->insertNewRowBefore($iRowId, $iNumberOfRows);
+
+        return $this;
     }
 
     /**

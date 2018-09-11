@@ -26,7 +26,7 @@ use KrscReports\Import\ReaderTrait;
  * @package KrscReports_Template
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt       LGPL
- * @version 1.2.8, 2018-09-10
+ * @version 1.2.8, 2018-09-11
  */
 
 /**
@@ -113,7 +113,7 @@ class TemplateHandler
         );
 
         foreach ($foundInCells as $foundInCell) {
-            $this->_oCell->getCellValueByCoordinate($foundInCell)->setValue(
+            $this->_oCell->getCellByCoordinate($foundInCell)->setValue(
                 $value
             );
         }
@@ -134,13 +134,23 @@ class TemplateHandler
 
     public function replaceRowPlaceholders($tablePrefix)
     {
+        $rowsInserted = false;
         $placeholders = $this->findPlaceholdersWithTablePrefix($tablePrefix);
         $rowIterator = 0;
         foreach ($this->dataArray[$tablePrefix] as $rowWithData) {
             foreach ($placeholders as $placeholderCoordinate => $placeholderName) {
+                if (!$rowsInserted) {
+                    $simpleCoordinate = $this->addRowsForCoordinate(
+                        $placeholderCoordinate,
+                        0
+                    );
+                    preg_match('/\d+/', $simpleCoordinate, $matches);
+                    $this->_oCell->insertNewRowBefore($matches[0] + 1, count($this->dataArray[$tablePrefix]) - 3);
+                    $rowsInserted = true;
+                }
                 $columnName = $this->rowPlaceholders[$tablePrefix][$placeholderName];
                 $cellValue = $rowWithData[$columnName];
-                $this->_oCell->getCellValueByCoordinate(
+                $this->_oCell->getCellByCoordinate(
                     $this->addRowsForCoordinate(
                         $placeholderCoordinate,
                         $rowIterator
@@ -191,7 +201,7 @@ class TemplateHandler
                 str_replace(
                     self::PLACEHOLDER_AFTER_KEY,
                     '',
-                    $this->_oCell->getCellValueByCoordinate($foundInCell)->getValue()
+                    $this->_oCell->getCellByCoordinate($foundInCell)->getValue()
                 )
             )[1];
 
