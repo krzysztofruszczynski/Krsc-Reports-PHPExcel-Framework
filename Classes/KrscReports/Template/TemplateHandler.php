@@ -26,7 +26,7 @@ use KrscReports\Import\ReaderTrait;
  * @package KrscReports_Template
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt       LGPL
- * @version 1.2.8, 2018-09-11
+ * @version 1.2.8, 2018-09-17
  */
 
 /**
@@ -71,6 +71,11 @@ class TemplateHandler
     protected $rowPlaceholders = array();
 
     /**
+     * @var array string[] - name of columns, for which placeholder is only part of text
+     */
+    protected $likePlaceholders = array();
+
+    /**
      * @var array first key is table prefix
      */
     protected $dataArray;
@@ -79,6 +84,11 @@ class TemplateHandler
      * @var \KrscReports_Type_Excel_PHPExcel_Cell cell object
      */
     protected $_oCell;
+
+    /**
+     * @var integer number of rows in template (preferred 3)
+     */
+    protected $numberOfRowsInTemplate = 3;
 
     /**
      *
@@ -91,30 +101,50 @@ class TemplateHandler
         return sprintf('%s%s%s', self::PLACEHOLDER_BEFORE_KEY, $key, self::PLACEHOLDER_AFTER_KEY);
     }
 
-    public function setSinglePlaceholder($key, $value)
+    public function setSinglePlaceholder($key, $value, $likePlaceholder = false)
     {
         $this->singlePlaceholders[$key] = $value;
+        if ($likePlaceholder) {
+            $this->likePlaceholders[] = $key;
+        }
+
+        return $this;
     }
 
     public function setRowPlaceholder($tablePrefix, $key, $columnName)
     {
         $this->rowPlaceholders[$tablePrefix][$key] = $columnName;
+
+        return $this;
     }
 
     public function setDataArray($tablePrefix, $dataArray)
     {
         $this->dataArray[$tablePrefix] = $dataArray;
+
+        return $this;
     }
 
     public function replaceSinglePlaceholder($key, $value)
     {
         $foundInCells = $this->findCellWithValueInDocument(
-            $this->preparePlaceholderKey($key)
+            $this->preparePlaceholderKey($key),
+            in_array($key, $this->likePlaceholders)
         );
 
         foreach ($foundInCells as $foundInCell) {
+            if (!in_array($key, $this->likePlaceholders)) {
+                $valueToSet = $value;
+            } else {
+                $valueToSet = str_replace(
+                    $this->preparePlaceholderKey($key),
+                    $value,
+                    $this->_oCell->getCellByCoordinate($foundInCell)->getValue()
+                );
+            }
+
             $this->_oCell->getCellByCoordinate($foundInCell)->setValue(
-                $value
+                $valueToSet
             );
         }
     }
@@ -137,6 +167,7 @@ class TemplateHandler
         $rowsInserted = false;
         $placeholders = $this->findPlaceholdersWithTablePrefix($tablePrefix);
         $rowIterator = 0;
+        $numberOfRows = count($this->dataArray[$tablePrefix]);
         foreach ($this->dataArray[$tablePrefix] as $rowWithData) {
             foreach ($placeholders as $placeholderCoordinate => $placeholderName) {
                 if (!$rowsInserted) {
@@ -145,7 +176,11 @@ class TemplateHandler
                         0
                     );
                     preg_match('/\d+/', $simpleCoordinate, $matches);
-                    $this->_oCell->insertNewRowBefore($matches[0] + 1, count($this->dataArray[$tablePrefix]) - 3);
+                    if ($numberOfRows > $this->numberOfRowsInTemplate) {
+                        $this->_oCell->insertNewRowBefore($matches[0] + 1, $numberOfRows - $this->numberOfRowsInTemplate);
+                    } else if ($numberOfRows < $this->numberOfRowsInTemplate) {
+                        $this->_oCell->removeRow($matches[0], $this->numberOfRowsInTemplate - $numberOfRows);
+                    }
                     $rowsInserted = true;
                 }
                 $columnName = $this->rowPlaceholders[$tablePrefix][$placeholderName];
