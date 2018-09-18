@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.8, 2018-09-11
+ * @version 1.2.8, 2018-09-17
  */
 
 /**
@@ -151,6 +151,21 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     public function insertNewRowBefore($iRowId, $iNumberOfRows = 1)
     {
         self::$_oPHPExcel->getActiveSheet()->insertNewRowBefore($iRowId, $iNumberOfRows);
+
+        return $this;
+    }
+
+    /**
+     * Method for deleting rows.
+     *
+     * @param integer $iRowId number of row, for which deletion is started
+     * @param integer $iNumberOfRows number of deleted rows (by default 1)
+     *
+     * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
+     */
+    public function removeRow($iRowId, $iNumberOfRows = 1)
+    {
+        self::$_oPHPExcel->getActiveSheet()->removeRow($iRowId, $iNumberOfRows);
 
         return $this;
     }

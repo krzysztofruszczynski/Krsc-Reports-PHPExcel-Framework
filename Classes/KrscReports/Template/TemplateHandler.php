@@ -26,7 +26,7 @@ use KrscReports\Import\ReaderTrait;
  * @package KrscReports_Template
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt       LGPL
- * @version 1.2.8, 2018-09-11
+ * @version 1.2.8, 2018-09-18
  */
 
 /**
@@ -71,6 +71,11 @@ class TemplateHandler
     protected $rowPlaceholders = array();
 
     /**
+     * @var array string[] - name of columns, for which placeholder is only part of text
+     */
+    protected $likePlaceholders = array();
+
+    /**
      * @var array first key is table prefix
      */
     protected $dataArray;
@@ -81,44 +86,114 @@ class TemplateHandler
     protected $_oCell;
 
     /**
+     * @var integer number of rows in template (preferred 3)
+     */
+    protected $numberOfRowsInTemplate = 3;
+
+    /**
+     * Method returning placeholder, how it exactly looks in template.
      *
-     * @param string $key
+     * @param string $key placeholder key
      *
-     * @return string
+     * @return string placeholder key how it is presented in template (for example with brackets)
      */
     public function preparePlaceholderKey($key)
     {
         return sprintf('%s%s%s', self::PLACEHOLDER_BEFORE_KEY, $key, self::PLACEHOLDER_AFTER_KEY);
     }
 
-    public function setSinglePlaceholder($key, $value)
+    /**
+     * Method setting value for single placeholder.
+     *
+     * @param string $key name of placeholder
+     * @param string $value value of placeholder
+     * @param boolean $likePlaceholder if true, placeholder can be only part of cell value; by false - only placeholder should be in cell value (by default false)
+     *
+     * @return $this
+     */
+    public function setSinglePlaceholder($key, $value, $likePlaceholder = false)
     {
         $this->singlePlaceholders[$key] = $value;
+        if ($likePlaceholder) {
+            $this->likePlaceholders[] = $key;
+        }
+
+        return $this;
     }
 
+    /**
+     * Method for setting row placeholder.
+     *
+     * @param string $tablePrefix prefix of table
+     * @param string $key         name of placeholder in template
+     * @param string $columnName  name of column in database output with data for specified placeholder
+     *
+     * @return $this
+     */
     public function setRowPlaceholder($tablePrefix, $key, $columnName)
     {
         $this->rowPlaceholders[$tablePrefix][$key] = $columnName;
+
+        return $this;
     }
 
+    /**
+     * Method for setting table data.
+     *
+     * @param string $tablePrefix prefix for table, for which data are set
+     * @param array  $dataArray   array[] (each row is database record)
+     *
+     * @return $this
+     */
     public function setDataArray($tablePrefix, $dataArray)
     {
         $this->dataArray[$tablePrefix] = $dataArray;
+
+        return $this;
     }
 
+    /**
+     * Method replacing value of single placeholder in created file.
+     *
+     * @param string $key   name of placeholder in template
+     * @param string $value value of placeholder
+     *
+     * @return $this
+     */
     public function replaceSinglePlaceholder($key, $value)
     {
         $foundInCells = $this->findCellWithValueInDocument(
-            $this->preparePlaceholderKey($key)
+            $this->preparePlaceholderKey($key),
+            in_array($key, $this->likePlaceholders)
         );
 
         foreach ($foundInCells as $foundInCell) {
+            if (!in_array($key, $this->likePlaceholders)) {
+                $valueToSet = $value;
+            } else {
+                $valueToSet = str_replace(
+                    $this->preparePlaceholderKey($key),
+                    $value,
+                    $this->_oCell->getCellByCoordinate($foundInCell)->getValue()
+                );
+            }
+
             $this->_oCell->getCellByCoordinate($foundInCell)->setValue(
-                $value
+                $valueToSet
             );
         }
+
+        return $this;
     }
 
+    /**
+     * Method returning coordinate with incremented row number depending of $rowIterator parameter input value.
+     *
+     * @param string $sCoordinate  coordinate with first row of data (can be with spreadsheet name)
+     * @param integer $rowIterator number of row, for which coordinate is searched
+     *
+     * @return string coordinate with incremented row number
+     */
     public function addRowsForCoordinate($sCoordinate, $rowIterator)
     {
         if (stripos($sCoordinate, '!')) {
@@ -132,11 +207,19 @@ class TemplateHandler
         return $sNewCoordinate;
     }
 
+    /**
+     * Method replacing all row placeholders for each record for table with prefix given in input.
+     *
+     * @param string $tablePrefix prefix for table, for which placeholders are taken
+     *
+     * @return $this
+     */
     public function replaceRowPlaceholders($tablePrefix)
     {
         $rowsInserted = false;
         $placeholders = $this->findPlaceholdersWithTablePrefix($tablePrefix);
         $rowIterator = 0;
+        $numberOfRows = count($this->dataArray[$tablePrefix]);
         foreach ($this->dataArray[$tablePrefix] as $rowWithData) {
             foreach ($placeholders as $placeholderCoordinate => $placeholderName) {
                 if (!$rowsInserted) {
@@ -145,7 +228,11 @@ class TemplateHandler
                         0
                     );
                     preg_match('/\d+/', $simpleCoordinate, $matches);
-                    $this->_oCell->insertNewRowBefore($matches[0] + 1, count($this->dataArray[$tablePrefix]) - 3);
+                    if ($numberOfRows > $this->numberOfRowsInTemplate) {
+                        $this->_oCell->insertNewRowBefore($matches[0] + 1, $numberOfRows - $this->numberOfRowsInTemplate);
+                    } else if ($numberOfRows < $this->numberOfRowsInTemplate) {
+                        $this->_oCell->removeRow($matches[0], $this->numberOfRowsInTemplate - $numberOfRows);
+                    }
                     $rowsInserted = true;
                 }
                 $columnName = $this->rowPlaceholders[$tablePrefix][$placeholderName];
@@ -159,8 +246,18 @@ class TemplateHandler
             }
             $rowIterator++;
         }
+
+        return $this;
     }
 
+    /**
+     * Method for searching in all worksheets given phrase
+     *
+     * @param string  $searchValue phrase to be searched
+     * @param boolean $likeSearch  if true, searched phrase can be a part of field value, if false: it have to be full value (by default false)
+     *
+     * @return array string[] coordinates of cells matching search criteria
+     */
     public function findCellWithValueInDocument($searchValue, $likeSearch = false)
     {
         self::$_oPHPExcel = \KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject();
@@ -175,6 +272,16 @@ class TemplateHandler
         return $foundInCells;
     }
 
+    /**
+     * Method for searching in particular row given phrase.
+     *
+     * @param string                  $searchValue    phrase to be searched
+     * @param \PHPExcel_Worksheet_Row $row            row provided by $worksheet->getRowIterator()
+     * @param string                  $worksheetTitle title of worksheet
+     * @param boolean                 $likeSearch     if true, searched phrase can be a part of field value, if false: it have to be full value (by default false)
+     *
+     * @return array string[] coordinates of cells matching search criteria
+     */
     public function findCellWithValueInRow($searchValue, $row, $worksheetTitle, $likeSearch = false)
     {
         $foundInCells = array();
@@ -189,6 +296,13 @@ class TemplateHandler
         return $foundInCells;
     }
 
+    /**
+     * Method searching for all placeholders for given table.
+     *
+     * @param string $tablePrefix prefix for table, for which placeholders are searched
+     *
+     * @return array string[] coordinates of cells matching search criteria
+     */
     public function findPlaceholdersWithTablePrefix($tablePrefix)
     {
         $searchValue = sprintf('%s%s', self::PLACEHOLDER_BEFORE_KEY, $tablePrefix);
@@ -211,6 +325,12 @@ class TemplateHandler
         return $placeholders;
     }
 
+    /**
+     * Method replacing all single and row placeholders
+     * (have to be previously set by $this->setSinglePlaceholder, $this->setRowPlaceholder and $this->setDataArray).
+     *
+     * @return $this
+     */
     public function replaceAllPlaceholders()
     {
         foreach ($this->singlePlaceholders as $singlePlaceholderKey => $singlePlaceholderValue) {
@@ -220,5 +340,7 @@ class TemplateHandler
         foreach ($this->rowPlaceholders as $tablePrefix => $tableColumns) {
             $this->replaceRowPlaceholders($tablePrefix);
         }
+
+        return $this;
     }
 }
