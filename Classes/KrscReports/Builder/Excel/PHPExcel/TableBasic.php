@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.5, 2018-04-19
+ * @version 2.0.0, 2018-09-27
  */
 
 /**
@@ -32,7 +32,7 @@
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_Excel_PHPExcel implements KrscReports_Builder_Interface_Table
+class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_Excel implements KrscReports_Builder_Interface_Table
 {
     /**
      * @var boolean flag if table is filtered (default false)
