@@ -22,11 +22,11 @@
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.3, 2018-02-19
+ * @version 2.0.0, 2018-09-28
  */
 
 /**
- * Class handling creation of file. For the time being only xsls is handled, in * future other formats would be also supported.
+ * Class handling creation of file. For the time being only xslx is handled, in * future other formats would be also supported.
  * 
  * @category KrscReports
  * @package KrscReports
@@ -34,6 +34,21 @@
  */
 class KrscReports_File
 {
+        /**
+         * Date format, which can be used as prefix for files.
+         */
+        const DATE_FORMAT_SIMPLE = 'Y-m-d';
+
+        /**
+         * Value for settings associated with PHPExcel.
+         */
+        const SETTINGS_PHPEXCEL = 'PHPExcel';
+
+        /**
+         * Value for settings associated with PhpSpreadsheet.
+         */
+        const SETTINGS_PHPSPREADSHEET = 'PhpSpreadsheet';
+
         /**
          * value for file type for Excel 2007
          */
@@ -72,6 +87,16 @@ class KrscReports_File
         );
 
         /**
+         * @var string name of builder (by default PhpSpreadsheet)
+         */
+        protected static $_sBuilderType = self::SETTINGS_PHPSPREADSHEET;
+
+        /**
+         * @var string date format to be used as prefix for file names
+         */
+        protected $_sDateFormat = self::DATE_FORMAT_SIMPLE;
+
+        /**
          * @var Object object responsible for creation of file
          */
         protected $_oWriter;
@@ -88,12 +113,18 @@ class KrscReports_File
 
         /**
          * Setter for file name.
+         *
          * @param String $sFileName name of file to be created
+         * @param bool $bPrefixData if true, name of file begin with timestamp (default: false)
          * @return KrscReports_File object on which method is executed
          */
-        public function setFileName( $sFileName )
+        public function setFileName($sFileName, $bPrefixData = false)
         {
+            if ($bPrefixData) {
+                $sFileName = sprintf('%s_%s', date($this->_sDateFormat), $sFileName);
+            }
             $this->_sFileName = $sFileName;
+
             return $this;
         }
 
@@ -125,6 +156,24 @@ class KrscReports_File
         }
 
         /**
+         * Method for setting builder type.
+         *
+         * @param string $sBuilderType
+         */
+        public static function setBuilderType($sBuilderType = self::SETTINGS_PHPSPREADSHEET)
+        {
+            self::$_sBuilderType = $sBuilderType;
+        }
+
+        /**
+         * @return string type of builder
+         */
+        public static function getBuilderType()
+        {
+            return self::$_sBuilderType;
+        }
+
+        /**
          * Setter for deciding, if document want to return to given site.
          *
          * @param Integer|Boolean $mReturnToSite if false, document is on the last page, 0 (integer) - first site (or any different spreadsheet index)
@@ -148,12 +197,24 @@ class KrscReports_File
             if( isset( $this->_oWriter ) ) {   // previously set - no changes
 
             } else if( is_null( $oWriter ) ) {
-                $this->_oWriter = PHPExcel_IOFactory::createWriter( KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType );
-                $this->_oWriter->setIncludeCharts( self::INCLUDE_CHARTS );
-                $this->_oWriter->setPreCalculateFormulas(true);
+                switch (self::getBuilderType()) { 
+                    case self::SETTINGS_PHPEXCEL:
+                        $this->_oWriter = PHPExcel_IOFactory::createWriter(KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType);
+                        $this->_oWriter->setIncludeCharts(self::INCLUDE_CHARTS);
+                        $this->_oWriter->setPreCalculateFormulas(true);
 
-                if ($this->_mReturnToSite !== false) {
-                    KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex($this->_mReturnToSite);
+                        if ($this->_mReturnToSite !== false) {
+                            KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject()->setActiveSheetIndex($this->_mReturnToSite);
+                        }
+                        break;
+                    case self::SETTINGS_PHPSPREADSHEET:
+                        $this->_oWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx(
+                            \KrscReports\Builder\Excel\PhpSpreadsheet::getPhpSpreadsheetObject()
+                        );
+                        if ($this->_mReturnToSite !== false) {
+                            \KrscReports\Builder\Excel\PhpSpreadsheet::getPhpSpreadsheetObject()->setActiveSheetIndex($this->_mReturnToSite);
+                        }
+                        break;
                 }
             } else {
                 $this->_oWriter = $oWriter;
