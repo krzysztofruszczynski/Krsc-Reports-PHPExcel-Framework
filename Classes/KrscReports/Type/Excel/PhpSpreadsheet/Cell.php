@@ -238,6 +238,8 @@ class Cell extends Excel\Cell
      */
     public function mergeCells($iBeginColumnId, $iBeginRowId, $iEndColumnId, $iEndRowId)
     {
+        $iBeginColumnId++;
+        $iEndColumnId++;
         if ($iBeginRowId == $iEndRowId) {
             for ($iSelectedColumnId = $iBeginColumnId; $iSelectedColumnId <= $iEndColumnId; $iSelectedColumnId++) {
                 $this->constructCellStyles($iSelectedColumnId, $iEndRowId);
