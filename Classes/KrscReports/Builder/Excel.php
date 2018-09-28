@@ -111,14 +111,35 @@ abstract class KrscReports_Builder_Excel extends KrscReports_Builder_Abstract
      */
     public static function setBuilderType()
     {
+        if (!isset(self::$_oBuilderType)) {
+            switch (\KrscReports_File::getBuilderType()) {
+                case \KrscReports_File::SETTINGS_PHPEXCEL:
+                    self::$_oBuilderType = new KrscReports_Builder_Excel_PHPExcel();
+                    break;
+                case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
+                    self::$_oBuilderType = new \KrscReports\Builder\Excel\PhpSpreadsheet();
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Method returning object responsible for creating excel file (dependent on vendor).
+     *
+     * @return KrscReports_Builder_Excel_PHPExcel|\KrscReports\Builder\Excel\PhpSpreadsheet
+     */
+    public static function getExcelObject()
+    {
         switch (\KrscReports_File::getBuilderType()) {
             case \KrscReports_File::SETTINGS_PHPEXCEL:
-                self::$_oBuilderType = new KrscReports_Builder_Excel_PHPExcel();
+                $returnObject = self::$_oBuilderType->getPHPExcelObject();
                 break;
             case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
-                self::$_oBuilderType = new \KrscReports\Builder\Excel\PhpSpreadsheet();
+                $returnObject = self::$_oBuilderType->getPhpSpreadsheetObject();
                 break;
         }
+
+        return $returnObject;
     }
 
     /**
