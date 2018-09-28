@@ -1,8 +1,10 @@
 <?php
+use KrscReports\Type\Excel\PhpSpreadsheet\StyleKeysTranslatorTrait;
+
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,21 +22,23 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.6, 2017-02-05
+ * @version 2.0.0, 2018-09-28
  */
 
 /**
  * Main class responsible for style of alignment for cell. Every class generating
  * properties associated with style of alignment should inherit from that class.
- * 
+ *
  * @category KrscReports
  * @package KrscReports_Type
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 class KrscReports_Type_Excel_PHPExcel_Style_Alignment extends KrscReports_Type_Excel_PHPExcel_Style_Default
 {
+    use StyleKeysTranslatorTrait;
+
     /**
      * key for element, which is created by this object
      */
@@ -93,7 +97,16 @@ class KrscReports_Type_Excel_PHPExcel_Style_Alignment extends KrscReports_Type_E
     {
         return 0;
     }
-   
+
+    /**
+     * Method for getting read order.
+     * @return string returns empty string in that implementation
+     */
+    protected function _getReadOrder()
+    {
+        return '';
+    }
+
     /**
      * Method returning style array for alignment.
      * @return array generated style array for alignment
@@ -104,13 +117,12 @@ class KrscReports_Type_Excel_PHPExcel_Style_Alignment extends KrscReports_Type_E
         
         $aOutput = $this->_attachToArray( $aOutput, 'horizontal', $this->_getHorizontal() );
         $aOutput = $this->_attachToArray( $aOutput, 'vertical', $this->_getVertical() );
-        $aOutput = $this->_attachToArray( $aOutput, 'rotation', $this->_getRotation() );
-        $aOutput = $this->_attachToArray( $aOutput, 'wrap', $this->_getWrap() );
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('rotation'), $this->_getRotation() );
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('wrap'), $this->_getWrap() );
         $aOutput = $this->_attachToArray( $aOutput, 'shrinkToFit', $this->_getShrinkToFit() );
         $aOutput = $this->_attachToArray( $aOutput, 'indent', $this->_getIndent() );
-        
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('readorder'), $this->_getReadOrder() );
+
         return $aOutput;
     }
 }
-
-
