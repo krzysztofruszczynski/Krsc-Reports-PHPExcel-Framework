@@ -27,7 +27,7 @@ use KrscReports\Type\Excel;
  * @package KrscReports_Type
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-25
+ * @version 2.0.0, 2018-10-08
  */
 
 /**
@@ -238,14 +238,12 @@ class Cell extends Excel\Cell
      */
     public function mergeCells($iBeginColumnId, $iBeginRowId, $iEndColumnId, $iEndRowId)
     {
-        $iBeginColumnId++;
-        $iEndColumnId++;
         if ($iBeginRowId == $iEndRowId) {
             for ($iSelectedColumnId = $iBeginColumnId; $iSelectedColumnId <= $iEndColumnId; $iSelectedColumnId++) {
                 $this->constructCellStyles($iSelectedColumnId, $iEndRowId);
             }
         }
-        self::$_oSpreadsheet->getActiveSheet()->mergeCellsByColumnAndRow($iBeginColumnId, $iBeginRowId, $iEndColumnId, $iEndRowId);
+        self::$_oSpreadsheet->getActiveSheet()->mergeCellsByColumnAndRow($iBeginColumnId + 1, $iBeginRowId, $iEndColumnId + 1, $iEndRowId);
 
         return $this;
     }
