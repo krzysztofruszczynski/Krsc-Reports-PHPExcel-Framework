@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-28
+ * @version 2.0.0, 2018-10-08
  */
 
 /**
@@ -197,7 +197,7 @@ class KrscReports_File
             if( isset( $this->_oWriter ) ) {   // previously set - no changes
 
             } else if( is_null( $oWriter ) ) {
-                switch (self::getBuilderType()) { 
+                switch (self::getBuilderType()) {
                     case self::SETTINGS_PHPEXCEL:
                         $this->_oWriter = PHPExcel_IOFactory::createWriter(KrscReports_Builder_Excel_PHPExcel::getPHPExcelObject(), $this->_sFileType);
                         $this->_oWriter->setIncludeCharts(self::INCLUDE_CHARTS);
@@ -234,14 +234,26 @@ class KrscReports_File
             {   // previously set - no changes
 
             } else if( is_null( $oReader ) ) {
-                $this->_oReader = PHPExcel_IOFactory::createReader( $this->_sFileType );
+                switch (self::getBuilderType()) {
+                    case self::SETTINGS_PHPEXCEL:
+                        $this->_oReader = PHPExcel_IOFactory::createReader($this->_sFileType);
+                        if ($this->_oReader->canRead($this->_sFileName)) {
+                            KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject($this->_oReader->load($this->_sFileName));
+                        } else {
+                            throw new Exception('Unable to read file via PHPExcel: ' . $this->_sFileName );
+                        }
 
-                if( $this->_oReader->canRead( $this->_sFileName ) ) {
-                    KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( $this->_oReader->load( $this->_sFileName ) );
-                } else {
-                    throw new Exception('Unable to read file: ' . $this->_sFileName );
+                        break;
+                    case self::SETTINGS_PHPSPREADSHEET:
+                        $this->_oReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+                        if ($this->_oReader->canRead($this->_sFileName)) {
+                            \KrscReports\Builder\Excel\PhpSpreadsheet::setSpreadsheetObject($this->_oReader->load($this->_sFileName));
+                        } else {
+                            throw new Exception('Unable to read file via PhpSpreadsheet: ' . $this->_sFileName );
+                        }
+
+                        break;
                 }
-
             } else {
                 $this->_oReader = $oReader;
             }

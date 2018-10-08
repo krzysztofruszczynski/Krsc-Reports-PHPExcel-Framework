@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-27
+ * @version 2.0.0, 2018-10-08
  */
 
 /**
@@ -130,6 +130,8 @@ abstract class KrscReports_Builder_Excel extends KrscReports_Builder_Abstract
      */
     public static function getExcelObject()
     {
+        self::setBuilderType();
+
         switch (\KrscReports_File::getBuilderType()) {
             case \KrscReports_File::SETTINGS_PHPEXCEL:
                 $returnObject = self::$_oBuilderType->getPHPExcelObject();
