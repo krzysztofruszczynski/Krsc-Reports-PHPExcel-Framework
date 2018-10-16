@@ -1,8 +1,10 @@
 <?php
+use KrscReports\Type\Excel\PhpSpreadsheet\StyleKeysTranslatorTrait;
+
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +22,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 2.0.0, 2018-09-28
  */
 
 /**
@@ -35,6 +37,8 @@
  */
 class KrscReports_Type_Excel_PHPExcel_Style_Fill extends KrscReports_Type_Excel_PHPExcel_Style_Default
 {
+    use StyleKeysTranslatorTrait;
+
     /**
      * key for element, which is created by this object
      */
@@ -93,10 +97,10 @@ class KrscReports_Type_Excel_PHPExcel_Style_Fill extends KrscReports_Type_Excel_
     {
         $aOutput = array();
         
-        $aOutput = $this->_attachToArray( $aOutput, 'type', $this->_getType() );
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('type'), $this->_getType() );
         $aOutput = $this->_attachToArray( $aOutput, 'rotation', $this->_getRotation() );
-        $aOutput = $this->_attachToArray( $aOutput, 'startcolor', $this->_getStartColor() );
-        $aOutput = $this->_attachToArray( $aOutput, 'endcolor', $this->_getEndColor() );
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('startcolor'), $this->_getStartColor() );
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('endcolor'), $this->_getEndColor() );
         $aOutput = $this->_attachToArray( $aOutput, 'color', $this->_getColor() );
         
         return $aOutput;

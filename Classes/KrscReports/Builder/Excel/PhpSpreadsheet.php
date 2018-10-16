@@ -1,4 +1,9 @@
 <?php
+namespace KrscReports\Builder\Excel;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Exception;
+
 /**
  * This file is part of KrscReports.
  *
@@ -26,43 +31,34 @@
  */
 
 /**
- * Extension of abstract builder suitable with PHPExcel. Contains functionality closely connected with PHPExcel.
+ * Extension of abstract builder suitable with PhpSpreadsheet. Contains functionality closely connected with PhpSpreadsheet.
  * Method constructDocument() is still abstract and needs to be implemented further.
  * 
  * @category KrscReports
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Builder_Excel_PHPExcel implements \KrscReports\Builder\Excel\ExcelBuilderTypeInterface
+class PhpSpreadsheet implements ExcelBuilderTypeInterface
 {
     /**
-     * @var \PHPExcel instance of PHPExcel used while adding new data to spreadsheets
+     * @var \PhpOffice\PhpSpreadsheet\Spreadsheet
      */
-    protected static $_oPHPExcel;
+    protected static $_oSpreadsheet;
 
     /**
-     * Method for setting PHPExcel object inside class.
-     * @param PHPExcel $oPHPExcel PHPExcel object to be used while building Excel spreadsheets
-     * @return void
+     * @param \PhpOffice\PhpSpreadsheet\Spreadsheet $oSpreadsheet
      */
-    public static function setPHPExcelObject( PHPExcel $oPHPExcel )
+    public static function setSpreadsheetObject(Spreadsheet $oSpreadsheet)
     {
-        self::$_oPHPExcel = $oPHPExcel;
+        self::$_oSpreadsheet = $oSpreadsheet;
     }
 
     /**
-     * Method returning PHPExcel object stored inside a class.
-     * @return PHPExcel stored PHPExcel object
-     * @throws Exception thrown when PHPExcel has not been set before (possibly only via self::setPHPExcelObject)
+     * @return \PhpOffice\PhpSpreadsheet\Spreadsheet
      */
-    public static function getPHPExcelObject()
+    public static function getPhpSpreadsheetObject()
     {
-        if( isset( self::$_oPHPExcel ) )
-        {
-            return self::$_oPHPExcel;
-        }
-        
-        throw new Exception( 'PhpExcel object not set in KrscReports_Builder_Excel_PHPExcel::setPhpExcelObject( PhpExcel $oPhpExcel )' );
+        return self::$_oSpreadsheet;
     }
 
     /**
@@ -71,7 +67,7 @@ class KrscReports_Builder_Excel_PHPExcel implements \KrscReports\Builder\Excel\E
      */
     public static function setDocumentProperties( $aDocumentProperties )
     {
-        $oProperties = self::$_oPHPExcel->getProperties();
+        $oProperties = self::$_oSpreadsheet->getProperties();
 
         foreach ( $aDocumentProperties as $sPropertyName => $sPropertyValue ) 
         {
@@ -86,30 +82,30 @@ class KrscReports_Builder_Excel_PHPExcel implements \KrscReports\Builder\Excel\E
     /**
      * Method for setting group name for current builder (used for Excel spreadsheet name).
      * @param string $sGroupName group name to be set (means that current builder will write to Excel spreadsheet with the same name)
-     * @return KrscReports_Builder_Excel_PHPExcel object on which method was executed
+     * @return \KrscReports\Builder\Excel\PhpSpreadsheet object on which method was executed
      */
     public function setGroupName( $sGroupName )
     {
-        $sGroupName = \KrscReports_Builder_Excel::filterGroupName($sGroupName);
+        $sGroupName = \KrscReports_Builder_Excel::filterGroupName( $sGroupName );       
         $this->_sGroupName = $sGroupName;
 
         try
         {
-            self::$_oPHPExcel->setActiveSheetIndexByName( $sGroupName );
+            self::$_oSpreadsheet->setActiveSheetIndexByName( $sGroupName );
         }
-        catch ( PHPExcel_Exception $oException )
+        catch (Exception $oException )
         {   // create new worksheet
-            if( count( self::$_oPHPExcel->getAllSheets()) == 1 && self::$_oPHPExcel->getActiveSheet()->getTitle() == 'Worksheet' )
+            if( count( self::$_oSpreadsheet->getAllSheets()) == 1 && self::$_oSpreadsheet->getActiveSheet()->getTitle() == 'Worksheet' )
             {   // renaming default worksheet
-                self::$_oPHPExcel->setActiveSheetIndex()->setTitle( $sGroupName );
+                self::$_oSpreadsheet->setActiveSheetIndex(0)->setTitle( $sGroupName );
             }
             else
             {   // second or later worksheet
-                $oNewSheet = self::$_oPHPExcel->createSheet();
-                $oNewSheet->setTitle( $sGroupName );                
+                $oNewSheet = self::$_oSpreadsheet->createSheet();
+                $oNewSheet->setTitle( $sGroupName );
             }
-
-            self::$_oPHPExcel->setActiveSheetIndexByName( $sGroupName );
+            
+            self::$_oSpreadsheet->setActiveSheetIndexByName( $sGroupName );
         }
 
         return $this;
