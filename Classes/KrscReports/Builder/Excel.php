@@ -33,7 +33,7 @@
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-abstract class KrscReports_Builder_Excel extends KrscReports_Builder_Abstract
+abstract class KrscReports_Builder_Excel extends \KrscReports_Builder_Abstract
 {
     /**
      * Maximum number of signs allowed in group name

@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-27
+ * @version 2.0.1, 2018-11-07
  */
 
 /**
@@ -39,6 +39,11 @@ class KrscReports_Builder_Excel_PHPExcel implements \KrscReports\Builder\Excel\E
      * @var \PHPExcel instance of PHPExcel used while adding new data to spreadsheets
      */
     protected static $_oPHPExcel;
+
+    /**
+     * @var string name of group in which this content is generated
+     */
+    protected $_sGroupName;
 
     /**
      * Method for setting PHPExcel object inside class.
@@ -113,5 +118,13 @@ class KrscReports_Builder_Excel_PHPExcel implements \KrscReports\Builder\Excel\E
         }
 
         return $this;
+    }
+
+    /**
+     * @return string actually set group name
+     */
+    public function getGroupName()
+    {
+        return $this->_sGroupName;
     }
 }
