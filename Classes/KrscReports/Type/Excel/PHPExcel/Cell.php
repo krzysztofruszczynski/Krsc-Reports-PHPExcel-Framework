@@ -111,7 +111,13 @@ class KrscReports_Type_Excel_PHPExcel_Cell
      */
     public function setValue( $mValue )
     {
-        $this->_mValue = $mValue;
+        if (is_scalar($mValue) && $mValue != strip_tags((string)$mValue)) { // value contains tag - treat as html
+            $html2rich = new \PHPExcel_Helper_HTML();
+            $this->_mValue = $html2rich->toRichTextObject((string)$mValue);
+        } else {
+            $this->_mValue = $mValue;
+        }
+
         return $this;
     }
     
