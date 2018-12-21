@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.2, 2017-05-08
+ * @version 2.0.1, 2018-11-08
  */
 
 /**
@@ -73,13 +73,23 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
     
     /**
      * Method adding new graph associated with table.
-     * @return KrscReports_Builder_Excel_PHPExcel_Graph_Basic new graph (on which settings can be made)
+     *
+     * @return \KrscReports_Builder_Excel_PHPExcel_Graph_Basic|\KrscReports\Builder\Excel\PhpSpreadsheet\Graph\Basic new graph (on which settings can be made)
      */
     public function addNewGraph()
     {
-        $oNewGraph = new KrscReports_Builder_Excel_PHPExcel_Graph_Basic();
-        $oNewGraph->setCellObject( $this->_oCell );
+        switch (\KrscReports_File::getBuilderType()) {
+            case \KrscReports_File::SETTINGS_PHPEXCEL:
+                $oNewGraph = new \KrscReports_Builder_Excel_PHPExcel_Graph_Basic();
+                break;
+            case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
+                $oNewGraph = new \KrscReports\Builder\Excel\PhpSpreadsheet\Graph\Basic();
+                break;
+        }
+
+        $oNewGraph->setCellObject($this->_oCell);
         $this->_aGraphs[] = $oNewGraph;
+
         return $oNewGraph;
     }
     
@@ -90,11 +100,11 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
     public function endTable() 
     {
         parent::endTable();
-        
+
         $iColumnSizeOfGraphs = 0;
         if ( isset( $this->_aGraphs ) ) {
-            foreach ( $this->_aGraphs as $oGraph ) {    // action made for every graph
-                /* @var $oGraph KrscReports_Builder_Excel_PHPExcel_GraphBasic */
+            foreach ( $this->_aGraphs as $oGraph ) {// action made for every graph
+                /* @var $oGraph \KrscReports\Builder\Excel\GraphBasic */
                 $iNumberOfColumns = count( $this->_aData[0] );
                 
                 
@@ -102,7 +112,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
                 $iPlotValuesColumnIndex = array_search( $oGraph->getPlotValuesColumnName(), $this->getColumnNames() );
                 
                 $oGraph->setGroupName( $this->_sGroupName . ( isset( $this->_sChartWorksheetSuffix ) ? $this->_sChartWorksheetSuffix : '' ) );
-                $oGraph->setSourceGroupName( $this->_sGroupName );                
+                $oGraph->setSourceGroupName( $this->_sGroupName );
                 
                 $aPlotLabels = $oGraph->getPlotLabels();
                 
@@ -122,6 +132,6 @@ class KrscReports_Builder_Excel_PHPExcel_TableWithGraphs extends KrscReports_Bui
                 $iColumnSizeOfGraphs += $oGraph->getGraphColumnSize() + $this->_iNumberOfColumnsBetweenGraphs;                
                 $oGraph->attachChart();
             }
-        }        
+        }
     }
 }

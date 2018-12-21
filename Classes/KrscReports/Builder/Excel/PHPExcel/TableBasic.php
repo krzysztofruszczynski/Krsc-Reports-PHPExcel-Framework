@@ -22,7 +22,7 @@
  * @package KrscReports_Builder
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-27
+ * @version 2.0.1, 2018-11-07
  */
 
 /**
@@ -56,7 +56,8 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
      */
     public function beginTable() 
     {
-        $iIterator = 0;        
+        $this->_sGroupName = self::$_oBuilderType->getGroupName();
+        $iIterator = 0;
         
         $aColumnNames = $this->getColumnNames();
         

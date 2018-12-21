@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-10-08
+ * @version 2.0.1, 2018-11-08
  */
 
 /**
@@ -211,6 +211,9 @@ class KrscReports_File
                         $this->_oWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx(
                             \KrscReports\Builder\Excel\PhpSpreadsheet::getPhpSpreadsheetObject()
                         );
+                        $this->_oWriter->setIncludeCharts(self::INCLUDE_CHARTS);
+                        $this->_oWriter->setPreCalculateFormulas(true);
+
                         if ($this->_mReturnToSite !== false) {
                             \KrscReports\Builder\Excel\PhpSpreadsheet::getPhpSpreadsheetObject()->setActiveSheetIndex($this->_mReturnToSite);
                         }

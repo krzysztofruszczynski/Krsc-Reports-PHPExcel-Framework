@@ -27,7 +27,7 @@ use KrscReports\Type\Excel;
  * @package KrscReports_Type
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-10-08
+ * @version 2.0.1, 2018-11-08
  */
 
 /**
@@ -60,9 +60,11 @@ class Cell extends Excel\Cell
     }
 
     /**
-     * Getter for cell value (from loaded file or from PHPExcel object created during script execution) 
+     * Getter for cell value (from loaded file or from PHPExcel object created during script execution)
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param integer $iRowId numeric coordinate of row (starts from 1)
+     *
      * @return mixed value for selected cell
      */
     public function getCellValue( $iColumnId, $iRowId )
@@ -114,7 +116,9 @@ class Cell extends Excel\Cell
 
     /**
      * Method for getting column dimension.
+     *
      * @param integer $iColumnId column index (starts from 0)
+     *
      * @return object column dimension for selected in input columnId
      */
     protected function _getColumnDimensionByColumn( $iColumnId )
@@ -124,23 +128,27 @@ class Cell extends Excel\Cell
 
     /**
      * Method returns letter coordinate for numeric coordinate of column.
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
+     *
      * @return string letter coordinate of given column
      */
     public function getColumnDimension( $iColumnId )
     {
-        return $this->_getColumnDimensionByColumn( $iColumnId + 1 )->getColumnIndex();
+        return $this->_getColumnDimensionByColumn($iColumnId)->getColumnIndex();
     }
 
     /**
      * Method sets autosize parameter for specified column.
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param boolean $bAutoSize flag for column autosize
+     *
      * @return object column dimension for selected in input columnId
      */
     public function setColumnDimensionAutosize( $iColumnId, $bAutoSize = true )
     {
-        return $this->_getColumnDimensionByColumn( $iColumnId + 1 )->setAutoSize( $bAutoSize );
+        return $this->_getColumnDimensionByColumn($iColumnId)->setAutoSize( $bAutoSize );
     }
 
     /**
@@ -171,34 +179,42 @@ class Cell extends Excel\Cell
 
     /**
      * Method setting auto filter for table.
+     *
      * @param integer $iColumnIdMin begin of range with filter
      * @param integer $iColumnIdMax end of range with filter 
      * @param integer $iHeaderRowHeight absolute height of row with header
+     *
      * @return object object on which method was executed
      */
     public function setAutoFilter( $iColumnIdMin, $iColumnIdMax, $iHeaderRowHeight )
     {
         self::$_oSpreadsheet->getActiveSheet()->setAutoFilterByColumnAndRow( $iColumnIdMin + 1, $iHeaderRowHeight, $iColumnIdMax + 1, $iHeaderRowHeight );
+
         return $this;
     }
 
     /**
      * Method setting comment for cell.
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param integer $iRowId numeric coordinate of row (starts from 1)
      * @param string $sComment content of comment
+     *
      * @return object object on which method was executed
      */
     public function constructCellComment( $iColumnId, $iRowId, $sComment )
     {
         self::$_oSpreadsheet->getActiveSheet()->getCommentByColumnAndRow( $iColumnId + 1, $iRowId )->getText()->createTextRun( $sComment );
+
         return $this;
     }
 
     /**
      * Method set styles for cell.
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param integer $iRowId numeric coordinate of row (starts from 1)
+     *
      * @return object object on which method was executed
      */
     public function constructCellStyles( $iColumnId, $iRowId )
@@ -213,8 +229,10 @@ class Cell extends Excel\Cell
      * Method creates cell with previously set properties on given in method's input coordinates 
      * (with one object with set properties more than one cell can be created; set properties can be changed
      * and new cells with new properties can be constructed from the same instance of object).
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param integer $iRowId numeric coordinate of row (starts from 1)
+     *
      * @return object object on which method was executed
      */
     public function constructCell( $iColumnId, $iRowId )
@@ -226,7 +244,7 @@ class Cell extends Excel\Cell
         return $this;
     }
     
-        /**
+    /**
      * Method for merging cells.
      *
      * @param int $iBeginColumnId begin index of column (counts from 0)
