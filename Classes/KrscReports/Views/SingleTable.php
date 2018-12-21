@@ -4,7 +4,7 @@ namespace KrscReports\Views;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@ namespace KrscReports\Views;
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.0, 2017-10-13
+ * @version 1.2.6, 2018-06-01
  */
 
 /**
@@ -52,6 +52,11 @@ class SingleTable extends AbstractView
     const KEY_SINGLE_TABLE_TITLE = 'title_single_table';
 
     /**
+     * key in options for single table title col span
+     */
+    const KEY_SINGLE_TABLE_TITLE_COL_SPAN = 'title_single_table_col_span';
+
+    /**
      * Method setting table builder in document element, setting necessary options (like lines between elements) 
      * and adding it to internal variable later used by Krsc Reports.
      * @param \KrscReports_Builder_Excel_PHPExcel_TableCurrent $builder previously created and configured table builder
@@ -61,11 +66,18 @@ class SingleTable extends AbstractView
     {
         $elementTable = new \KrscReports_Document_Element_Table();
         $elementTable->setBuilder($builder);
+        $elementTable->setGroupName($spreadsheetName);
 
         if ( isset($this->options[self::KEY_COLUMN_LINES_BETWEEN_ELEMENTS]) ) {
             $elementTable->setLinesBetweenElements($this->options[self::KEY_COLUMN_LINES_BETWEEN_ELEMENTS]);
         }
-        
+        if (isset($this->options[self::KEY_START_COLUMN_INDEX])) {
+            $elementTable->setStartWidth($this->options[self::KEY_START_COLUMN_INDEX]);
+        }
+        if (isset($this->options[self::KEY_START_ROW_INDEX])) {
+            $elementTable->setStartHeight($this->options[self::KEY_START_ROW_INDEX]);
+        }
+
         // adding table to spreadsheet
         $this->documentElement->addElement($elementTable, $spreadsheetName);
     }
@@ -84,7 +96,10 @@ class SingleTable extends AbstractView
         $builder->setCellObject( $this->getCell() );
 
         if ( isset( $this->options[self::KEY_SINGLE_TABLE_TITLE] ) ) {
-            $builder->setTitle( $this->options[self::KEY_SINGLE_TABLE_TITLE] );
+            $builder->setTitle(
+                $this->options[self::KEY_SINGLE_TABLE_TITLE],
+                (isset($this->options[self::KEY_SINGLE_TABLE_TITLE_COL_SPAN]) ? $this->options[self::KEY_SINGLE_TABLE_TITLE_COL_SPAN] : null)
+            );
         }
 
         $builder->setData( $this->data );

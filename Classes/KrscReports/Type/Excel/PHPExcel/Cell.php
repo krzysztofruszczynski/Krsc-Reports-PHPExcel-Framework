@@ -22,7 +22,7 @@
  * @package KrscReports_Type
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.4, 2018-03-23
+ * @version 1.2.8, 2018-09-17
  */
 
 /**
@@ -53,10 +53,15 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     protected $_sType;
     
     /**
-     * @var array key is columnId, value is column fixed size  
+     * @var array|integer key is columnId, value is column fixed size (if integer - value apply to every column)
      */
-    protected $_aColumnFixedSizes = array();
+    protected $_mColumnFixedSizes = array();
     
+    /**
+     * @var array|integer key is columnId, value is column fixed size  (if integer - value apply to every column)
+     */
+    protected $_mColumnMaxSizes = array();
+
     /**
      * @var KrscReports_Type_Excel_PHPExcel_Style object for managing style collections
      */
@@ -117,16 +122,60 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     }
     
     /**
-     * Getter for cell value (from loaded file or from PHPExcel object created during script execution) 
+     * Getter for cell value (from loaded file or from PHPExcel object created during script execution)
+     *
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
      * @param integer $iRowId numeric coordinate of row (starts from 1)
-     * @return mixed value for selected cell
+     *
+     *  @return mixed value for selected cell
      */
-    public function getCellValue( $iColumnId, $iRowId )
+    public function getCellValue($iColumnId, $iRowId)
     {
         return self::$_oPHPExcel->getActiveSheet()->getCellByColumnAndRow( $iColumnId, $iRowId )->getValue();
     }
-    
+
+    /**
+     * Getter for cell via coordinate (from loaded file or from PHPExcel object created during script execution)
+     *
+     * @param string $sCoordinate cell coordinate (can include spreadsheet reference at the beginning)
+     *
+     * @return mixed value for selected cell
+     */
+    public function getCellByCoordinate($sCoordinate)
+    {
+        return self::$_oPHPExcel->getActiveSheet()->getCell($sCoordinate);
+    }
+
+    /**
+     * Method for inserting rows before
+     *
+     * @param integer $iRowId number of row, before which new rows will be added
+     * @param integer $iNumberOfRows number of added rows (by default 1)
+     *
+     * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
+     */
+    public function insertNewRowBefore($iRowId, $iNumberOfRows = 1)
+    {
+        self::$_oPHPExcel->getActiveSheet()->insertNewRowBefore($iRowId, $iNumberOfRows);
+
+        return $this;
+    }
+
+    /**
+     * Method for deleting rows.
+     *
+     * @param integer $iRowId number of row, for which deletion is started
+     * @param integer $iNumberOfRows number of deleted rows (by default 1)
+     *
+     * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
+     */
+    public function removeRow($iRowId, $iNumberOfRows = 1)
+    {
+        self::$_oPHPExcel->getActiveSheet()->removeRow($iRowId, $iNumberOfRows);
+
+        return $this;
+    }
+
     /**
      * Method setting type of cell.
      * @param string $sType type of cell to be set
@@ -191,30 +240,124 @@ class KrscReports_Type_Excel_PHPExcel_Cell
     {
         return $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize( $bAutoSize );
     }
-    
+
     /**
      * Method checks whether fixed size for this column is already set.
+     *
      * @param integer $iColumnId numeric id of column
+     *
      * @return boolean true if fixed size is already set, false otherwise
      */
     public function isColumnFixedSizeIsSet( $iColumnId )
     {
-        return isset( $this->_aColumnFixedSizes[$iColumnId] );
+        $bIsColumnFixedSizeIsSet = false;
+
+        if (!is_array($this->_mColumnFixedSizes) && is_numeric($this->_mColumnFixedSizes)) {
+            $bIsColumnFixedSizeIsSet = true;
+        } else {
+            $bIsColumnFixedSizeIsSet = isset($this->_mColumnFixedSizes[$iColumnId]);
+        }
+
+        return $bIsColumnFixedSizeIsSet;
     }
-    
+
     /**
      * Method setting fixed size for specific column.
-     * @param integer $iColumnId numeric id of column
+     * @param integer|null $iColumnId numeric id of column (null - apply to all columns)
      * @param double $dFixedSize width of column
+     *
+     * @return void PHPExcel_Worksheet_ColumnDimension|void column dimension for selected in input columnId (if set)
+     */
+    public function setColumnFixedSize($iColumnId, $dFixedSize)
+    {
+        if (is_null($iColumnId)) {
+            $this->_mColumnFixedSizes = $dFixedSize;
+        } else {
+            $this->_mColumnFixedSizes[$iColumnId] = $dFixedSize;
+        }
+    }
+
+    /**
+     * Method checks whether max size for this column is already set.
+     *
+     * @param integer $iColumnId numeric id of column
+     *
+     * @return boolean true if max size is already set, false otherwise
+     */
+    public function isColumnMaxSizeIsSet($iColumnId)
+    {
+        $bIsColumnMaxSizeIsSet = false;
+
+        if (!is_array($this->_mColumnMaxSizes) && is_numeric($this->_mColumnMaxSizes)) {
+            $bIsColumnMaxSizeIsSet = true;
+        } else {
+            $bIsColumnMaxSizeIsSet = isset($this->_mColumnMaxSizes[$iColumnId]);
+        }
+
+        return $bIsColumnMaxSizeIsSet;
+    }
+
+    /**
+     * Method for getting max column size.
+     *
+     * @param integer $iColumnId column Id
+     *
+     * @return integer max size of column
+     */
+    public function getColumnMaxSize($iColumnId)
+    {
+        if (is_array($this->_mColumnMaxSizes)) {
+            $iMaxSize = $this->_mColumnMaxSizes[$iColumnId];
+        } else {
+            $iMaxSize = $this->_mColumnMaxSizes;
+        }
+
+        return $iMaxSize;
+    }
+
+    /**
+     * Method setting max size for specific column.
+     *
+     * @param integer|null $iColumnId numeric id of column (null - apply to all columns)
+     * @param double $dMaxSize max width of column
+     *
+     * @return void
+     */
+    public function setColumnMaxSize($iColumnId, $dMaxSize)
+    {
+        if (is_null($iColumnId)) {
+            $this->_mColumnMaxSizes = $dMaxSize;
+        } else {
+            $this->_mColumnMaxSizes[$iColumnId] = $dMaxSize;
+        }
+    }
+
+    /**
+     * Method for setting on cell object fixed size for given column.
+     *
+     * @param integer $iColumnId id of column (starts from 0)
+     *
      * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
      */
-    public function setColumnFixedSize( $iColumnId, $dFixedSize )
+    public function createColumnFixedSize($iColumnId)
     {
-        $this->_aColumnFixedSizes[$iColumnId] = $dFixedSize;
-        $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize( false );
-        return $this->_getColumnDimensionByColumn( $iColumnId )->setWidth( $dFixedSize );
+        return $this->createColumnSize($iColumnId, (is_array($this->_mColumnFixedSizes) ? $this->_mColumnFixedSizes[$iColumnId] : $this->_mColumnFixedSizes));
     }
-    
+
+    /**
+     *
+     * @param integer $iColumnId
+     * @param integer $iSize
+     *
+     * @return PHPExcel_Worksheet_ColumnDimension column dimension for selected in input columnId
+     */
+    public function createColumnSize($iColumnId, $iSize)
+    {
+        $this->_getColumnDimensionByColumn( $iColumnId )->setAutoSize(false);
+
+        return $this->_getColumnDimensionByColumn( $iColumnId )->setWidth($iSize);
+    }
+
     /**
      * Method setting auto filter for table.
      * @param integer $iColumnIdMin begin of range with filter
@@ -268,9 +411,30 @@ class KrscReports_Type_Excel_PHPExcel_Cell
         $this->constructCellStyles( $iColumnId, $iRowId );
         
         // constructing phpexcel element
-        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue, true);    
+        self::$_oPHPExcel->getActiveSheet()->setCellValueByColumnAndRow( $iColumnId, $iRowId, $this->_mValue, true);
         
         return $this;
     }
-    
+
+    /**
+     * Method for merging cells.
+     *
+     * @param int $iBeginColumnId begin index of column (counts from 0)
+     * @param int $iBeginRowId begin index of row (counts from 1)
+     * @param int $iEndColumnId end index of column (counts from 0)
+     * @param int $iEndRowId end index of row (counts from 1)
+     *
+     * @return $this
+     */
+    public function mergeCells($iBeginColumnId, $iBeginRowId, $iEndColumnId, $iEndRowId)
+    {
+        if ($iBeginRowId == $iEndRowId) {
+            for ($iSelectedColumnId = $iBeginColumnId; $iSelectedColumnId <= $iEndColumnId; $iSelectedColumnId++) {
+                $this->constructCellStyles($iSelectedColumnId, $iEndRowId);
+            }
+        }
+        self::$_oPHPExcel->getActiveSheet()->mergeCellsByColumnAndRow($iBeginColumnId, $iBeginRowId, $iEndColumnId, $iEndRowId);
+
+        return $this;
+    }
 }

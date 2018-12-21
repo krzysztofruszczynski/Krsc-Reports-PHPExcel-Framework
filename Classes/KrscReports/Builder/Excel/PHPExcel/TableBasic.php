@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.8, 2017-03-28
+ * @version 1.2.5, 2018-04-19
  */
 
 /**
@@ -67,11 +67,13 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
             
         foreach( $aColumnNames as $sColumnName )
         {
-            if( !$this->_oCell->isColumnFixedSizeIsSet( $iIterator ) )
+            if(!$this->_oCell->isColumnFixedSizeIsSet($iIterator))
             {
                 $this->_oCell->setColumnDimensionAutosize( $this->_iActualWidth + $iIterator, true );
+            } else {
+                $this->_oCell->createColumnFixedSize($iIterator);
             }
-            
+
             $iIterator++;
         }
     }
@@ -109,7 +111,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
      */
     public function setRows() 
     {
-        
+
         foreach( $this->_aData as $aRow )
         {   // iterating over rows
             $iIterator = 0;
@@ -118,17 +120,59 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
                 $this->_oCell->setValue( $mColumnValue );
                 $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
             }
-            
+
             // adding one row in registry
             $this->_iActualHeight++;
         }
     }
-    
+
+    /**
+     * Method for getting size of column. If text is divided into lines, size of longest line is given.
+     *
+     * @param mixed $mColumnValue value inserted for cell
+     *
+     * @return int size of columns (number of signs)
+     */
+    public function getColumnSize($mColumnValue)
+    {
+        if ($mColumnValue instanceof PHPExcel_RichText) {
+            // getting text from RichText object
+            $mColumnValue = $mColumnValue->getPlainText();
+        }
+
+        // determing column size (if many lines - take the lognest one)
+        if (is_scalar($mColumnValue)) {
+            if (stripos($mColumnValue, PHP_EOL) !== false) {
+                // text consist of more than one line - the longest chosen
+                $columnSize = max(array_map('strlen', explode(PHP_EOL, $mColumnValue)));
+            } else {
+                $columnSize = strlen((string)($mColumnValue));
+            }
+        } else {
+            $columnSize = null;
+        }
+
+        return $columnSize;
+    }
+
+    /**
+     * Method setting max column sizes.
+     *
+     * @param array $aMaxSizeSet key is column id. For each of column fixed (max) size of column is set.
+     */
+    public function setMaxColumnsSizes($aMaxSizeSet)
+    {
+        foreach ($aMaxSizeSet as $columnId => $isMaxSizeSet) {
+            // create fixed size for columns, where max size of column is reached
+            $this->_oCell->createColumnSize($columnId, $this->_oCell->getColumnMaxSize($columnId));
+        }
+    }
+
     /**
      * Action responsible for creating document (while creating table not used but has to be implemented).
      * @return void
      */
-    public function constructDocument()    
+    public function constructDocument()
     {
         
     }

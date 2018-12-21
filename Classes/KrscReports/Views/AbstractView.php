@@ -6,7 +6,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.4, 2018-03-23
+ * @version 1.2.6, 2018-06-01
  */
 
 /**
@@ -49,12 +49,27 @@ abstract class AbstractView
      * key in options where there is array column size (keys - column id starting from 0, values - width of column) 
      */
     const KEY_COLUMN_FIXED_SIZES = 'column_sizes';
-    
+
+    /**
+     * key in options where there is array column size (keys - column id starting from 0, values - max width of column)
+     */
+    const KEY_COLUMN_MAX_SIZES = 'column_max_sizes';
+
     /**
      * key in options for number of rows between subsequent tables
      */
     const KEY_COLUMN_LINES_BETWEEN_ELEMENTS = 'lines_between_elements';
-    
+
+    /**
+     * key in options for start column for table (counts from 0)
+     */
+    const KEY_START_COLUMN_INDEX = 'start_width_column_index';
+
+    /**
+     * key in options for start row for table (counts from 1)
+     */
+    const KEY_START_ROW_INDEX = 'start_height_row_index';
+
     /**
      * index of element in option array with name of translator domain to be used (only if required)
      */
@@ -203,9 +218,23 @@ abstract class AbstractView
         $this->cell = self::getCellObject();
         $this->cell->setStyleObject( $this->styleBuilder->getStyleObject() );
 
-        if ( isset( $this->options[self::KEY_COLUMN_FIXED_SIZES] ) && is_array( $this->options[self::KEY_COLUMN_FIXED_SIZES]) ) {
-            foreach ( $this->options[self::KEY_COLUMN_FIXED_SIZES] as $columnId => $columnSize ) {
-                $this->cell->setColumnFixedSize( $columnId, $columnSize );
+        if ( isset( $this->options[self::KEY_COLUMN_FIXED_SIZES] )) {
+            if (is_array( $this->options[self::KEY_COLUMN_FIXED_SIZES])) {
+                foreach ( $this->options[self::KEY_COLUMN_FIXED_SIZES] as $columnId => $columnSize ) {
+                    $this->cell->setColumnFixedSize( $columnId, $columnSize );
+                }
+            } else {
+                $this->cell->setColumnFixedSize(null, $this->options[self::KEY_COLUMN_FIXED_SIZES]);
+            }
+        }
+
+        if ( isset( $this->options[self::KEY_COLUMN_MAX_SIZES] )) {
+            if (is_array( $this->options[self::KEY_COLUMN_MAX_SIZES])) {
+                foreach ( $this->options[self::KEY_COLUMN_MAX_SIZES] as $columnId => $columnSize ) {
+                    $this->cell->setColumnMaxSize($columnId, $columnSize);
+                }
+            } else {
+                $this->cell->setColumnMaxSize(null, $this->options[self::KEY_COLUMN_MAX_SIZES]);
             }
         }
 
