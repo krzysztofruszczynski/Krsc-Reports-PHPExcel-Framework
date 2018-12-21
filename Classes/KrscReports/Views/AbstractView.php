@@ -2,6 +2,7 @@
 namespace KrscReports\Views;
 
 use KrscReports\Builder;
+use KrscReports\Exception\RowSizeMismatchException;
 use KrscReports\Import\ReaderTrait;
 use KrscReports\Type\Excel\PHPExcel\Style;
 
@@ -28,7 +29,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-25
+ * @version 2.0.1, 2018-12-21
  */
 
 /**
@@ -238,9 +239,13 @@ abstract class AbstractView
 
     /**
      * Method adding column names to data provided in input.
+     *
      * @param array $data
      * @param array $columnNames
+     *
      * @return array
+     *
+     * @throws \KrscReports\Exception\RowSizeMismatchException
      */
     protected function addColumnNames( $data, $columnNames = array() )
     {
@@ -254,7 +259,9 @@ abstract class AbstractView
                 }
 
                 if ( count( $columnNames ) !== count( $row ) ) {
-                    throw new \Exception(sprintf( 'Array sizes are not the same: (columnNames: %s, row: %s, rowNo: %s)', count($columnNames), count($row), $key));
+                    throw new RowSizeMismatchException(
+                        RowSizeMismatchException::createExceptionMessage($columnNames, $row, $key)
+                    );
                 }
 
                 $outputData[$key] = array_combine( $columnNames, $row );  

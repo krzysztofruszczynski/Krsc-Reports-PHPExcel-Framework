@@ -26,25 +26,26 @@
  */
 
 /**
- * Class for handling errors with inproper extension.
- * 
+ * Class for handling errors with improper extension.
+ *
  * @category KrscReports
  * @package KrscReports_Exception
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 class KrscReports_Exception_InvalidExtension extends KrscReports_Exception
 {
-        /**
-         * @var string 
-         */
-	protected $message = 'Requested extension is not handled by application';
+    /**
+     * @var string
+     */
+    protected $message = 'Requested extension is not handled by application';
 
-        /**
-         * @param string $message
-         * @param integer $code
-         */
-	public function __construct( $message, $code = 0 )
-	{
-		$this->message = $this->message . ' (' . $message . ')'; 
-	}
+    /**
+     * @param string  $message
+     * @param integer $code
+     */
+    public function __construct( $message, $code = 0 )
+    {
+        $this->message = $this->message . ' (' . $message . ')';
+        parent::__construct($message);
+    }
 }
