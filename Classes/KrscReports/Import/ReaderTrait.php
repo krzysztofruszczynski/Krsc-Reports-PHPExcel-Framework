@@ -24,7 +24,7 @@ namespace KrscReports\Import;
  * @package KrscReports
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt       LGPL
- * @version 1.2.8, 2018-09-07
+ * @version 2.0.0, 2018-09-27
  */
 
 /**
@@ -60,6 +60,25 @@ trait ReaderTrait
     }
 
     /**
+     * Constructor for cell object.
+     *
+     * @return \KrscReports_Type_Excel_PHPExcel_Cell|\KrscReports\Type\Excel\PhpSpreadsheet\Cell new object of cell
+     */
+    public static function getCellObject()
+    {
+        switch (\KrscReports_File::getBuilderType()) {
+            case \KrscReports_File::SETTINGS_PHPEXCEL:
+                $returnObject = new \KrscReports_Type_Excel_PHPExcel_Cell();
+                break;
+            case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
+                $returnObject = new \KrscReports\Type\Excel\PhpSpreadsheet\Cell();
+                break;
+        }
+
+        return $returnObject;
+    }
+
+    /**
      * Method for setting cell object. Cell object can be constructed only when PHPExcel object was previously set.
      *
      * @param KrscReports_Type_Excel_PHPExcel_Cell $oCell stub of cell object (by default null)
@@ -69,7 +88,7 @@ trait ReaderTrait
     public function setCellObject($oCell = null)
     {
         if(is_null($oCell)) {
-            $this->_oCell = new \KrscReports_Type_Excel_PHPExcel_Cell();
+            $this->_oCell = $this->getCellObject();
         } else {
             $this->_oCell = $oCell;
         }

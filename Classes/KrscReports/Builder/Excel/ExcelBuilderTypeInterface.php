@@ -1,4 +1,6 @@
 <?php
+namespace KrscReports\Builder\Excel;
+
 /**
  * This file is part of KrscReports.
  *
@@ -19,31 +21,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * @category KrscReports
- * @package KrscReports_Type
+ * @package KrscReports_Builder
  * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-28
+ * @version 2.0.0, 2018-09-27
  */
 
 /**
- * Class for creating double black border for cells.
+ * Interface for builders associated with Excel.
  * 
  * @category KrscReports
- * @package KrscReports_Type
+ * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Type_Excel_PHPExcel_Style_Borders_DoubleBorders extends KrscReports_Type_Excel_PHPExcel_Style_Borders
+interface ExcelBuilderTypeInterface
 {
     /**
-     * Method for getting style array for all borders.
-     * @return array style array for all borders
+     * Method for setting file properties
+     * @param array $aDocumentProperties property name is key (must have a set method), property value is array value
      */
-    protected function _getAllBorders()
-    {
-        $aOutput = array();
-        $aOutput[$this->getTranslatedStyleKey(static::KEY_STYLE)] = PHPExcel_Style_Border::BORDER_DOUBLE;
-        $aOutput[static::KEY_COLOR] = self::_getColorArray( PHPExcel_Style_Color::COLOR_BLACK );
-        return $aOutput;
-    }
-    
+    public static function setDocumentProperties($aDocumentProperties);
+
+    /**
+     * Method for setting group name for current builder (used for Excel spreadsheet name).
+     * @param string $sGroupName group name to be set (means that current builder will write to Excel spreadsheet with the same name)
+     * @return \KrscReports\Builder\Excel\ExcelBuilderTypeInterface object on which method was executed
+     */
+    public function setGroupName($sGroupName);
 }

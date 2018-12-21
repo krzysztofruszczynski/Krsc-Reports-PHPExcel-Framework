@@ -1,8 +1,10 @@
 <?php
+use KrscReports\Type\Excel\PhpSpreadsheet\StyleKeysTranslatorTrait;
+
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +22,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 2.0.0, 2018-09-28
  */
 
 /**
@@ -35,10 +37,12 @@
  */
 class KrscReports_Type_Excel_PHPExcel_Style_Borders extends KrscReports_Type_Excel_PHPExcel_Style_Default
 {
+    use StyleKeysTranslatorTrait;
+
     /**
      * key for element, which is created by this object
      */
-    const ARRAY_KEY = 'borders';  
+    const ARRAY_KEY = 'borders';
     
     /**
      * key for subarray with style of border
@@ -121,14 +125,14 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders extends KrscReports_Type_Exc
     {
         $aOutput = array();
         
-        $aOutput = $this->_attachToArray( $aOutput, 'allborders', $this->_getAllBorders() );
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('allborders'), $this->_getAllBorders() );
         $aOutput = $this->_attachToArray( $aOutput, 'left', $this->_getLeft() );
         $aOutput = $this->_attachToArray( $aOutput, 'right', $this->_getRight() );
         $aOutput = $this->_attachToArray( $aOutput, 'bottom', $this->_getBottom() );
         $aOutput = $this->_attachToArray( $aOutput, 'top', $this->_getTop() );
         $aOutput = $this->_attachToArray( $aOutput, 'diagonal', $this->_getDiagonal() );
-        $aOutput = $this->_attachToArray( $aOutput, 'diagonaldirection', $this->_getDiagonalDirection() );
-        
+        $aOutput = $this->_attachToArray( $aOutput, $this->getTranslatedStyleKey('diagonaldirection'), $this->_getDiagonalDirection() );
+
         return $aOutput;
     }
 }

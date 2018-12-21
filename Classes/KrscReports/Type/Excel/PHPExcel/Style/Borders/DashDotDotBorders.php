@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2014 Krzysztof Ruszczyński
+ * Copyright (c) 2018 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2014 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.0, 2014-12-28
+ * @version 2.0.0, 2018-09-28
  */
 
 /**
@@ -41,9 +41,8 @@ class KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders extends Kr
     protected function _getAllBorders()
     {
         $aOutput = array();
-        $aOutput[static::KEY_STYLE] = PHPExcel_Style_Border::BORDER_DASHDOTDOT;
+        $aOutput[$this->getTranslatedStyleKey(static::KEY_STYLE)] = PHPExcel_Style_Border::BORDER_DASHDOTDOT;
         $aOutput[static::KEY_COLOR] = self::_getColorArray( PHPExcel_Style_Color::COLOR_BLACK );
         return $aOutput;
     }
-    
 }
