@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-10-08
+ * @version 2.0.1, 2019-02-05
  */
 
 /**
@@ -49,11 +49,12 @@ abstract class KrscReports_Builder_Excel extends \KrscReports_Builder_Abstract
      *   '?' => '_',
      *   '[' => '_',
      *   ']' => '_',
+     *   '\'' => ' ', // theoretically allowed, but cause problems with formulas
      * )
      *
      * Array with illegal signs inside group name (key: illegal sign, value: replacement)
      */
-    const GROUP_NAME_ILLEGAL_SIGNS = 'a:7:{s:1:"*";s:0:"";s:1:":";s:1:"_";s:1:"/";s:1:"_";s:1:"\";s:1:"_";s:1:"?";s:1:"_";s:1:"[";s:1:"_";s:1:"]";s:1:"_";}';
+    const GROUP_NAME_ILLEGAL_SIGNS = 'a:8:{s:1:"*";s:0:"";s:1:":";s:1:"_";s:1:"/";s:1:"_";s:1:"\";s:1:"_";s:1:"?";s:1:"_";s:1:"[";s:1:"_";s:1:"]";s:1:"_";s:1:"\'";s:1:" ";}';
 
     /**
      * @var \KrscReports\Type\Excel\Cell object responsible for creating cell inside Excel spreadsheet
