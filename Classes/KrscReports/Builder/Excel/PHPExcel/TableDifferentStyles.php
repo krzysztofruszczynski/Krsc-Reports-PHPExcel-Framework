@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.5, 2018-04-19
+ * @version 2.0.2, 2019-03-08
  */
 
 /**
@@ -33,7 +33,7 @@
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
 class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReports_Builder_Excel_PHPExcel_TableBasic implements KrscReports_Builder_Interface_Table
-{   
+{
     /**
      * style name for row with holiday
      */
@@ -43,7 +43,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
      * key in array representing default style for cell
      */
     const STYLE_CELL_DEFAULT = '';
-    
+
     /**
      * name of column which has info about style of each row (in this situation: true or false for switching between styles)
      */
@@ -86,7 +86,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
         // adding one row in registry
         $this->_iActualHeight++;
     }
-    
+
     /**
      * Method handling style for given column.
      * @param string $sColumnName name of column being actually analysed
@@ -106,7 +106,7 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
             $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
         }
     }
-    
+
     /**
      * Method extracting informations about styles for cells in a row.
      * @param array|string $mDataStyleColumn if value false - default style; 
@@ -135,13 +135,17 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
         
         return $mColumnStyles;
     }
-    
+
     /**
      * Action done when table rows has to be displayed (increments height with each row).
      * @return void
      */
     public function setRows() 
     {
+        if ($this->_bFromArrayUsage) {
+            $this->_oCell->setFromArrayUsage($this->_iActualWidth, $this->_iActualHeight);
+        }
+
         $aMaxSizeSet = array(); // subsequent keys are columnsIds (iterators) with boolean value
 
         foreach( $this->_aData as $aRow )
@@ -155,16 +159,16 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
                 unset( $aColumnStyles ); // if exists from previous iteration
                 $this->setStyleKey( KrscReports_Document_Element_Table::STYLE_ROW );
             }
-            
+
             $bIsStyleForEachRow = isset( $aColumnStyles ) && is_array($aColumnStyles);
-            
+
             foreach( $aRow as $sColumnName => $mColumnValue )
             {
                 if( $bIsStyleForEachRow )
                 {
                     $this->_handleColumnStyle( $sColumnName, $aColumnStyles );
                 }
-                
+
                 $this->_oCell->setValue( $mColumnValue );
 
                 $columnSize = $this->getColumnSize($mColumnValue);
@@ -177,12 +181,16 @@ class KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles extends KrscReport
 
                 $this->_oCell->constructCell( $this->_iActualWidth + $iIterator++, $this->_iActualHeight );
             }
-            
+
             // adding one row in registry
             $this->_iActualHeight++;
         }
 
         $this->setMaxColumnsSizes($aMaxSizeSet);
+
+        if ($this->_bFromArrayUsage) {
+            $this->_oCell->endFromArrayUsage($this->_iActualWidth, $this->_iActualHeight - 1);
+        }
     }
     
 }

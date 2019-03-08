@@ -4,7 +4,7 @@ namespace KrscReports\Views;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@ namespace KrscReports\Views;
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.2.6, 2018-06-01
+ * @version 2.0.2, 2019-03-08
  */
 
 /**
@@ -90,7 +90,8 @@ class SingleTable extends AbstractView
     protected function getSingleTableBuilder( $spreadsheetName )
     {
         $builder = new \KrscReports_Builder_Excel_PHPExcel_TableCurrent();
-        $builder->setAutoFilter( ( isset( $this->options[self::KEY_AUTOFILTER] ) ? $this->options[self::KEY_AUTOFILTER] : true ) );
+        $builder->setAutoFilter((isset($this->options[self::KEY_AUTOFILTER]) ? $this->options[self::KEY_AUTOFILTER] : true));
+        $builder->setFromArrayUsage((isset($this->options[self::KEY_USE_FROM_ARRAY]) ? $this->options[self::KEY_USE_FROM_ARRAY] : false));
 
         $builder->setGroupName( $spreadsheetName ); // change active sheet
         $builder->setCellObject( $this->getCell() );

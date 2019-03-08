@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.1, 2018-11-07
+ * @version 2.0.2, 2019-03-08
  */
 
 /**
@@ -38,10 +38,17 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
      * @var boolean flag if table is filtered (default false)
      */
     protected $_bAutoFilter = false;
-    
+
+    /**
+     * @var boolean flag if fromArray method to populate rows is used
+     */
+    protected $_bFromArrayUsage = false;
+
     /**
      * Method setting auto filter property.
+     *
      * @param boolean $bAutoFilter flag if table is filtered (default: true)
+     *
      * @return KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles object on which this method was executed
      */
     public function setAutoFilter( $bAutoFilter = true )
@@ -49,7 +56,21 @@ class KrscReports_Builder_Excel_PHPExcel_TableBasic extends KrscReports_Builder_
         $this->_bAutoFilter = $bAutoFilter;
         return $this;
     }
-    
+
+    /**
+     * Method setting if fromArray method to populate rows is used.
+     *
+     * @param boolean $bFromArrayUsage flag if fromArray method to populate rows is used (default: true)
+     *
+     * @return $this
+     */
+    public function setFromArrayUsage($bFromArrayUsage = true)
+    {
+        $this->_bFromArrayUsage = $bFromArrayUsage;
+
+        return $this;
+    }
+
     /**
      * Action done when table begins.
      * @return void

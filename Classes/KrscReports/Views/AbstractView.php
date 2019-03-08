@@ -9,7 +9,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,9 +27,9 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.1, 2018-12-21
+ * @version 2.0.2, 2019-03-08
  */
 
 /**
@@ -82,6 +82,11 @@ abstract class AbstractView
      * index of element in option array with file properties
      */
     const KEY_DOCUMENT_PROPERTIES = 'document_properties';
+
+    /**
+     * index of element in option array with information whether to use faster fromArray method - disabling custom styling for cells (boolean)
+     */
+    const KEY_USE_FROM_ARRAY = 'from_array';
 
     /**
      * @var \KrscReports\ColumnTranslatorService service for translating column names

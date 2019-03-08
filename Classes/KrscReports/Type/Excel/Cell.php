@@ -4,7 +4,7 @@ namespace KrscReports\Type\Excel;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@ namespace KrscReports\Type\Excel;
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-25
+ * @version 2.0.2, 2019-03-08
  */
 
 /**
@@ -67,6 +67,16 @@ abstract class Cell
      * @var string currently selected key of style collection
      */
     protected $_sStyleKey = \KrscReports_Type_Excel_PHPExcel_Style::KEY_DEFAULT;
+
+    /**
+     * @var string dimension of start cell for fromArray function (used if this value is set)
+     */
+    protected $_sStartCell;
+
+    /**
+     * @var array data to be inserted by fromArray method at once
+     */
+    protected $_aFromArrayData = array();
 
     /**
      * Method returns current style object (useful for adding new styles).
@@ -223,6 +233,41 @@ abstract class Cell
 
         return $bIsColumnMaxSizeIsSet;
     }
+
+    /**
+     * Method enabling usage of fromArray method.
+     *
+     * @param integer $iStartWidth index of first column with data in a table
+     * @param integer $iStartHeight index of first row with data in a table
+     *
+     * @return $this
+     */
+    public function setFromArrayUsage($iStartWidth, $iStartHeight)
+    {
+        $this->_sStartCell = $this->getColumnDimension($iStartWidth) . $iStartHeight;
+
+        return $this;
+    }
+
+    /**
+     * Method saving current data for fromArray method and disabling it for newer data.
+     * @TODO: to be declared abstract after implementation in PHPExcel
+     *
+     * @param integer $iBeginColumnId index of first column with data in a table
+     * @param integer $iEndRowId id of last row with data
+     *
+     * @return void
+     */
+    public function endFromArrayUsage($iBeginColumnId, $iEndRowId) {}
+
+    /**
+     * Method returns letter coordinate for numeric coordinate of column.
+     *
+     * @param integer $iColumnId numeric coordinate of column (starts differently depending on vendor)
+     *
+     * @return string letter coordinate of given column
+     */
+    abstract public function getColumnDimension($iColumnId);
 
     abstract public function attachChart($oChart);
 }

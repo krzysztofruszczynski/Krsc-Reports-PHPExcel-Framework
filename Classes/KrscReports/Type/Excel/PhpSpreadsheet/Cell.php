@@ -7,7 +7,7 @@ use KrscReports\Type\Excel;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,9 +25,9 @@ use KrscReports\Type\Excel;
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.1, 2018-11-08
+ * @version 2.0.2, 2019-03-08
  */
 
 /**
@@ -237,9 +237,15 @@ class Cell extends Excel\Cell
      */
     public function constructCell( $iColumnId, $iRowId )
     {
-        $this->constructCellStyles( $iColumnId, $iRowId );
-
-        self::$_oSpreadsheet->getActiveSheet()->setCellValueByColumnAndRow($iColumnId + 1, $iRowId, $this->_mValue);
+        if (isset($this->_sStartCell)) {
+            if (!isset($this->_aFromArrayData[$iRowId])) {
+                $this->_aFromArrayData[$iRowId] = array();
+            }
+            $this->_aFromArrayData[$iRowId][$iColumnId] = $this->_mValue;
+        } else {
+            $this->constructCellStyles( $iColumnId, $iRowId );
+            self::$_oSpreadsheet->getActiveSheet()->setCellValueByColumnAndRow($iColumnId + 1, $iRowId, $this->_mValue);
+        }
 
         return $this;
     }
@@ -264,6 +270,25 @@ class Cell extends Excel\Cell
         self::$_oSpreadsheet->getActiveSheet()->mergeCellsByColumnAndRow($iBeginColumnId + 1, $iBeginRowId, $iEndColumnId + 1, $iEndRowId);
 
         return $this;
+    }
+
+    /**
+     * Method saving current data for fromArray method and disabling it for newer data.
+     *
+     * @param integer $iBeginColumnId index of first column with data in a table
+     * @param integer $iEndRowId id of last row with data
+     *
+     * @return void
+     */
+    public function endFromArrayUsage($iBeginColumnId, $iEndRowId)
+    {
+        self::$_oSpreadsheet->getActiveSheet()->fromArray($this->_aFromArrayData, NULL, $this->_sStartCell);
+        if (!empty($this->_aFromArrayData)) {
+            $iNumberOfColumns = count(current($this->_aFromArrayData));
+            self::$_oSpreadsheet->getActiveSheet()->getStyle($this->_sStartCell.':'.$this->getColumnDimension($iBeginColumnId+$iNumberOfColumns-1).$iEndRowId)->applyFromArray($this->_oStyle->getStyleArray($this->_sStyleKey));
+        }
+
+        unset($this->_aFromArrayData, $this->_sStartCell);
     }
 
     /**
