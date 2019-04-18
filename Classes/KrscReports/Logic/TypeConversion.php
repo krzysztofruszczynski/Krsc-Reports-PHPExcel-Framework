@@ -1,5 +1,5 @@
 <?php
-use KrscReports\Type\Excel\PhpSpreadsheet\StyleConstantsTranslatorTrait;
+namespace KrscReports\Logic;
 
 /**
  * This file is part of KrscReports.
@@ -21,33 +21,39 @@ use KrscReports\Type\Excel\PhpSpreadsheet\StyleConstantsTranslatorTrait;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * @category KrscReports
- * @package KrscReports_Type
+ * @package KrscReports_Logic
  * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
  * @version 2.0.3, 2019-04-17
  */
 
 /**
- * Class for creating dash-dot-dot black border for cells.
- * 
+ * Logic handling issues related to type conversion.
+ *
  * @category KrscReports
- * @package KrscReports_Type
+ * @package KrscReports_Logic
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Type_Excel_PHPExcel_Style_Borders_DashDotDotBorders extends KrscReports_Type_Excel_PHPExcel_Style_Borders
+class TypeConversion
 {
-    use StyleConstantsTranslatorTrait;
-
     /**
-     * Method for getting style array for all borders.
-     * @return array style array for all borders
+     * Method converting excel date to PHP object.
+     *
+     * @param object $oInputDate object with date (Excel format)
+     *
+     * @return \DateTime date object (PHP format)
      */
-    protected function _getAllBorders()
+    public static function dateFromExcelToPHP($oInputDate)
     {
-        $aOutput = array();
-        $aOutput[$this->getTranslatedStyleKey(static::KEY_STYLE)] = $this->getTranslatedStyleConstant('PHPExcel_Style_Border', 'BORDER_DASHDOTDOT');
-        $aOutput[static::KEY_COLOR] = self::_getColorArray(KrscReports_Type_Excel_PHPExcel_Style_Default::COLOR_BLACK);
+        switch (\KrscReports_File::getBuilderType()) {
+            case \KrscReports_File::SETTINGS_PHPEXCEL:
+                $returnObject = \PHPExcel_Shared_Date::ExcelToPHPObject($oInputDate);
+                break;
+            case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
+                $returnObject = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($oInputDate);
+                break;
+        }
 
-        return $aOutput;
+        return $returnObject;
     }
 }

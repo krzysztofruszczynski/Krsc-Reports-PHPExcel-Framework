@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.1, 2017-04-28
+ * @version 2.0.3, 2019-04-17
  */
 
 /**
@@ -32,7 +32,7 @@
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Builder_Excel_PHPExcel_Modifier_RowHighlight extends KrscReports_Builder_Excel_PHPExcel
+class KrscReports_Builder_Excel_PHPExcel_Modifier_RowHighlight extends KrscReports_Builder_Excel
 {
     /**
      * @var integer start column for table, which we want to highlight (starts from 0)
@@ -140,6 +140,4 @@ class KrscReports_Builder_Excel_PHPExcel_Modifier_RowHighlight extends KrscRepor
     {
         
     }
-
 }
-

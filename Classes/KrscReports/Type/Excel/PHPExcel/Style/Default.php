@@ -49,7 +49,12 @@ abstract class KrscReports_Type_Excel_PHPExcel_Style_Default
      * hex value for light green color
      */
     const COLOR_LIGHT_GREEN = '66FF66';
-    
+
+    /**
+     * hex value for dark green color
+     */
+    const COLOR_DARKGREEN = 'FF008000';
+
     /**
      * hex value for light blue
      */
@@ -70,6 +75,11 @@ abstract class KrscReports_Type_Excel_PHPExcel_Style_Default
      */
     const COLOR_LIGHT_GRAY = 'EEE9E9';
     
+    /**
+     * hex value for black color
+     */
+    const COLOR_BLACK = 'FF000000';
+
     /**
      * @var KrscReports_Logic_Color business logic for colors
      */

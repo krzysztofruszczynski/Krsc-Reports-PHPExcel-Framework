@@ -32,7 +32,7 @@
  * @package KrscReports_Builder
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports\Builder\Excel\GraphBasic// KrscReports_Builder_Excel
+class KrscReports_Builder_Excel_PHPExcel_Graph_Basic extends KrscReports\Builder\Excel\GraphBasic
 {
     /**
      * Setter for default settings for graph.

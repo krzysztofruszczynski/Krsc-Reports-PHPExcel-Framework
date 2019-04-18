@@ -122,7 +122,7 @@ class KrscReports_Type_Excel_PHPExcel_Style_Font extends KrscReports_Type_Excel_
      */
     protected function _getColor()
     {
-        return self::_getColorArray( PHPExcel_Style_Color::COLOR_BLACK );
+        return self::_getColorArray(KrscReports_Type_Excel_PHPExcel_Style_Default::COLOR_BLACK);
     }
     
     /**
