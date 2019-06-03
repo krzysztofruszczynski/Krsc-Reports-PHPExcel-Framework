@@ -1,8 +1,10 @@
 <?php
+use KrscReports\Type\Excel\PhpSpreadsheet\StyleConstantsTranslatorTrait;
+
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2019 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +22,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.6, 2017-02-05
+ * @version 2.0.4, 2019-06-03
  */
 
 /**
@@ -34,9 +36,11 @@
  */
 class KrscReports_Type_Excel_PHPExcel_Style_Alignment_Right extends KrscReports_Type_Excel_PHPExcel_Style_Alignment
 {
+    use StyleConstantsTranslatorTrait;
+
     protected function _getHorizontal()
     {
-        return PHPExcel_Style_Alignment::HORIZONTAL_RIGHT;
+        return $this->getTranslatedStyleConstant('PHPExcel_Style_Alignment', 'HORIZONTAL_RIGHT');
     }
 }
 
