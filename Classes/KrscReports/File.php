@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.1, 2018-11-08
+ * @version 2.0.5, 2020-01-29
  */
 
 /**
@@ -290,6 +290,9 @@ class KrscReports_File
             foreach ($aHeaders as $sHeaderKey => $sHeaderValue) {
                 $oHtmlHeaders->set($sHeaderKey, $sHeaderValue);
             }
+
+            // avoid creation of headers via createHeaders() method:
+            $this->_bWriteHeader = false;
         }
 
         /**
