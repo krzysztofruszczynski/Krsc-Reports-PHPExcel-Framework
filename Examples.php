@@ -22,12 +22,12 @@
  * @package KrscReports
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-01
+ * @version 2.0.6, 2020-02-02
  */
 
 /**
  * Structural code handling example reports.
- * 
+ *
  * @category KrscReports
  * @package KrscReports
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
@@ -56,14 +56,14 @@ else
     echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Example reports from KrscReports library</title></head><body>';
     echo '<p>Example reports from KrscReports library. See <a href="https://github.com/krzysztofruszczynski">https://github.com/krzysztofruszczynski</a> for more informations</p>';
     echo '<ul>';
-    
+
     foreach( KrscReports_Report_ExampleReport::getReportArray() as $iPosition => $oReport )
     {
         echo sprintf( '<li><a href="%s">%s</a></li><br/>', '?' . KrscReports_Report_ExampleReport::INPUT_REPORT_ID . '=' . $iPosition, $oReport->getDescription() );
     }
-    
+
     echo '</ul>';
-    
+
     echo '<p>Copyright (c) Krzysztof Ruszczyński 2014-2017 ( <a href="http://www.ruszczynski.eu">http://www.ruszczynski.eu</a> ). This library uses LGPL licence and works only with PHPExcel.';
     echo '</body></html>';
 }
