@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.5, 2020-01-29
+ * @version 2.0.6, 2020-02-01
  */
 
 /**
@@ -110,6 +110,16 @@ class KrscReports_File
          * @var string selected file type (used by PHPExcel writer and reader)
          */
         protected $_sFileType = self::FILE_TYPE_EXCEL;
+
+        /**
+         * Method returns all settings possibilities (settings mostly associated with vendors).
+         *
+         * @return array all names of settings
+         */
+        public static function getAllSettingsNames()
+        {
+            return array(self::SETTINGS_PHPEXCEL, self::SETTINGS_PHPSPREADSHEET);
+        }
 
         /**
          * Setter for file name.

@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2017 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2017 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.1.0, 2017-04-26
+ * @version 2.0.6, 2020-02-01
  */
 
 /**
@@ -40,6 +40,12 @@ if( isset( $_GET[KrscReports_Report_ExampleReport::INPUT_REPORT_ID] ) )
 {
     /* creating output file */
     $oFile = new KrscReports_File();
+    if(isset($_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME])) {
+        if(in_array($_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME], KrscReports_File::getAllSettingsNames())) {
+            KrscReports_File::setBuilderType($_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME]);
+        }
+    }
+
     $oFile->setFileName( 'Krsc_Example_' . $_GET[KrscReports_Report_ExampleReport::INPUT_REPORT_ID] );
     /* report generation */
     KrscReports_Report_ExampleReport::generateReport( $_GET[KrscReports_Report_ExampleReport::INPUT_REPORT_ID] );
