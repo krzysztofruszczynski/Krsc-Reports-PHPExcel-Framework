@@ -1,8 +1,10 @@
 <?php
+use KrscReports\Import\ReaderTrait;
+
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +22,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-12-26
+ * @version 2.0.6, 2020-02-02
  */
 
 /**
@@ -49,6 +51,10 @@ class KrscReports_Report_ExampleReportManyStyles extends KrscReports_Report_Exam
      */
     public function generate()
     {
+        KrscReports_Builder_Excel::setExcelObject();
+        $oCell = ReaderTrait::getCellObject();
+        KrscReports_Builder_Excel::setDocumentProperties();
+
         // setting styles - adding elements to iterator 
         $oCollectionDefault = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
         $oCollectionDefault->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders() );
@@ -60,9 +66,7 @@ class KrscReports_Report_ExampleReportManyStyles extends KrscReports_Report_Exam
         $oStyle = new KrscReports_Type_Excel_PHPExcel_Style();
         $oStyle->setStyleCollection( $oCollectionDefault );
         $oStyle->setStyleCollection( $oCollectionRow, KrscReports_Document_Element_Table::STYLE_ROW );
-        
-        KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
-        $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
+
         $oCell->setStyleObject( $oStyle );
         
         $oBuilder = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
@@ -86,13 +90,11 @@ class KrscReports_Report_ExampleReportManyStyles extends KrscReports_Report_Exam
         $oElement = new KrscReports_Document_Element();
         $oElement->addElement( $oElementTable );
         $oElement->addElement( $oElementTable2, 'Second_one' );
-        
-        
-                
+
         $oElement->beforeConstructDocument();
         $oElement->constructDocument();
         $oElement->afterConstructDocument();
-            
+
     }
 }
 

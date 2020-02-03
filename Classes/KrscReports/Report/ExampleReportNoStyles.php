@@ -1,8 +1,10 @@
 <?php
+use KrscReports\Import\ReaderTrait;
+
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +22,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-20
+ * @version 2.0.6, 2020-02-02
  */
 
 /**
@@ -48,10 +50,11 @@ class KrscReports_Report_ExampleReportNoStyles extends KrscReports_Report_Exampl
      * @return void
      */
     public function generate()
-    {        
-        KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
-        $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
-        
+    {
+        KrscReports_Builder_Excel::setExcelObject();
+        $oCell = ReaderTrait::getCellObject();
+        KrscReports_Builder_Excel::setDocumentProperties();
+
         $oBuilder = new KrscReports_Builder_Excel_PHPExcel_TableBasic();
         $oBuilder->setCellObject( $oCell );
         $oBuilder->setData( array( array( 'First column' => '1', 'Second column' => '2' ), array( 'First column' => '3', 'Second column' => '4' ) ) );

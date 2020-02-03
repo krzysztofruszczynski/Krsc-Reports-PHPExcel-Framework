@@ -1,8 +1,10 @@
 <?php
+use KrscReports\Import\ReaderTrait;
+
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2016 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +22,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Report
- * @copyright Copyright (c) 2016 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 1.0.3, 2016-11-27
+ * @version 2.0.6, 2020-02-02
  */
 
 /**
@@ -178,6 +180,10 @@ class KrscReports_Report_ExampleReportDifferentCellStyles extends KrscReports_Re
      */
     public function generate()
     {
+        KrscReports_Builder_Excel::setExcelObject();
+        $oCell = ReaderTrait::getCellObject();
+        KrscReports_Builder_Excel::setDocumentProperties();
+
         $oCollectionDefault = new KrscReports_Type_Excel_PHPExcel_Style_Iterator_Collection();
         $oCollectionDefault->addStyleElement( new KrscReports_Type_Excel_PHPExcel_Style_Borders_ExampleBorders() );
         
@@ -238,11 +244,9 @@ class KrscReports_Report_ExampleReportDifferentCellStyles extends KrscReports_Re
         $oStyle->setStyleCollection( $oCollectionDarkRed, self::STYLE_CELL_DARK_RED );
         $oStyle->setStyleCollection( $oCollectionLightBlue, self::STYLE_CELL_LIGHT_BLUE );
         $oStyle->setStyleCollection( $oCollectionGray, self::STYLE_CELL_GRAY );
-        
-        KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject( new PHPExcel() );
-        $oCell = new KrscReports_Type_Excel_PHPExcel_Cell();
+
         $oCell->setStyleObject( $oStyle );
-        
+
         $oBuilder = new KrscReports_Builder_Excel_PHPExcel_TableDifferentStyles();
         $oBuilder->setCellObject( $oCell );
         
@@ -262,10 +266,8 @@ class KrscReports_Report_ExampleReportDifferentCellStyles extends KrscReports_Re
         $oElement->afterConstructDocument();    
     }
 
-    public function getDescription() 
+    public function getDescription()
     {
         return 'Report with one table with color of fillment varying from cell to cell.';
     }
-
 }
-
