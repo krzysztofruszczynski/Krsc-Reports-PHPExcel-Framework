@@ -1,7 +1,6 @@
 <?php
 namespace KrscReports\Views;
 
-use KrscReports\Builder;
 use KrscReports\Exception\RowSizeMismatchException;
 use KrscReports\Import\ReaderTrait;
 use KrscReports\Type\Excel\PHPExcel\Style;
@@ -9,7 +8,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2019 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,9 +26,9 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.2, 2019-03-08
+ * @version 2.0.6, 2020-02-05
  */
 
 /**
@@ -125,16 +124,8 @@ abstract class AbstractView
     
     public function __construct()
     {
-        switch (\KrscReports_File::getBuilderType()) { 
-            case \KrscReports_File::SETTINGS_PHPEXCEL:
-                \KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject(new \PHPExcel());
-                $this->documentElement = new \KrscReports_Document_Element();
-                break;
-            case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
-                Builder\Excel\PhpSpreadsheet::setSpreadsheetObject(new \PhpOffice\PhpSpreadsheet\Spreadsheet());
-                $this->documentElement = new \KrscReports_Document_Element();
-                break;
-        }
+        \KrscReports_Builder_Excel::setExcelObject();
+        $this->documentElement = new \KrscReports_Document_Element();
     }
 
     public function setColumnTranslator( $columnTranslator )
@@ -165,15 +156,6 @@ abstract class AbstractView
             if ( isset( $this->columnTranslator ) ) {
                 // translate properties
                 $this->options[self::KEY_DOCUMENT_PROPERTIES] = $this->columnTranslator->translateColumns( $this->options[self::KEY_DOCUMENT_PROPERTIES], ( isset( $this->options[self::KEY_TRANSLATOR_DOMAIN] ) ? $this->options[self::KEY_TRANSLATOR_DOMAIN] : '' ) );
-            }
-
-            switch (\KrscReports_File::getBuilderType()) {
-                case \KrscReports_File::SETTINGS_PHPEXCEL:
-                    $this->options[self::KEY_DOCUMENT_PROPERTIES]['Creator'] = 'PHPExcel';
-                    break;
-                case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
-                    $this->options[self::KEY_DOCUMENT_PROPERTIES]['Creator'] = 'PhpSpreadsheet';
-                    break;
             }
 
             \KrscReports_Builder_Excel::setDocumentProperties($this->options[self::KEY_DOCUMENT_PROPERTIES]);
