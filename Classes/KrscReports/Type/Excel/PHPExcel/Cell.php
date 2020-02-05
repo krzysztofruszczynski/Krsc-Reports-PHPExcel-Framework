@@ -4,7 +4,7 @@ use KrscReports\Type\Excel;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2018 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@ use KrscReports\Type\Excel;
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2018 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.0, 2018-09-25
+ * @version 2.0.6, 2020-02-05
  */
 
 /**
@@ -170,17 +170,23 @@ class KrscReports_Type_Excel_PHPExcel_Cell extends Excel\Cell
 
     /**
      * Method setting auto filter for table.
+     * NOT WORKING for PHPExcel due to an error in vendor (PHPExcel_Writer_Excel2007_Worksheet:771).
+     * This method doesn't execute anything, only returns it's object.
+     *
      * @param integer $iColumnIdMin begin of range with filter
      * @param integer $iColumnIdMax end of range with filter 
      * @param integer $iHeaderRowHeight absolute height of row with header
+     *
      * @return KrscReports_Type_Excel_PHPExcel_Cell object on which method was executed
      */
     public function setAutoFilter( $iColumnIdMin, $iColumnIdMax, $iHeaderRowHeight )
     {
-        self::$_oPHPExcel->getActiveSheet()->setAutoFilterByColumnAndRow( $iColumnIdMin, $iHeaderRowHeight, $iColumnIdMax, $iHeaderRowHeight );
+        // CAUTION: this cause error, wrong code by PHPExcel vendor:
+        //self::$_oPHPExcel->getActiveSheet()->setAutoFilterByColumnAndRow( $iColumnIdMin, $iHeaderRowHeight, $iColumnIdMax, $iHeaderRowHeight );
+
         return $this;
     }
-    
+
     /**
      * Method setting comment for cell.
      * @param integer $iColumnId numeric coordinate of column (starts from 0)
