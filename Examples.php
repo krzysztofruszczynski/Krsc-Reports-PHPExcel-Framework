@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-02
+ * @version 2.0.6, 2020-02-12
  */
 
 /**
@@ -64,6 +64,6 @@ else
 
     echo '</ul>';
 
-    echo '<p>Copyright (c) Krzysztof Ruszczyński 2014-2017 ( <a href="http://www.ruszczynski.eu">http://www.ruszczynski.eu</a> ). This library uses LGPL licence and works only with PHPExcel.';
+    echo '<p>Copyright (c) Krzysztof Ruszczyński 2014 - 2020 ( <a href="http://www.ruszczynski.eu">http://www.ruszczynski.eu</a> ). This library uses LGPL licence and works only with PhpSpreadsheet and PHPExcel.';
     echo '</body></html>';
 }
