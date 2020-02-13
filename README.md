@@ -1,6 +1,6 @@
 KrscReports
 ===========
-In order to run, this project needs PHPExcel. Installing it via composer is recommended. Then load in your browser Examples.php file from the main folder and see the possibilities of this library. [Click here to see live demo.](https://www.krsc.ruszczynski.eu/reports/example/list)
+In order to run, this project needs PhpSpreadsheet (or alternatively PHPExcel). Installing it via composer is recommended. Then load in your browser Examples.php file from the main folder and see the possibilities of this library. [Click here to see live demo.](https://www.krsc.ruszczynski.eu/reports/example/list)
 
 Install via composer
 ===========
