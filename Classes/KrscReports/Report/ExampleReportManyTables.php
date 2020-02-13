@@ -46,7 +46,7 @@ class KrscReports_Report_ExampleReportManyTables extends KrscReports_Report_Exam
     }
     
     /**
-     * Method responsible for creating PHPExcel object with generated report.
+     * Method responsible for creating object with generated report.
      * @return void
      */
     public function generate()

@@ -1,5 +1,6 @@
 <?php
 use KrscReports\Import\ReaderTrait;
+use KrscReports\Type\Excel\PhpSpreadsheet\StyleConstantsTranslatorTrait;
 
 /**
  * This file is part of KrscReports.
@@ -24,7 +25,7 @@ use KrscReports\Import\ReaderTrait;
  * @package KrscReports_Report
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-02
+ * @version 2.0.6, 2020-02-13
  */
 
 /**
@@ -36,46 +37,48 @@ use KrscReports\Import\ReaderTrait;
  */
 class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_ExampleReport
 {
+    use StyleConstantsTranslatorTrait;
+
     /**
      * title of column with product name
      */
     const COLUMN_PRODUCT_NAME = 'Product name';
-    
+
     /**
      * title of column with product price
      */
     const COLUMN_PRODUCT_PRICE = 'Product price (in EUR)';
-    
+
     /**
      * title of column with product availibility
      */
     const COLUMN_PRODUCT_AVAILIBILITY = 'Product availibility';
-    
+
     /**
      * value for availibility, when product is not available
      */
     const AVAILIBILITY_LEVEL_NOT_AVAILABLE = 0;
-    
+
     /**
      * value for availibility, when product supply is very low
      */
     const AVAILIBILITY_LEVEL_VERY_LOW = 1;
-    
+
     /**
      * value for availibility, when product supply is low
      */
     const AVAILIBILITY_LEVEL_LOW = 2;
-    
+
     /**
      * value for availibility, when product supply is medium
      */
     const AVAILIBILITY_LEVEL_MEDIUM = 3;
-    
+
     /**
      * value for availibility, when product supply is high
      */
     const AVAILIBILITY_LEVEL_HIGH = 4;
-    
+
     /**
      * @var array key is availibility value which stores title to be used in spreadsheet 
      */
@@ -114,7 +117,7 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
      * @return void
      */
     protected function _setData()
-    {   
+    {
         $this->_addRow( 'Laptop', '800', self::AVAILIBILITY_LEVEL_HIGH )
         ->_addRow( 'Tablet', '200', self::AVAILIBILITY_LEVEL_MEDIUM )
         ->_addRow( 'Smartphone', '300', self::AVAILIBILITY_LEVEL_VERY_LOW )
@@ -149,7 +152,7 @@ class KrscReports_Report_ExampleReportChartPie extends KrscReports_Report_Exampl
         $oGraph->setGraphSize( 10, 6 );
         $oGraph->setPlotCategoryColumnName( self::COLUMN_PRODUCT_NAME );
         $oGraph->setPlotValuesColumnName( self::COLUMN_PRODUCT_PRICE );
-        $oGraph->setPlotType( PHPExcel_Chart_DataSeries::TYPE_BARCHART );
+        $oGraph->setPlotType($this->getTranslatedStyleConstant('PHPExcel_Chart_DataSeries', 'TYPE_BARCHART'));
         $oGraph->setLayout();
         $oGraph->setChartTitle('');
 

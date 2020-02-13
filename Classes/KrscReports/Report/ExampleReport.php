@@ -22,7 +22,7 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-12
+ * @version 2.0.6, 2020-02-13
  */
 
 /**
@@ -106,7 +106,7 @@ abstract class KrscReports_Report_ExampleReport
     abstract public function getDescription();
 
     /**
-     * Method responsible for creating PHPExcel object with generated report.
+     * Method responsible for creating object with generated report.
      * @return void
      */
     abstract public function generate();
