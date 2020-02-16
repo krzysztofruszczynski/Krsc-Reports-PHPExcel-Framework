@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-12
+ * @version 2.0.6, 2020-02-16
  */
 
 /**
@@ -55,11 +55,30 @@ else
 {
     echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Example reports from KrscReports library</title></head><body>';
     echo '<p>Example reports from KrscReports library. See <a href="https://github.com/krzysztofruszczynski">https://github.com/krzysztofruszczynski</a> for more informations</p>';
-    echo '<ul>';
+    echo '<p>';
+    if (class_exists('PHPExcel_Style_Color')) {
+        // PHPExcel classes are present - possible to switch to PHPExcel
+        if (isset($_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME]) && $_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME] === KrscReports_File::SETTINGS_PHPEXCEL) {
+            echo 'Currently reports are made using PHPExcel.';
+            echo '<br/><button onclick="location.href = \'?'.KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME.'='.KrscReports_File::SETTINGS_PHPSPREADSHEET.'\';">Switch to '.KrscReports_File::SETTINGS_PHPSPREADSHEET.'</button>';
+        } else {
+            echo 'Currently reports are made using PhpSpreadsheet.';
+            echo '<br/><button onclick="location.href = \'?'.KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME.'='.KrscReports_File::SETTINGS_PHPEXCEL.'\';">Switch to '.KrscReports_File::SETTINGS_PHPEXCEL.'</button>';
+        }
+    } else if (!class_exists('\PhpOffice\PhpSpreadsheet\Style\Color')) {
+        echo '<b>PhpSpreadsheet neither PHPExcel is installed, please install via composer at least one of them (PhpSpreadsheet recommended).</b>';
+    } else {
+        echo 'All reports are made only using PhpSpreadsheet because PHPExcel is not present (don\'t install if not needed for backward compatibility).';
+    }
+    echo '</p><ul>';
 
     foreach( KrscReports_Report_ExampleReport::getReportArray() as $iPosition => $oReport )
     {
-        echo sprintf( '<li><a href="%s">%s</a></li><br/>', '?' . KrscReports_Report_ExampleReport::INPUT_REPORT_ID . '=' . $iPosition, $oReport->getDescription() );
+        if (isset($_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME])) {
+            echo sprintf('<li><a href="?%s=%d&%s=%s">%s</a></li><br/>', KrscReports_Report_ExampleReport::INPUT_REPORT_ID, $iPosition, KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME, $_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME], $oReport->getDescription());
+        } else {
+            echo sprintf('<li><a href="?%s=%d">%s</a></li><br/>', KrscReports_Report_ExampleReport::INPUT_REPORT_ID, $iPosition, $oReport->getDescription());
+        }
     }
 
     echo '</ul>';
