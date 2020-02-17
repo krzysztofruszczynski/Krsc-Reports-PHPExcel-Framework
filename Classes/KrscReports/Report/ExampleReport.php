@@ -65,6 +65,7 @@ abstract class KrscReports_Report_ExampleReport
         new KrscReports_Report_ExampleReportDifferentSizes();
         new Report\ExampleReportManyRows();
         new Report\ExampleReportPassFailTests();
+        new Report\ExampleReportTableWithFiltering();
     }
 
     /**
