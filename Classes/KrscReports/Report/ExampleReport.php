@@ -1,4 +1,6 @@
 <?php
+use KrscReports\Report;
+
 /**
  * This file is part of KrscReports.
  *
@@ -22,7 +24,7 @@
  * @package KrscReports_Report
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-13
+ * @version 2.0.6, 2020-02-17
  */
 
 /**
@@ -61,7 +63,8 @@ abstract class KrscReports_Report_ExampleReport
         new KrscReports_Report_ExampleReportDifferentCellStyles();
         new KrscReports_Report_ExampleReportChartPie();
         new KrscReports_Report_ExampleReportDifferentSizes();
-        new KrscReports_Report_ExampleReportManyRows();
+        new Report\ExampleReportManyRows();
+        new Report\ExampleReportPassFailTests();
     }
 
     /**
