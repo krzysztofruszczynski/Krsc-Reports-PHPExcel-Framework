@@ -29,7 +29,7 @@ use KrscReports\Views\SingleTable;
  * @package KrscReports_Report
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-17
+ * @version 2.0.6, 2020-02-19
  */
 
 /**
@@ -39,7 +39,7 @@ use KrscReports\Views\SingleTable;
  * @package KrscReports_Report
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class ExampleReportPassFailTests extends \KrscReports_Report_ExampleReport
+class ExampleReportPassFailTests extends \KrscReports_Report_ExampleReport implements ReportWithServiceInterface
 {
     const COLUMN_TEST_NAME = 'Test name';
 
@@ -64,15 +64,12 @@ class ExampleReportPassFailTests extends \KrscReports_Report_ExampleReport
     }
 
     /**
-     * Method responsible for creating service with generated report.
-     * @return void
+     * Method returning prepared view.
+     *
+     * @return \KrscReports\Views\AbstractView
      */
-    public function generate()
+    public function getReportView()
     {
-        $oExcelService = new Service();
-        $oExcelService->setSpreadsheetName('Results_Spreadsheet');
-        $oExcelService->setFileName('Krsc_Example_11');
-
         $aDataForExcel = array();
         $iIterator = 1;
         for ($i = 0; $i < $this->_iNumberOfRows; $i++) {
@@ -100,9 +97,23 @@ class ExampleReportPassFailTests extends \KrscReports_Report_ExampleReport
             $aDataForExcel,
             array(self::COLUMN_TEST_NAME, self::COLUMN_TEST_RESULT, self::COLUMN_TEST_DATE, self::COLUMN_COMMENTS)
         );
-        $oReportView->setDocumentProperties();
 
-        $oExcelService->setReportView($oReportView);
+        return $oReportView;
+    }
+
+    /**
+     * Method responsible for creating service with generated report.
+     * @return void
+     */
+    public function generate()
+    {
+        $oExcelService = new Service();
+        $oExcelService->setSpreadsheetName('Results_Spreadsheet');
+        $oExcelService->setFileName('Krsc_Example_11');
+
+        $oExcelService->setReportView(
+            $this->getReportView()->setDocumentProperties()
+        );
         $oExcelService->createReport();
     }
 }

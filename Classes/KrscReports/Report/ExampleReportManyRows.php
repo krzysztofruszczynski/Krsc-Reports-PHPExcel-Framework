@@ -28,7 +28,7 @@ use KrscReports\Views\SingleTable;
  * @package KrscReports_Report
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-16
+ * @version 2.0.6, 2020-02-19
  */
 
 /**
@@ -38,7 +38,7 @@ use KrscReports\Views\SingleTable;
  * @package KrscReports_Report
  * @author Krzysztof Ruszczyński <http://www.ruszczynski.eu>
  */
-class ExampleReportManyRows extends \KrscReports_Report_ExampleReport
+class ExampleReportManyRows extends \KrscReports_Report_ExampleReport implements ReportWithServiceInterface
 {
     /**
      * @var integer number of rows to create
@@ -55,15 +55,12 @@ class ExampleReportManyRows extends \KrscReports_Report_ExampleReport
     }
 
     /**
-     * Method responsible for creating service with generated report.
-     * @return void
+     * Method returning prepared view.
+     *
+     * @return \KrscReports\Views\AbstractView
      */
-    public function generate()
+    public function getReportView()
     {
-        $oExcelService = new Service();
-        $oExcelService->setSpreadsheetName('First_Spreadsheet');
-        $oExcelService->setFileName('Krsc_Example_10');
-
         $aDataForExcel = array();
         $iIterator = 1;
         for ($i = 0; $i < $this->_iNumberOfRows; $i++) {
@@ -82,8 +79,22 @@ class ExampleReportManyRows extends \KrscReports_Report_ExampleReport
             array('First column', 'Second column', 'Third column')
         );
 
-        $oReportView->setDocumentProperties();
-        $oExcelService->setReportView($oReportView);
+        return $oReportView;
+    }
+
+    /**
+     * Method responsible for creating service with generated report.
+     * @return void
+     */
+    public function generate()
+    {
+        $oExcelService = new Service();
+        $oExcelService->setSpreadsheetName('First_Spreadsheet');
+        $oExcelService->setFileName('Krsc_Example_10');
+
+        $oExcelService->setReportView(
+            $this->getReportView()->setDocumentProperties()
+        );
         $oExcelService->createReport();
     }
 }
