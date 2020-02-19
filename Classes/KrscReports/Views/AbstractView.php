@@ -28,7 +28,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  * @package KrscReports
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-05
+ * @version 2.0.6, 2020-02-19
  */
 
 /**
@@ -46,7 +46,7 @@ abstract class AbstractView
      * key in options for auto filter
      */
     const KEY_AUTOFILTER = 'autofilter';
-    
+
     /**
      * key in options where there is array column size (keys - column id starting from 0, values - width of column) 
      */
@@ -76,7 +76,7 @@ abstract class AbstractView
      * index of element in option array with name of translator domain to be used (only if required)
      */
     const KEY_TRANSLATOR_DOMAIN = 'translator_domain';
-   
+
     /**
      * index of element in option array with file properties
      */
@@ -91,37 +91,37 @@ abstract class AbstractView
      * @var \KrscReports\ColumnTranslatorService service for translating column names
      */
     protected $columnTranslator;
-     
+
     /**
      * @var array subsequent elements are titles for subsequent columns (if we don't want to use those from provided data or there are no data)
      */
     protected $columnNames;
-    
+
     /**
      * @var \KrscReports\Type\Excel\PHPExcel\Style\Bundle\AbstractStyle style builder
      */
     protected $styleBuilder;
-    
+
     /**
      * @var \KrscReports_Type_Excel_PHPExcel_Cell instance of cell
      */
     protected $cell;
-    
+
     /**
      * @var array data for spreadsheet 
      */
     protected $data = array();
-    
+
     /**
      * @var array options for table (for example legend) 
      */
     protected $options = array();
-    
+
     /**
      * @var \KrscReports_Document_Element element, to which excel elements are attached 
      */
     protected $documentElement;
-    
+
     public function __construct()
     {
         \KrscReports_Builder_Excel::setExcelObject();
@@ -149,6 +149,8 @@ abstract class AbstractView
 
     /**
      * Method for setting document properties. To be executed after options are set.
+     *
+     * @return $this object, on which method was executed
      */
     public function setDocumentProperties()
     {
@@ -160,6 +162,8 @@ abstract class AbstractView
 
             \KrscReports_Builder_Excel::setDocumentProperties($this->options[self::KEY_DOCUMENT_PROPERTIES]);
         }
+
+        return $this;
     }
 
     /**
@@ -194,10 +198,10 @@ abstract class AbstractView
         if ( isset( $this->cell ) && !$forceNew ) {
             return $this->cell;
         }
-        
+
         // if previously set, it will remain, otherwise - default one
         $this->setStyleBuilder( $this->styleBuilder );
-        
+
         $this->cell = self::getCellObject();
         $this->cell->setStyleObject( $this->styleBuilder->getStyleObject() );
 
@@ -238,7 +242,7 @@ abstract class AbstractView
     {
         if( !empty( $columnNames ) ){
             $outputData = array();
-            foreach( $data as $key => $row ){                
+            foreach( $data as $key => $row ){
                 $styleColumn = ''; // can be string or array
                 if ( isset( $row[self::getStyleColumnName()] ) ) { // removing style element from array before array_combine
                     $styleColumn = $row[self::getStyleColumnName()];
@@ -335,8 +339,8 @@ abstract class AbstractView
             $element = $this->getDocumentElement( $spreadsheetName );
         } else {
             $element = $this->getDocumentElement();
-        }        
-        
+        }
+
         $element->beforeConstructDocument();
         $element->constructDocument();
         $element->afterConstructDocument();  
