@@ -24,7 +24,7 @@ use KrscReports\Report;
  * @package KrscReports_Report
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-17
+ * @version 2.0.6, 2020-02-23
  */
 
 /**
@@ -66,6 +66,7 @@ abstract class KrscReports_Report_ExampleReport
         new Report\ExampleReportManyRows();
         new Report\ExampleReportPassFailTests();
         new Report\ExampleReportTableWithFiltering();
+        new Report\ExampleReportTableWithGraph();
     }
 
     /**
