@@ -24,7 +24,7 @@ namespace KrscReports\Views;
  * @package KrscReports
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-17
+ * @version 2.0.6, 2020-02-24
  */
 
 /**
@@ -75,9 +75,15 @@ class SingleTableWithFilters extends SingleTable
         $builderLegend = $this->getFilterTableBuilder();
         $builder = $this->getSingleTableBuilder( $spreadsheetName );
 
+        $this->setTableElement($builderLegend, $spreadsheetName);
+
+        /*
+         * Options parameter changed after filter table is set to prevent
+         * using there value set below. Useful while making distance to
+         * element before, for example in composite view.
+         */
         $this->options[self::KEY_COLUMN_LINES_BETWEEN_ELEMENTS] = 1;
 
-        $this->setTableElement($builderLegend, $spreadsheetName);
         $this->setTableElement($builder, $spreadsheetName);
 
         return $this->documentElement; 
