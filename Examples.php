@@ -22,7 +22,7 @@
  * @package KrscReports
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-16
+ * @version 2.0.6, 2020-02-24
  */
 
 /**
@@ -72,8 +72,15 @@ else
     }
     echo '</p><ul>';
 
+    $bReportsWithView = false;
     foreach( KrscReports_Report_ExampleReport::getReportArray() as $iPosition => $oReport )
     {
+        if ($iPosition === 0) {
+            echo '<p>Examples with custom configuration:</p>';
+        } else if ($bReportsWithView === false && $oReport instanceof KrscReports\Report\ReportWithServiceInterface) {
+            echo '<p>Examples with view architecture used:</p>';
+            $bReportsWithView = true;
+        }
         if (isset($_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME])) {
             echo sprintf('<li><a href="?%s=%d&%s=%s">%s</a></li><br/>', KrscReports_Report_ExampleReport::INPUT_REPORT_ID, $iPosition, KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME, $_GET[KrscReports_Report_ExampleReport::INPUT_SETTINGS_NAME], $oReport->getDescription());
         } else {
@@ -83,6 +90,6 @@ else
 
     echo '</ul>';
 
-    echo '<p>Copyright (c) Krzysztof Ruszczyński 2014 - 2020 ( <a href="http://www.ruszczynski.eu">http://www.ruszczynski.eu</a> ). This library uses LGPL licence and works only with PhpSpreadsheet and PHPExcel.';
+    echo '<p>Copyright (c) Krzysztof Ruszczyński 2014 - 2020 ( <a href="http://www.ruszczynski.eu">http://www.ruszczynski.eu</a> ). This library uses LGPL licence and works only with PhpSpreadsheet and/or PHPExcel.';
     echo '</body></html>';
 }
