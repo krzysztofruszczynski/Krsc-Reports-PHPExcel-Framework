@@ -2,7 +2,7 @@
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2019 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category KrscReports
  * @package KrscReports_Builder
- * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.1, 2019-02-05
+ * @version 2.1.0, 2020-02-02
  */
 
 /**
@@ -125,7 +125,24 @@ abstract class KrscReports_Builder_Excel extends \KrscReports_Builder_Abstract
     }
 
     /**
-     * Method returning object responsible for creating excel file (dependent on vendor).
+     * Method setting object responsible for creating excel file (depends on vendor).
+     *
+     * @return void
+     */
+    public static function setExcelObject()
+    {
+        switch (\KrscReports_File::getBuilderType()) {
+            case \KrscReports_File::SETTINGS_PHPEXCEL:
+                \KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject(new \PHPExcel());
+                break;
+            case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
+                \KrscReports\Builder\Excel\PhpSpreadsheet::setSpreadsheetObject(new \PhpOffice\PhpSpreadsheet\Spreadsheet());
+                break;
+        }
+    }
+
+    /**
+     * Method returning object responsible for creating excel file (depends on vendor).
      *
      * @return KrscReports_Builder_Excel_PHPExcel|\KrscReports\Builder\Excel\PhpSpreadsheet
      */
@@ -162,9 +179,18 @@ abstract class KrscReports_Builder_Excel extends \KrscReports_Builder_Abstract
      * @param array $aDocumentProperties property name is key (must have a set method), property value is array value
      * @return \KrscReports_Builder_Excel_PHPExcel|\KrscReports\Builder\Excel\PhpSpreadsheet object on which method was executed
      */
-    public static function setDocumentProperties($aDocumentProperties)
+    public static function setDocumentProperties($aDocumentProperties = array())
     {
         self::setBuilderType();
+
+        switch (\KrscReports_File::getBuilderType()) {
+            case \KrscReports_File::SETTINGS_PHPEXCEL:
+                $aDocumentProperties['Creator'] = 'PHPExcel';
+                break;
+            case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
+                $aDocumentProperties['Creator'] = 'PhpSpreadsheet';
+                break;
+        }
 
         return self::$_oBuilderType->setDocumentProperties($aDocumentProperties);
     }

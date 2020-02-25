@@ -1,7 +1,6 @@
 <?php
 namespace KrscReports\Views;
 
-use KrscReports\Builder;
 use KrscReports\Exception\RowSizeMismatchException;
 use KrscReports\Import\ReaderTrait;
 use KrscReports\Type\Excel\PHPExcel\Style;
@@ -9,7 +8,7 @@ use KrscReports\Type\Excel\PHPExcel\Style;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2019 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,9 +26,9 @@ use KrscReports\Type\Excel\PHPExcel\Style;
  *
  * @category KrscReports
  * @package KrscReports
- * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.2, 2019-03-08
+ * @version 2.1.0, 2020-02-19
  */
 
 /**
@@ -47,7 +46,7 @@ abstract class AbstractView
      * key in options for auto filter
      */
     const KEY_AUTOFILTER = 'autofilter';
-    
+
     /**
      * key in options where there is array column size (keys - column id starting from 0, values - width of column) 
      */
@@ -77,7 +76,7 @@ abstract class AbstractView
      * index of element in option array with name of translator domain to be used (only if required)
      */
     const KEY_TRANSLATOR_DOMAIN = 'translator_domain';
-   
+
     /**
      * index of element in option array with file properties
      */
@@ -92,49 +91,41 @@ abstract class AbstractView
      * @var \KrscReports\ColumnTranslatorService service for translating column names
      */
     protected $columnTranslator;
-     
+
     /**
      * @var array subsequent elements are titles for subsequent columns (if we don't want to use those from provided data or there are no data)
      */
     protected $columnNames;
-    
+
     /**
      * @var \KrscReports\Type\Excel\PHPExcel\Style\Bundle\AbstractStyle style builder
      */
     protected $styleBuilder;
-    
+
     /**
      * @var \KrscReports_Type_Excel_PHPExcel_Cell instance of cell
      */
     protected $cell;
-    
+
     /**
      * @var array data for spreadsheet 
      */
     protected $data = array();
-    
+
     /**
      * @var array options for table (for example legend) 
      */
     protected $options = array();
-    
+
     /**
      * @var \KrscReports_Document_Element element, to which excel elements are attached 
      */
     protected $documentElement;
-    
+
     public function __construct()
     {
-        switch (\KrscReports_File::getBuilderType()) { 
-            case \KrscReports_File::SETTINGS_PHPEXCEL:
-                \KrscReports_Builder_Excel_PHPExcel::setPHPExcelObject(new \PHPExcel());
-                $this->documentElement = new \KrscReports_Document_Element();
-                break;
-            case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
-                Builder\Excel\PhpSpreadsheet::setSpreadsheetObject(new \PhpOffice\PhpSpreadsheet\Spreadsheet());
-                $this->documentElement = new \KrscReports_Document_Element();
-                break;
-        }
+        \KrscReports_Builder_Excel::setExcelObject();
+        $this->documentElement = new \KrscReports_Document_Element();
     }
 
     public function setColumnTranslator( $columnTranslator )
@@ -158,6 +149,8 @@ abstract class AbstractView
 
     /**
      * Method for setting document properties. To be executed after options are set.
+     *
+     * @return $this object, on which method was executed
      */
     public function setDocumentProperties()
     {
@@ -167,17 +160,10 @@ abstract class AbstractView
                 $this->options[self::KEY_DOCUMENT_PROPERTIES] = $this->columnTranslator->translateColumns( $this->options[self::KEY_DOCUMENT_PROPERTIES], ( isset( $this->options[self::KEY_TRANSLATOR_DOMAIN] ) ? $this->options[self::KEY_TRANSLATOR_DOMAIN] : '' ) );
             }
 
-            switch (\KrscReports_File::getBuilderType()) {
-                case \KrscReports_File::SETTINGS_PHPEXCEL:
-                    $this->options[self::KEY_DOCUMENT_PROPERTIES]['Creator'] = 'PHPExcel';
-                    break;
-                case \KrscReports_File::SETTINGS_PHPSPREADSHEET:
-                    $this->options[self::KEY_DOCUMENT_PROPERTIES]['Creator'] = 'PhpSpreadsheet';
-                    break;
-            }
-
             \KrscReports_Builder_Excel::setDocumentProperties($this->options[self::KEY_DOCUMENT_PROPERTIES]);
         }
+
+        return $this;
     }
 
     /**
@@ -212,10 +198,10 @@ abstract class AbstractView
         if ( isset( $this->cell ) && !$forceNew ) {
             return $this->cell;
         }
-        
+
         // if previously set, it will remain, otherwise - default one
         $this->setStyleBuilder( $this->styleBuilder );
-        
+
         $this->cell = self::getCellObject();
         $this->cell->setStyleObject( $this->styleBuilder->getStyleObject() );
 
@@ -256,7 +242,7 @@ abstract class AbstractView
     {
         if( !empty( $columnNames ) ){
             $outputData = array();
-            foreach( $data as $key => $row ){                
+            foreach( $data as $key => $row ){
                 $styleColumn = ''; // can be string or array
                 if ( isset( $row[self::getStyleColumnName()] ) ) { // removing style element from array before array_combine
                     $styleColumn = $row[self::getStyleColumnName()];
@@ -353,8 +339,8 @@ abstract class AbstractView
             $element = $this->getDocumentElement( $spreadsheetName );
         } else {
             $element = $this->getDocumentElement();
-        }        
-        
+        }
+
         $element->beforeConstructDocument();
         $element->constructDocument();
         $element->afterConstructDocument();  

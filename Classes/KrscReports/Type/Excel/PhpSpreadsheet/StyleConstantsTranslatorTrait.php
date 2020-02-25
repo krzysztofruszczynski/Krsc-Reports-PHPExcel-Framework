@@ -4,7 +4,7 @@ namespace KrscReports\Type\Excel\PhpSpreadsheet;
 /**
  * This file is part of KrscReports.
  *
- * Copyright (c) 2019 Krzysztof Ruszczyński
+ * Copyright (c) 2020 Krzysztof Ruszczyński
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@ namespace KrscReports\Type\Excel\PhpSpreadsheet;
  *
  * @category KrscReports
  * @package KrscReports_Type
- * @copyright Copyright (c) 2019 Krzysztof Ruszczyński
+ * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.3, 2019-04-17
+ * @version 2.1.0, 2020-02-13
  */
 
 /**
@@ -39,8 +39,11 @@ trait StyleConstantsTranslatorTrait {
      * @var array array key is class name in PHPExcel, array value is class name in PhpSpreadsheet
      */
     protected $_aPHPExcelToPhpSpreadsheetClasses = array(
+        'PHPExcel_Chart_DataSeries' => '\PhpOffice\PhpSpreadsheet\Chart\DataSeries',
         'PHPExcel_Style_Alignment' => '\PhpOffice\PhpSpreadsheet\Style\Alignment',
         'PHPExcel_Style_Border' => '\PhpOffice\PhpSpreadsheet\Style\Border',
+        'PHPExcel_Style_Color' => '\PhpOffice\PhpSpreadsheet\Style\Color',
+        'PHPExcel_Style_Fill' => '\PhpOffice\PhpSpreadsheet\Style\Fill',
     );
 
     /**
