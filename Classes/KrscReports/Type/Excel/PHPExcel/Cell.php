@@ -24,7 +24,7 @@ use KrscReports\Type\Excel;
  * @package KrscReports_Type
  * @copyright Copyright (c) 2020 Krzysztof Ruszczyński
  * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version 2.0.6, 2020-02-05
+ * @version 2.1.0, 2020-02-05
  */
 
 /**
