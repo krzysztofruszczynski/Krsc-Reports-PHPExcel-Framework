@@ -18,5 +18,5 @@ Tested with Symfony 3.<br/>
 
 Tutorial
 ===========
-To learn more about creating reports with KrscReports, please have a look at [wiki with tutotials](https://github.com/krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework/wiki).
-
+To learn more about creating reports with KrscReports, please have a look at [wiki with tutotials](https://github.com/krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework/wiki). You can also copy content of [KrscReports\Report\ExampleReportManyRows](https://github.com/krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework/blob/master/Classes/KrscReports/Report/ExampleReportManyRows.php)
+class and adapt it to your needs.
