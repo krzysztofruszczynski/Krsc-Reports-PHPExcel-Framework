@@ -3,11 +3,10 @@
     "description": "KrscReports is a php library written in order to create complex PhpSpreadsheet and PHPExcel files.",
     "keywords": ["PhpExcel", "PhpSpreadsheet", "Framework", "Excel"],
     "homepage": "https://github.com/krzysztofruszczynski/Krsc-Reports-PHPExcel-Framework/blob/master/README.md",
-    "license": "LGPL-2.1",
+    "license": "LGPL-2.1-or-later",
     "authors": [
         {
             "name": "Krzysztof Ruszczyński",
-            "email": "ruszczak@o2.pl",
             "homepage": "http://www.ruszczynski.eu"
         }
     ],
