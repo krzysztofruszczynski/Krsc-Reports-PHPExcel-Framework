@@ -72,7 +72,7 @@ class Service
      * @param \KrscReports\ColumnTranslatorService $columnTranslator if translator is provided, column names are translated
      * @param string $translatorDomain domain for translator
      */
-    public function __construct($columns = array(), $columnTranslator = null, $translatorDomain = null)
+    public function __construct($columns = array(), ColumnTranslatorService $columnTranslator = null, $translatorDomain = null)
     {
         $this->setColumns($columns, $columnTranslator, $translatorDomain);
         $this->file = new \KrscReports_File();
@@ -95,7 +95,7 @@ class Service
      * @param  string $translatorDomain domain for translator
      * @return \KrscReports\Service object on which this method was executed
      */
-    public function setColumns($columns = array(), $columnTranslator = null, $translatorDomain = null)
+    public function setColumns($columns = array(), ColumnTranslatorService $columnTranslator = null, $translatorDomain = null)
     {
         $this->columns = ( is_null($columnTranslator) || empty($columns) ) ? $columns : $columnTranslator->translateColumns($columns, $translatorDomain);
         return $this;
